@@ -1,13 +1,20 @@
+import { Link } from 'react-router-dom'
+import * as C from "./styles"
+import Button from '../../components/button';
+import Input from '../../components/input';
 
 function Login() {
     return (
         <div>
-        <h1>Login</h1>
-        <form>
-            <input type="text" placeholder="Username" />
-            <input type="password" placeholder="Password" />
-            <button type="submit">Login</button>
-        </form>
+        <C.Container>
+            <C.Content>
+                <C.Label>Login</C.Label>
+                <Input type="text" placeholder='Username'/>
+                <Input type="password" placeholder='Password'/>
+                <Button text='Entrar'/>
+                <p>Não tem conta? <C.Strong> <Link to="/register">Registre-se</Link></C.Strong> </p>
+            </C.Content>
+        </C.Container>
         </div>
     );
     }
