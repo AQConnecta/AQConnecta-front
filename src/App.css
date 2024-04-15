@@ -5,6 +5,28 @@
   text-align: center;
 }
 
+:root{
+  --cor01: #0B0A07;
+  --cor02: #1F1F1F;
+  --cor03: #D6D6D6;
+  --cor04: #70C3FF;
+}
+
+
+*{
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+
+}
+
+body{
+  width: 100vw;
+  height: 100vh;
+  background-color: #f0f2f5;
+  font-family: Arial, Helvetica, sans-serif
+}
+
 .logo {
   height: 6em;
   padding: 1.5em;
