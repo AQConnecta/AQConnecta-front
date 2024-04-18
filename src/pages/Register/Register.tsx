@@ -1,13 +1,16 @@
 import { Link } from 'react-router-dom';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Box, Button, TextField } from '@mui/material';
 import api from '../../services/api';
 import { RegisterBody } from '../../services/endpoints/auth';
+import { useSnackbar } from 'notistack';
 
 function Register() {
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [fieldsValid, setFieldsValid] = useState(false);
+  const {enqueueSnackbar} = useSnackbar()
 
   async function handleRegister() {
     try {
@@ -16,8 +19,13 @@ function Register() {
         console.log(res)
     } catch (err) {
         console.log(err)
+        enqueueSnackbar('Erro ao registrar', {variant: 'error'})
     }
   }
+  
+  useEffect(() => {
+    setFieldsValid(name.length > 0 && email.length > 0 && password.length > 0)
+  }, [name, email, password])
 
   return (
     <Box
@@ -80,6 +88,7 @@ function Register() {
           variant="contained"
           onClick={() => handleRegister()}
           sx={{ width: '100%', height: '50px' }}
+          disabled={!fieldsValid}
         >
           Registrar
         </Button>
