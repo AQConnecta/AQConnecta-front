@@ -1,25 +1,97 @@
-import { Link } from 'react-router-dom'
-import * as C from "./styles"
-import Button from '../../components/button'
-import Input from '../../components/input'
-
+import { Link } from 'react-router-dom';
+import { useState } from 'react';
+import { Box, Button, TextField } from '@mui/material';
+import api from '../../services/api';
+import { RegisterBody } from '../../services/endpoints/auth';
 
 function Register() {
+  const [name, setName] = useState('');
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
 
-    return (
-        <div>
-            <C.Container>
-                <C.Content>
-                    <C.Label>Registre-se</C.Label>
-                    <Input placeholder='Nome' type='text'></Input>
-                    <Input placeholder='E-mail' type='text'></Input>
-                    <Input placeholder='Senha' type='password'></Input>
-                    <Button text='Registrar'></Button>
-                    <p>Já tem conta? <C.Strong> <Link to="/login">Entrar</Link></C.Strong> </p>
-                </C.Content>
-            </C.Container>
-        </div>
-    )
+  async function handleRegister() {
+    try {
+        const body: RegisterBody = { nome: name, email, senha: password }
+        const res = await api.auth.register(body)
+        console.log(res)
+    } catch (err) {
+        console.log(err)
+    }
+  }
+
+  return (
+    <Box
+      sx={{
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center',
+        flexDirection: 'column',
+        gap: '10px',
+        height: '100vh',
+      }}
+    >
+      <Box
+        sx={{
+          display: 'flex',
+          alignItems: 'center',
+          flexDirection: 'column',
+          gap: '15px',
+          width: '100%',
+          boxShadow: '0 1px 2px #0003',
+          backgroundColor: 'white',
+          maxWidth: '350px',
+          padding: '20px',
+          borderRadius: '5px',
+        }}
+      >
+        <Box
+          sx={{
+            fontSize: '23px',
+            fontWeight: 600,
+            color: '#676767',
+            marginBottom: '15px',
+          }}
+        >
+          Registre-se
+        </Box>
+        <TextField
+          variant="outlined"
+          placeholder="Digite seu nome"
+          label="Nome"
+          onChange={(e) => setName(e.target.value)}
+          sx={{ width: '100%' }}
+        />
+        <TextField
+          variant="outlined"
+          placeholder="Digite seu E-mail"
+          label="E-mail"
+          onChange={(e) => setEmail(e.target.value)}
+          sx={{ width: '100%' }}
+        />
+        <TextField
+          variant="outlined"
+          type="password"
+          placeholder="Senha"
+          label="Senha"
+          onChange={(e) => setPassword(e.target.value)}
+          sx={{ width: '100%' }}
+        />
+        <Button
+          variant="contained"
+          onClick={() => handleRegister()}
+          sx={{ width: '100%', height: '50px' }}
+        >
+          Registrar
+        </Button>
+        <p>
+          Já tem conta?{' '}
+          <Link to="/login">
+            <Box sx={{ textDecoration: 'none', color: '#676767' }}>Entrar</Box>
+          </Link>
+        </p>
+      </Box>
+    </Box>
+  );
 }
 
-export default Register
+export default Register;

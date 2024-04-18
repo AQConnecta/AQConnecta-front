@@ -1,6 +1,5 @@
 import styled from "styled-components";
 
-
 export const Container = styled.div`
     display: flex;
     align-items: center;
@@ -9,7 +8,6 @@ export const Container = styled.div`
     gap: 10px;
     height: 100vh;
 `;
-
 
 export const Content = styled.div`
     gap: 15px;
@@ -25,7 +23,6 @@ export const Content = styled.div`
     border-radius: 5px
 `;
 
-
 export const Label = styled.label`
     font-size: 23px;
     font-weight: 600;
@@ -38,12 +35,10 @@ export const LabelSignup = styled.label`
     color: #676767
 `;
 
-
 export const labelError = styled.label`
     font-size: 14px;
     color: red;
 `;
-
 
 export const Strong = styled.strong`
     cursor: pointer;
