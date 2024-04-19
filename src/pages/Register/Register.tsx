@@ -1,4 +1,4 @@
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { useEffect, useState } from 'react';
 import { Box, Button, TextField } from '@mui/material';
 import api from '../../services/api';
@@ -11,12 +11,14 @@ function Register() {
   const [password, setPassword] = useState('');
   const [fieldsValid, setFieldsValid] = useState(false);
   const {enqueueSnackbar} = useSnackbar()
+  const navigate = useNavigate()
 
   async function handleRegister() {
     try {
         const body: RegisterBody = { nome: name, email, senha: password }
         const res = await api.auth.register(body)
-        console.log(res)
+        enqueueSnackbar('Registrado com sucesso', {variant: 'success'})
+        navigate('/login')
     } catch (err) {
         console.log(err)
         enqueueSnackbar('Erro ao registrar', {variant: 'error'})

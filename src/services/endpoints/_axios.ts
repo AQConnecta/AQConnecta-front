@@ -2,13 +2,7 @@ import axios, {AxiosInstance} from 'axios'
 import config from './config'
 
 export const RequestHeaders = {
-  'Content-Type': 'application/json',
-  Accept: 'application/json',
-  'Access-Control-Expose-Headers': 'Access-Control-',
-  'Access-Control-Allow-Headers': 'Access-Control-, Origin, X-Requested-With, Content-Type, Accept',
-  'Access-Control-Allow-Methods': 'GET, POST, PUT, DELETE, OPTIONS, HEAD',
-  'Access-Control-Allow-Origin': '*',
-  Allow: 'GET, POST, PUT, DELETE, OPTIONS, HEAD',
+  'Content-Type': 'application/json'
 }
 
 const _axios: AxiosInstance = axios.create({
