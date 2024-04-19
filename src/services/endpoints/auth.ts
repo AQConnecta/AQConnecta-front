@@ -32,4 +32,8 @@ export class AuthEndpoint {
     async register(data:RegisterBody): Promise<any> {
         return await axios.post(`${PREFIX}/registrar`, data)
     }
+
+    async forgotPassword(data: {email: string}): Promise<any> {
+        return await axios.post(`${PREFIX}/recuperando-senha`, data)
+    }
 }

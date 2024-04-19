@@ -16,7 +16,7 @@ function Login() {
             if(user) {
                 localStorage.setItem('token', user.token)
                 localStorage.setItem('user', JSON.stringify(user))
-                redirect('/')
+                redirect('/home')
             }
         } catch (err) {
             console.log(err)
@@ -34,6 +34,7 @@ function Login() {
                 <Box sx={{fontSize: '23px', fontWeight: 600, color: '#676767', marginBottom: '15px'}}>Login</Box>
                 <TextField variant='outlined' placeholder='Digite seu E-mail' label='E-mail' onChange={(e) => setEmail(e.target.value)} sx={{width: '100%'}} />
                 <TextField variant='outlined' type="password" placeholder='Senha' label='Senha' onChange={(e) => setPassword(e.target.value)} sx={{width: '100%'}}/>
+                <Box sx={{alignSelf: 'flex-end'}}><Link to='/forgot-password'>Esqueci minha senha</Link></Box>
                 <Button variant='contained' onClick={() => handleLogin()} sx={{width: '100%', height:'50px'}} disabled={!validFields}>Entrar</Button>
                 <p>Não tem conta? <Link to="/register"><Box sx={{textDecoration: 'none', color: '#676767'}}>Registre-se</Box></Link></p>
             </Box>
