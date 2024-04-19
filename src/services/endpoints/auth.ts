@@ -14,8 +14,10 @@ export type AuthLogin = {
 }
 
 export type LoginResponse = {
-    usuario: Usuario;
-    token: string;
+    data: {
+        usuario: Usuario;
+        token: string;
+    }
 }
 
 export type RegisterBody = {

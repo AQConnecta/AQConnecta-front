@@ -12,7 +12,8 @@ function Login() {
 
     async function handleLogin() {
         try {
-            const user = await api.auth.login({email, senha: password})
+            const res = await api.auth.login({email, senha: password})
+            const user = res.data
             if(user) {
                 localStorage.setItem('token', user.token)
                 localStorage.setItem('user', JSON.stringify(user))
