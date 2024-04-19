@@ -1,9 +1,8 @@
-import React from 'react'
 import { Link } from 'react-router-dom'
 import { Usuario } from '../../services/endpoints/auth'
 
 function Home() {
-    const user:Usuario = JSON.parse(localStorage.getItem('user'))
+    const user:Usuario = JSON.parse(localStorage.getItem('user') || '')
 
     if(!user) {
         return <Link to='/login'>Login</Link>

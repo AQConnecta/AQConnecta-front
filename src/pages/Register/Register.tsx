@@ -16,7 +16,7 @@ function Register() {
   async function handleRegister() {
     try {
         const body: RegisterBody = { nome: name, email, senha: password }
-        const res = await api.auth.register(body)
+        await api.auth.register(body)
         enqueueSnackbar('Registrado com sucesso', {variant: 'success'})
         navigate('/login')
     } catch (err) {

@@ -11,7 +11,7 @@ function ForgotPassword() {
 
     async function handleForgotButtonPress() {
         try {
-            const res = await api.auth.forgotPassword({email})
+            await api.auth.forgotPassword({email})
             enqueueSnackbar('E-mail enviado com sucesso', {variant: 'success'})
             navigate('/login')
         } catch (err) {
@@ -69,7 +69,7 @@ function ForgotPassword() {
           variant="contained"
           onClick={() => handleForgotButtonPress()}
           sx={{ width: '100%', height: '50px' }}
-          disabled={!email.length > 0}
+          disabled={!(email.length > 0)}
         >
           Recuperar senha
         </Button>

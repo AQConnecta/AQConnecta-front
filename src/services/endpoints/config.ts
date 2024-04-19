@@ -13,7 +13,7 @@ const config = {
     useLocal: false,
 }
 
-export function configurePrefix(key: keyof typeof config['localUrl']) {
+export function configurePrefix() {
     return config.useLocal ? config.localUrl : config.baseUrl
 }
 

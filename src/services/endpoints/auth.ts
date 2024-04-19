@@ -10,7 +10,7 @@ export type Usuario = {
 
 export type AuthLogin = {
     email: string;
-    password: string;
+    senha: string;
 }
 
 export type LoginResponse = {
