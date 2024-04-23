@@ -19,4 +19,18 @@ export function removeBearerToken() {
   delete _axios.defaults.headers.common['Authorization']
 }
 
+_axios.interceptors.response.use(
+  response => response,
+  error => {
+    console.log(error)
+    if (error.response.status === 401) {
+      removeBearerToken()
+      localStorage.removeItem('token')
+      localStorage.removeItem('user')
+      window.location.href = '/login'
+    }
+    return Promise.reject(error)
+  }
+)
+
 export default _axios

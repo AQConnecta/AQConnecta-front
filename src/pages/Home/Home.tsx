@@ -1,21 +1,20 @@
-import { Link } from 'react-router-dom'
-import { Usuario } from '../../services/endpoints/auth'
+import { Link } from 'react-router-dom';
+import { Usuario } from '../../services/endpoints/auth';
+import { Box, Drawer, List, ListItem, ListItemButton, Toolbar } from '@mui/material';
+import Sidebar from '../../components/Sidebar';
 
 function Home() {
-    const user:Usuario = JSON.parse(localStorage.getItem('user') || '')
+  const user: Usuario = JSON.parse(localStorage.getItem('user') || '');
 
-    if(!user) {
-        return <Link to='/login'>Login</Link>
-    }
+  if (!user) {
+    return <Link to="/login">Login</Link>;
+  }
 
-    return (
-        <div className='bg-amber-700'>
-            <h1 className='text-xl text-red-500'>Home</h1>
-            <h2>Olá {user.nome}</h2>
-
-        </div>
-    )
+  return (
+    <Box>
+        <Sidebar />
+    </Box>
+  );
 }
 
-export default Home
-
+export default Home;

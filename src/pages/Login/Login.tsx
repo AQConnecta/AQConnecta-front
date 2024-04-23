@@ -3,6 +3,7 @@ import { useEffect, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom'
 import api from '../../services/api';
 import { useSnackbar } from 'notistack';
+import { setBearerToken } from '../../services/endpoints/_axios';
 
 function Login() {
     const [email, setEmail] = useState('')
@@ -19,6 +20,7 @@ function Login() {
             if (user) {
                 localStorage.setItem('token', user.token)
                 localStorage.setItem('user', JSON.stringify(user.usuario))
+                setBearerToken(user.token)
                 navigate('/home')
             }
         } catch (err) {
