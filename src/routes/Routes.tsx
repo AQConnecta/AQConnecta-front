@@ -7,6 +7,7 @@ import ForgotPassword from '../pages/ForgotPassword/ForgotPassword';
 import ListCompetencia from '../pages/Competencia/ListaCompetencias';
 import MeuEndereco from '../pages/Endereco/Endereco';
 import EnderecoRegister from '../pages/Endereco/EnderecoRegister';
+import MinhaExperiencia from "../pages/Experiencia/Experiencia.tsx";
 
 const AppRoutes = () => {
   return (
@@ -20,6 +21,7 @@ const AppRoutes = () => {
         <Route path="home" element={<Home />} />
         <Route path="/" element={<Login />} />
         <Route path='competencias' element={<ListCompetencia />} />
+        <Route path='experiencias' element={<MinhaExperiencia />} />
         <Route path="*" element={<Error />} />
       </Routes>
     </BrowserRouter>

@@ -10,6 +10,7 @@ import {
 } from '@mui/material';
 import { Link, useNavigate } from 'react-router-dom';
 import { removeBearerToken } from '../services/endpoints/_axios';
+import {Usuario} from "../services/endpoints/auth.ts";
 
 const routes = [
     {
@@ -19,6 +20,10 @@ const routes = [
     {
         path: '/endereco',
         label: 'Endereço'
+    },
+    {
+        path: '/experiencias',
+        label: 'Experiencias'
     }
 ]
 
@@ -72,8 +77,7 @@ function Sidebar() {
                     display: 'flex',
                     alignItems: 'center',
                     justifyContent: 'center',
-                  }}
-                >
+                  }}>
                   <Link to={`${route.path}`}>{route.label}</Link>
                 </ListItemButton>
               </ListItem>
