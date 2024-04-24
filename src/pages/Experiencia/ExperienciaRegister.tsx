@@ -154,6 +154,7 @@ function ExperienciaRegister() {
               type='date'
               placeholder="Data de início"
               label="Data de início"
+              InputLabelProps={{ shrink: true }}
               value={experiencia.dataInicio || ''}
               onChange={(e) =>
                 setExperienciaValue(e.target.value, 'dataInicio')
@@ -165,6 +166,7 @@ function ExperienciaRegister() {
               variant="outlined"
               placeholder="Data de fim"
               label="Data de fim"
+              InputLabelProps={{ shrink: true }}
               disabled={experiencia.atualExperiencia}
               value={experiencia.dataFim || ''}
               onChange={(e) => setExperienciaValue(e.target.value, 'dataFim')}

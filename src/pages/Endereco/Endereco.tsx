@@ -19,8 +19,11 @@ function MeuEndereco() {
     async function getEndereco() {
       try {
         const res = await api.endereco.getEndereco(user.id);
-        setEndereco(res.data.data[0]);
+        if(res.status !== 204) {
+            setEndereco(res.data.data[0]);
+        }
       } catch (err) {
+        console.log(err);
         enqueueSnackbar('Erro ao buscar endereço', { variant: 'error' });
       }
     }
