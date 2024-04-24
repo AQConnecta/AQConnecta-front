@@ -60,7 +60,7 @@ function ListCompetencia() {
     async function getCompetencias() {
       try {
         const res = await api.competencia.listAll();
-        setRows(res.data.data);
+        setRows(res.data.data || []);
       } catch (error) {
         enqueueSnackbar('Erro ao buscar competências', { variant: 'error' });
       }
@@ -69,7 +69,7 @@ function ListCompetencia() {
     async function getMyCompetencias() {
       try {
         const res = await api.competencia.listByUserId(user.id);
-        setMinhasCompetencias(res.data.data);
+        setMinhasCompetencias(res.data.data || []);
       } catch (error) {
         enqueueSnackbar('Erro ao buscar minhas competências', {
           variant: 'error',
