@@ -29,7 +29,7 @@ function MinhaExperiencia() {
 
     function reload() {
         setShouldReload((prev) => prev + 1);
-        }    
+    }
 
     const formatDate = (dateString) => {
         const options = { year: 'numeric', month: 'numeric', day: 'numeric' };
@@ -59,6 +59,8 @@ function MinhaExperiencia() {
                 flexDirection: 'column',
             }}
         >
+          <Button variant='contained' onClick={() => navigate('register')}>Cadastrar experiência</Button>
+
             <Box
                 width="100%"
                 sx={{
@@ -72,8 +74,6 @@ function MinhaExperiencia() {
                     borderRadius: '5px',
                 }}
             >
-                <Button variant='contained' onClick={() => navigate('register')}>Cadastrar experiência</Button>
-
                 {experiencias && experiencias.length > 0 ? (
                     experiencias.map((experiencia, index) => (
                         <Box key={index} sx={{padding: '8px', border: '1px solid #000', borderRadius: '5px'}}>

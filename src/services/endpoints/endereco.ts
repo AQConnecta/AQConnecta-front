@@ -22,6 +22,10 @@ export class EnderecoEndpoint {
     return await axios.put(`${PREFIX}/alterar/${idUsuario}`, data)
    }
 
+  async deletarEndereco(idEndereco:string) {
+    return await axios.delete(`${PREFIX}/deletar/${idEndereco}`)
+  }
+
    async getEndereco(idUsuario:string) {
     return await axios.get(`${PREFIX}/listar/${idUsuario}`)
    }
