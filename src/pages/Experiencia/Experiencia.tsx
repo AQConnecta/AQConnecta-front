@@ -11,6 +11,7 @@ import {Experiencia} from "../../services/endpoints/experiencia.ts";
 function MinhaExperiencia() {
     const user: Usuario = JSON.parse(localStorage.getItem('user') || '{}');
     const [experiencias, setExperiencias] = useState<Experiencia[]>([]);
+    const [shouldReload, setShouldReload] = useState(0);
     const navigate = useNavigate();
 
     useEffect(() => {
@@ -24,16 +25,28 @@ function MinhaExperiencia() {
         }
 
         getExperiencia();
-    });
+    },[shouldReload]);
+
+    function reload() {
+        setShouldReload((prev) => prev + 1);
+        }    
 
     const formatDate = (dateString) => {
         const options = { year: 'numeric', month: 'numeric', day: 'numeric' };
         return new Date(dateString).toLocaleDateString('pt-BR', options);
     };
 
-    // function handleRegisterClick() {
-    //     navigate('register')
-    // }
+    async function handleDelete(idExperiencia) {
+        try {
+            console.log(idExperiencia)
+            await api.experiencia.deletarExperiencia(idExperiencia);
+            enqueueSnackbar('Experiência deletada com sucesso', {variant: 'success'});
+            reload()
+        } catch (err) {
+            enqueueSnackbar('Erro ao deletar experiência', {variant: 'error'});
+            console.log(err)
+        }
+    }
 
     return (
         <Box
@@ -59,9 +72,11 @@ function MinhaExperiencia() {
                     borderRadius: '5px',
                 }}
             >
-                {experiencias.length > 0 ? (
+                <Button variant='contained' onClick={() => navigate('register')}>Cadastrar experiência</Button>
+
+                {experiencias && experiencias.length > 0 ? (
                     experiencias.map((experiencia, index) => (
-                        <Box key={index}>
+                        <Box key={index} sx={{padding: '8px', border: '1px solid #000', borderRadius: '5px'}}>
                             <Typography variant="h6">Experiência {index + 1}</Typography>
                             <Typography variant="body1">{experiencia.titulo} - {experiencia.instituicao}</Typography>
                             <Typography
@@ -73,19 +88,21 @@ function MinhaExperiencia() {
                                 }}
                             />
                             <Typography variant="body1">{experiencia.descricao}</Typography>
-                            <Button variant="contained" sx={{width: '100%', height: '50px'}}>
+                            <Box sx={{display: 'flex', direction: 'column',alignItems: 'center', justifyContent: 'center', gap: '16px'}}>
+                            <Button variant="contained" sx={{width: '100%', height: '50px'}} onClick={() => navigate(`register/${experiencia.id}`)}>
                                 Editar
                             </Button>
+                            <Button variant="contained" sx={{width: '100%', height: '50px', backgroundColor: 'tomato'}} onClick={() => handleDelete(experiencia.id)}>
+                                Excluir
+                            </Button>
+                            </Box>
                         </Box>
                     ))
                 ) : (
                     <Box>
-                        <Typography variant="body1">Experiência não encontrada</Typography>
-                        <Button variant='contained'>Cadastrar experiência</Button>
-                        {/* onClick={() => handleRegisterClick()} */}
+                        <Typography variant="body1">Sem experiências até o momento</Typography>
                     </Box>
                 )}
-
             </Box>
         </Box>
     );

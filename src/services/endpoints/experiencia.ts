@@ -12,15 +12,23 @@ export type Experiencia = {
 }
 
 export class ExperienciaEndpoint {
-   // async cadastrarEndereco(data: Experiencia) {
-   //  return await axios.post(`${PREFIX}/cadastrar`, data)
-   // }
-   //
-   // async alterarEndereco(idUsuario:string ,data: Experiencia) {
-   //  return await axios.put(`${PREFIX}/alterar/${idUsuario}`, data)
-   // }
-
    async getExperiencia(idUsuario:string) {
     return await axios.get(`${PREFIX}/listar/${idUsuario}`)
+   }
+
+   async cadastrarExperiencia(data: Experiencia) {
+    return await axios.post(`${PREFIX}/cadastrar`, data)
+   }
+
+   async alterarExperiencia(idUsuario:string ,data: Experiencia) {
+    return await axios.put(`${PREFIX}/alterar/${idUsuario}`, data)
+   }
+
+   async deletarExperiencia(idExperiencia:string) {
+    return await axios.delete(`${PREFIX}/deletar/${idExperiencia}`)
+   }
+
+   async localizaExperiencia(idExperiencia:string) {
+    return await axios.get(`${PREFIX}/localizar/${idExperiencia}`)
    }
 }

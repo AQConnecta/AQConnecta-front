@@ -7,21 +7,30 @@ import ForgotPassword from '../pages/ForgotPassword/ForgotPassword';
 import ListCompetencia from '../pages/Competencia/ListaCompetencias';
 import MeuEndereco from '../pages/Endereco/Endereco';
 import EnderecoRegister from '../pages/Endereco/EnderecoRegister';
-import MinhaExperiencia from "../pages/Experiencia/Experiencia.tsx";
+import MinhaExperiencia from '../pages/Experiencia/Experiencia.tsx';
+import Sidebar from '../components/Sidebar.tsx';
+import ExperienciaRegister from '../pages/Experiencia/ExperienciaRegister.tsx';
 
 const AppRoutes = () => {
   return (
     <BrowserRouter>
       <Routes>
-        <Route path='endereco' element={<MeuEndereco />} />
-        <Route path='endereco/register' element={<EnderecoRegister />} />
-        <Route path='register' element={<Register />} />
-        <Route path='login' element={<Login />} />
-        <Route path='forgot-password' element={<ForgotPassword />} />
-        <Route path="home" element={<Home />} />
+        <Route path="register" element={<Register />} />
+        <Route path="login" element={<Login />} />
         <Route path="/" element={<Login />} />
-        <Route path='competencias' element={<ListCompetencia />} />
-        <Route path='experiencias' element={<MinhaExperiencia />} />
+        <Route path="endereco">
+          <Route index element={<MeuEndereco />} />
+          <Route path="register" element={<EnderecoRegister />} />
+          <Route path="register/:id" element={<EnderecoRegister />} />
+        </Route>
+        <Route path="forgot-password" element={<ForgotPassword />} />
+        <Route path="home" element={<Home />} />
+        <Route path="competencias" element={<ListCompetencia />} />
+        <Route path="experiencias">
+          <Route index element={<MinhaExperiencia />} />
+          <Route path="register" element={<ExperienciaRegister />} />
+          <Route path="register/:id" element={<ExperienciaRegister />} />
+        </Route>
         <Route path="*" element={<Error />} />
       </Routes>
     </BrowserRouter>

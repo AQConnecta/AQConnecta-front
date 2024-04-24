@@ -1,0 +1,200 @@
+import { Box, Button, Switch, TextField, Typography } from '@mui/material';
+import { useEffect, useState } from 'react';
+import useHandleKeyPress from '../../hooks/useHandleKeyPress';
+import api from '../../services/api';
+import { useNavigate, useParams } from 'react-router-dom';
+import { useSnackbar } from 'notistack';
+import { Experiencia } from '../../services/endpoints/experiencia';
+
+function ExperienciaRegister() {
+  const [experiencia, setExperiencia] = useState<Experiencia>({
+    titulo: '',
+    instituicao: '',
+    descricao: '',
+    dataInicio: '',
+    dataFim: '',
+    atualExperiencia: false,
+  });
+  const navigate = useNavigate();
+  const { enqueueSnackbar } = useSnackbar();
+  const { id: experienciaId } = useParams();
+  const user = JSON.parse(localStorage.getItem('user') || '{}');
+  const isEdit = !!experienciaId;
+
+  useEffect(() => {
+    if (!experienciaId || !user) return;
+    async function getexperiencia() {
+      try {
+        const res = await api.experiencia.localizaExperiencia(experienciaId);
+        const exp = res.data.data;
+        exp.dataInicio = exp.dataInicio.split('T')[0];
+        if (exp.dataFim) exp.dataFim = exp.dataFim.split('T')[0];
+        setExperiencia(res.data.data);
+      } catch (err) {
+        enqueueSnackbar('Erro ao buscar endereço', { variant: 'error' });
+      }
+    }
+    getexperiencia();
+  }, [experienciaId]);
+
+  const handleKeyPress = useHandleKeyPress({
+    verification: validateFields(),
+    key: 'Enter',
+    callback: () => submitExperiencia(),
+  });
+
+  function setExperienciaValue(value: string, field: string) {
+    setExperiencia({ ...experiencia, [field]: value });
+  }
+
+  function validateFields() {
+    const { titulo, instituicao, dataInicio, dataFim, descricao } = experiencia;
+    if (experiencia.atualExperiencia) {
+      return !(titulo && instituicao && dataInicio && descricao);
+    }
+    return !(titulo && instituicao && dataInicio && dataFim && descricao);
+  }
+
+  async function submitExperiencia() {
+    const newExperiencia = { ...experiencia, dataInicio: experiencia.dataInicio + 'T00:00:00', dataFim: experiencia.dataFim ? experiencia.dataFim + 'T00:00:00' : experiencia.dataFim};
+    if (isEdit) {
+      try {
+        await api.experiencia.alterarExperiencia(experiencia.id, newExperiencia);
+        enqueueSnackbar('Experiência editada com sucesso', {
+          variant: 'success',
+        });
+        navigate('/experiencias');
+      } catch (error) {
+        enqueueSnackbar('Erro ao editar experiência', { variant: 'error' });
+      }
+      return;
+    }
+    try {
+      await api.experiencia.cadastrarExperiencia(newExperiencia);
+      enqueueSnackbar('Experiência cadastrada com sucesso', {
+        variant: 'success',
+      });
+      navigate('/experiencias');
+    } catch (error) {
+      enqueueSnackbar('Erro ao cadastrar experiência', { variant: 'error' });
+    }
+  }
+
+  useEffect(() => {
+    window.addEventListener('keydown', handleKeyPress);
+    return () => {
+      window.removeEventListener('keydown', handleKeyPress);
+    };
+  }, [handleKeyPress]);
+
+  return (
+    <Box
+      height="100%"
+      width="100%"
+      sx={{
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center',
+        flexDirection: 'column',
+      }}
+    >
+      <Box
+        width="100%"
+        sx={{
+          display: 'flex',
+          flexDirection: 'column',
+          gap: '15px',
+          boxShadow: '0 1px 2px #0003',
+          backgroundColor: 'white',
+          maxWidth: '400px',
+          padding: '20px',
+          borderRadius: '5px',
+        }}
+      >
+        <Typography variant="h6">
+          {isEdit ? 'Editar' : 'Cadastrar'} experiência
+        </Typography>
+        <TextField
+          variant="outlined"
+          placeholder="Título da experiência"
+          label="Titulo"
+          value={experiencia.titulo}
+          onChange={(e) => setExperienciaValue(e.target.value, 'titulo')}
+          sx={{ width: '100%' }}
+        />
+        <TextField
+          variant="outlined"
+          placeholder="Instituição"
+          label="Instituição"
+          value={experiencia.instituicao}
+          onChange={(e) => setExperienciaValue(e.target.value, 'instituicao')}
+          sx={{ width: '100%' }}
+        />
+        <Box>
+          <Box sx={{ display: 'flex', direction: 'column',alignItems: 'center', justifyContent: 'flex-end', width: '100%', paddingRight: '5px', paddingBottom: '8px' }}>
+            <Switch
+              checked={experiencia.atualExperiencia}
+              onChange={(e) =>
+                setExperienciaValue(e.target.checked, 'atualExperiencia')
+              }
+            />
+            <Typography>Experiência atual</Typography>
+          </Box>
+          <Box
+            sx={{
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'space-between',
+              direction: 'column',
+              gap: '12px',
+            }}
+          >
+            <TextField
+              variant="outlined"
+              type='date'
+              placeholder="Data de início"
+              label="Data de início"
+              value={experiencia.dataInicio || ''}
+              onChange={(e) =>
+                setExperienciaValue(e.target.value, 'dataInicio')
+              }
+              sx={{ width: '100%' }}
+            />
+            <TextField
+            type='date'
+              variant="outlined"
+              placeholder="Data de fim"
+              label="Data de fim"
+              disabled={experiencia.atualExperiencia}
+              value={experiencia.dataFim || ''}
+              onChange={(e) => setExperienciaValue(e.target.value, 'dataFim')}
+              sx={{ width: '100%' }}
+            />
+          </Box>
+        </Box>
+        <TextField
+          variant="outlined"
+          placeholder="Descrição"
+          label="Descrição"
+          multiline
+          minRows={4}
+          value={experiencia.descricao}
+          onChange={(e) => setExperienciaValue(e.target.value, 'descricao')}
+          sx={{ width: '100%' }}
+        />
+        <Button
+          variant="contained"
+          sx={{ width: '100%', height: '50px' }}
+          disabled={
+            validateFields()
+          }
+          onClick={() => submitExperiencia()}
+        >
+          {isEdit ? 'Salvar' : 'Cadastrar'}
+        </Button>
+      </Box>
+    </Box>
+  );
+}
+
+export default ExperienciaRegister;

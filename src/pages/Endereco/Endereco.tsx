@@ -13,23 +13,23 @@ const columns: GridColDef[] = [{ field: 'descricao', headerName: 'Descrição' }
 function MeuEndereco() {
   const user: Usuario = JSON.parse(localStorage.getItem('user') || '{}');
   const [endereco, setEndereco] = useState<Endereco>({} as Endereco);
-    const navigate = useNavigate();
+  const navigate = useNavigate();
 
   useEffect(() => {
     async function getEndereco() {
       try {
         const res = await api.endereco.getEndereco(user.id);
-        setEndereco(res.data);
+        setEndereco(res.data.data[0]);
       } catch (err) {
         enqueueSnackbar('Erro ao buscar endereço', { variant: 'error' });
       }
     }
 
     getEndereco();
-  });
+  }, []);
 
   function handleRegisterClick() {
-    navigate('register')
+    navigate('register');
   }
 
   return (
@@ -58,22 +58,28 @@ function MeuEndereco() {
       >
         {endereco ? (
           <Box>
-            <Typography variant="h6">Endereço</Typography>
-            <Typography variant="body1">Rua: Rua do Endereço</Typography>
-            <Typography variant="body1">Número: 123</Typography>
-            <Typography variant="body1">Bairro: Bairro do Endereço</Typography>
-            <Typography variant="body1">Cidade: Cidade do Endereço</Typography>
-            <Typography variant="body1">Estado: Estado do Endereço</Typography>
-            <Typography variant="body1">CEP: 12345-678</Typography>
-            <Button variant="contained" sx={{ width: '100%', height: '50px' }}>
+            <Typography variant="h6">Meu endereço</Typography>
+            <Box sx={{ padding: '8px' }}>
+              <Typography variant="body1">Rua: {endereco.rua}</Typography>
+              <Typography variant="body1">
+                Número: {endereco.numeroCasa}
+              </Typography>
+              <Typography variant="body1">Bairro: {endereco.bairro}</Typography>
+              <Typography variant="body1">Cidade: {endereco.cidade}</Typography>
+              <Typography variant="body1">Estado: {endereco.estado}</Typography>
+              <Typography variant="body1">CEP: {endereco.cep}</Typography>
+            </Box>
+            <Button variant="contained" sx={{ width: '100%', height: '50px' }} onClick={() => navigate(`register/${endereco.id}`)}>
               Editar
             </Button>
           </Box>
         ) : (
-            <Box>
-          <Typography variant="body1">Endereço não encontrado</Typography>
-          <Button variant='contained' onClick={() => handleRegisterClick()}>Cadastrar endereço</Button>
-            </Box>
+          <Box>
+            <Typography variant="body1">Endereço não encontrado</Typography>
+            <Button variant="contained" onClick={() => handleRegisterClick()}>
+              Cadastrar endereço
+            </Button>
+          </Box>
         )}
       </Box>
     </Box>
