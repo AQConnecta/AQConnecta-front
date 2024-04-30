@@ -1,4 +1,4 @@
-import axios, {AxiosInstance} from 'axios'
+import axios, {AxiosInstance, AxiosResponse as _AxiosResponse} from 'axios'
 import config from './config'
 
 export const RequestHeaders = {
@@ -32,5 +32,9 @@ _axios.interceptors.response.use(
     return Promise.reject(error)
   }
 )
+
+export type AxiosResponse<T> = Partial<Omit<_AxiosResponse, 'data'>> & {
+  data: {data: T }
+}
 
 export default _axios

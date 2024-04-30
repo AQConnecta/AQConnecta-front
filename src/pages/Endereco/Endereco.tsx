@@ -8,7 +8,7 @@ import { Endereco } from '../../services/endpoints/endereco';
 
 function MeuEndereco() {
   const user: Usuario = JSON.parse(localStorage.getItem('user') || '{}');
-  const [enderecos, setEnderecos] = useState<Endereco>({} as Endereco);
+  const [enderecos, setEnderecos] = useState<Endereco[]>([]);
   const [shouldReload, setShouldReload] = useState(0);
   const navigate = useNavigate();
 
@@ -33,7 +33,7 @@ function MeuEndereco() {
     navigate('register');
   }
 
-  async function handleDelete(idEndereco) {
+  async function handleDelete(idEndereco:string) {
     try {
       await api.endereco.deletarEndereco(idEndereco);
       enqueueSnackbar('Endereço deletada com sucesso', { variant: 'success' });
@@ -70,7 +70,7 @@ function MeuEndereco() {
         <Button variant="contained" onClick={() => navigate('register')}>Cadastrar endereço</Button>
 
         {enderecos && enderecos.length > 0 ? (
-          enderecos.map((endereco, index) => (
+          enderecos.map((endereco:Endereco, index:number) => (
             <Box key={index} sx={{ padding: '8px', border: '1px solid #000', borderRadius: '5px' }}>
               <Typography variant="h6">
                 Endereço
@@ -114,14 +114,14 @@ function MeuEndereco() {
                 <Button
                   variant="contained"
                   sx={{ width: '100%', height: '50px' }}
-                  onClick={() => navigate(`register/${enderecos.id}`)}
+                  onClick={() => navigate(`register/${endereco.id}`)}
                 >
                   Editar
                 </Button>
                 <Button
                   variant="contained"
                   sx={{ width: '100%', height: '50px', backgroundColor: 'tomato' }}
-                  onClick={() => handleDelete(endereco.id)}
+                  onClick={() => handleDelete(endereco.id!)}
                 >
                   Excluir
                 </Button>

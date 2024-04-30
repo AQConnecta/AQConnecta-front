@@ -27,6 +27,7 @@ function ExperienciaRegister() {
     const newExperiencia = { ...experiencia, dataInicio: `${experiencia.dataInicio}T00:00:00`, dataFim: experiencia.dataFim ? `${experiencia.dataFim}T00:00:00` : experiencia.dataFim };
     if (isEdit) {
       try {
+        if (!experiencia.id) return
         await api.experiencia.alterarExperiencia(experiencia.id, newExperiencia);
         enqueueSnackbar('Experiência editada com sucesso', {
           variant: 'success',
@@ -49,9 +50,9 @@ function ExperienciaRegister() {
   }
 
   useEffect(() => {
-    if (!experienciaId || !user) return;
     async function getexperiencia() {
       try {
+        if (!experienciaId || !user) return;
         const res = await api.experiencia.localizaExperiencia(experienciaId);
         const exp = res.data.data;
         exp.dataInicio = exp.dataInicio.split('T')[0];
@@ -143,7 +144,7 @@ function ExperienciaRegister() {
           >
             <Switch
               checked={experiencia.atualExperiencia}
-              onChange={(e) => setExperienciaValue(e.target.checked, 'atualExperiencia')}
+              onChange={(e) => setExperienciaValue(`${e.target.checked}`, 'atualExperiencia')}
             />
             <Typography>Experiência atual</Typography>
           </Box>

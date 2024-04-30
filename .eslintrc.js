@@ -21,6 +21,8 @@ module.exports = {
     },
     plugins: ['react', 'import'],
     rules: {
+        "max-len": 0,
+        "object-curly-newline": ['error', { "multiline": true, "consistent": true }],
         "indent": ['error', 2],
         "react/jsx-indent": ['error', 2],
         '@typescript-eslint/explicit-module-boundary-types': 0,

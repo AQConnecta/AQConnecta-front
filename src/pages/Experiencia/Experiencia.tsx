@@ -29,12 +29,12 @@ function MinhaExperiencia() {
     setShouldReload((prev) => prev + 1);
   }
 
-  const formatDate = (dateString) => {
-    const options = { year: 'numeric', month: 'numeric', day: 'numeric' };
+  const formatDate = (dateString: string) => {
+    const options:Intl.DateTimeFormatOptions = { year: 'numeric', month: 'numeric', day: 'numeric' };
     return new Date(dateString).toLocaleDateString('pt-BR', options);
   };
 
-  async function handleDelete(idExperiencia) {
+  async function handleDelete(idExperiencia: string) {
     try {
       await api.experiencia.deletarExperiencia(idExperiencia);
       enqueueSnackbar('Experiência deletada com sucesso', { variant: 'success' });
@@ -106,7 +106,7 @@ function MinhaExperiencia() {
                 <Button variant="contained" sx={{ width: '100%', height: '50px' }} onClick={() => navigate(`register/${experiencia.id}`)}>
                   Editar
                 </Button>
-                <Button variant="contained" sx={{ width: '100%', height: '50px', backgroundColor: 'tomato' }} onClick={() => handleDelete(experiencia.id)}>
+                <Button variant="contained" sx={{ width: '100%', height: '50px', backgroundColor: 'tomato' }} onClick={() => handleDelete(experiencia.id!)}>
                   Excluir
                 </Button>
               </Box>

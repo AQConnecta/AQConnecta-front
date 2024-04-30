@@ -28,7 +28,7 @@ function EnderecoRegister() {
   async function submitEndereco() {
     if (isEdit) {
       try {
-        await api.endereco.alterarEndereco(endereco.id, endereco);
+        await api.endereco.alterarEndereco(endereco.id!, endereco);
         enqueueSnackbar('Endereço editado com sucesso', {
           variant: 'success',
         });

@@ -1,3 +1,4 @@
+import React from 'react';
 import {
   Box,
   Drawer,
@@ -24,11 +25,11 @@ const routes = [
   },
 ]
 
-function Sidebar() {
+function Sidebar():React.JSX.Element {
   const user: Usuario = JSON.parse(localStorage.getItem('user') || '');
   const navigate = useNavigate();
   if (!user) {
-    return navigate('/login');
+    navigate('/login');
   }
 
   function handleLogout() {
