@@ -7,7 +7,7 @@ export const RequestHeaders = {
 
 const _axios: AxiosInstance = axios.create({
   baseURL: config.baseUrl,
-  timeout: 16000,
+  timeout: import.meta.env.VITE_TIMEOUT,
   headers: RequestHeaders,
 })
 
