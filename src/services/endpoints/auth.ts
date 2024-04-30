@@ -3,7 +3,7 @@ import axios from './_axios'
 const PREFIX = '/auth'
 
 export type Usuario = {
-    id: number;
+    id: string;
     nome: string;
     email: string;
 }

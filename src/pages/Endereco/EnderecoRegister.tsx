@@ -1,10 +1,12 @@
-import { Box, Button, TextField, Typography } from '@mui/material';
-import { Endereco } from '../../services/endpoints/endereco';
+import {
+  Box, Button, TextField, Typography,
+} from '@mui/material';
 import { useEffect, useState } from 'react';
-import useHandleKeyPress from '../../hooks/useHandleKeyPress';
-import api from '../../services/api';
 import { useNavigate, useParams } from 'react-router-dom';
 import { useSnackbar } from 'notistack';
+import { Endereco } from '../../services/endpoints/endereco';
+import useHandleKeyPress from '../../hooks/useHandleKeyPress';
+import api from '../../services/api';
 
 function EnderecoRegister() {
   const [endereco, setEndereco] = useState<Endereco>({
@@ -22,6 +24,30 @@ function EnderecoRegister() {
   const { id: enderecoId } = useParams();
   const user = JSON.parse(localStorage.getItem('user') || '{}');
   const isEdit = !!enderecoId;
+
+  async function submitEndereco() {
+    if (isEdit) {
+      try {
+        await api.endereco.alterarEndereco(endereco.id!, endereco);
+        enqueueSnackbar('Endereço editado com sucesso', {
+          variant: 'success',
+        });
+        navigate('/endereco');
+      } catch (error) {
+        enqueueSnackbar('Erro ao editar endereço', { variant: 'error' });
+      }
+      return;
+    }
+    try {
+      await api.endereco.cadastrarEndereco(endereco);
+      enqueueSnackbar('Endereço cadastrado com sucesso', {
+        variant: 'success',
+      });
+      navigate('/endereco');
+    } catch (error) {
+      enqueueSnackbar('Erro ao cadastrar endereço', { variant: 'error' });
+    }
+  }
 
   useEffect(() => {
     if (!enderecoId || !user) return;
@@ -44,30 +70,6 @@ function EnderecoRegister() {
 
   function setEnderecoValue(value: string, field: string) {
     setEndereco({ ...endereco, [field]: value });
-  }
-
-  async function submitEndereco() {
-    if (isEdit) {
-      try {
-        await api.endereco.alterarEndereco(endereco.id, endereco);
-        enqueueSnackbar('Endereço editado com sucesso', {
-          variant: 'success',
-        });
-        navigate('/endereco');
-      } catch (error) {
-        enqueueSnackbar('Erro ao editar endereço', { variant: 'error' });
-      }
-      return;
-    }
-    try {
-      await api.endereco.cadastrarEndereco(endereco);
-      enqueueSnackbar('Endereço cadastrado com sucesso', {
-        variant: 'success',
-      });
-      navigate('/endereco');
-    } catch (error) {
-      enqueueSnackbar('Erro ao cadastrar endereço', { variant: 'error' });
-    }
   }
 
   useEffect(() => {
@@ -101,7 +103,11 @@ function EnderecoRegister() {
           borderRadius: '5px',
         }}
       >
-        <Typography variant="h6">{isEdit ? 'Editar' : 'Cadastrar'} endereço</Typography>
+        <Typography variant="h6">
+          {isEdit ? 'Editar' : 'Cadastrar'}
+          {' '}
+          endereço
+        </Typography>
         <TextField
           variant="outlined"
           placeholder="Digite seu CEP"

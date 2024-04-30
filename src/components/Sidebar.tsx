@@ -1,37 +1,35 @@
+import React from 'react';
 import {
   Box,
-  CssBaseline,
-  Divider,
   Drawer,
   List,
   ListItem,
   ListItemButton,
-  Toolbar,
 } from '@mui/material';
 import { Link, useNavigate } from 'react-router-dom';
 import { removeBearerToken } from '../services/endpoints/_axios';
-import {Usuario} from "../services/endpoints/auth.ts";
+import { Usuario } from '../services/endpoints/auth.ts';
 
 const routes = [
-    {
-        path: '/competencias',
-        label: 'Competências'
-    },
-    {
-        path: '/endereco',
-        label: 'Endereço'
-    },
-    {
-        path: '/experiencias',
-        label: 'Experiencias'
-    }
+  {
+    path: '/competencias',
+    label: 'Competências',
+  },
+  {
+    path: '/endereco',
+    label: 'Endereço',
+  },
+  {
+    path: '/experiencias',
+    label: 'Experiencias',
+  },
 ]
 
-function Sidebar() {
+function Sidebar():React.JSX.Element {
   const user: Usuario = JSON.parse(localStorage.getItem('user') || '');
   const navigate = useNavigate();
   if (!user) {
-    return navigate('/login');
+    navigate('/login');
   }
 
   function handleLogout() {
@@ -65,23 +63,27 @@ function Sidebar() {
           }}
         >
           <Box>
-            <Box>Olá, {user.nome}</Box>
+            <Box>
+              Olá,
+              {user.nome}
+            </Box>
           </Box>
           <Box>
             <Box>Navegação</Box>
             <List>
-                {routes.map((route) => (
-              <ListItem>
-                <ListItemButton
-                  sx={{
-                    display: 'flex',
-                    alignItems: 'center',
-                    justifyContent: 'center',
-                  }}>
-                  <Link to={`${route.path}`}>{route.label}</Link>
-                </ListItemButton>
-              </ListItem>
-                ))}
+              {routes.map((route) => (
+                <ListItem>
+                  <ListItemButton
+                    sx={{
+                      display: 'flex',
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                    }}
+                  >
+                    <Link to={`${route.path}`}>{route.label}</Link>
+                  </ListItemButton>
+                </ListItem>
+              ))}
             </List>
           </Box>
           <Box>

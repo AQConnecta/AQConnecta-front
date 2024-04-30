@@ -3,6 +3,7 @@ import axios from './_axios'
 const PREFIX = '/experiencia'
 
 export type Experiencia = {
+    id?: string
     titulo: string
     instituicao: string
     descricao: string
