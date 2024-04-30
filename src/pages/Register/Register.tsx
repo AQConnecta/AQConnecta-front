@@ -1,30 +1,29 @@
 import { Link, useNavigate } from 'react-router-dom';
 import { useEffect, useState } from 'react';
 import { Box, Button, TextField } from '@mui/material';
+import { useSnackbar } from 'notistack';
 import api from '../../services/api';
 import { RegisterBody } from '../../services/endpoints/auth';
-import { useSnackbar } from 'notistack';
 
 function Register() {
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [fieldsValid, setFieldsValid] = useState(false);
-  const {enqueueSnackbar} = useSnackbar()
+  const { enqueueSnackbar } = useSnackbar()
   const navigate = useNavigate()
 
   async function handleRegister() {
     try {
-        const body: RegisterBody = { nome: name, email, senha: password }
-        await api.auth.register(body)
-        enqueueSnackbar('Registrado com sucesso', {variant: 'success'})
-        navigate('/login')
+      const body: RegisterBody = { nome: name, email, senha: password }
+      await api.auth.register(body)
+      enqueueSnackbar('Registrado com sucesso', { variant: 'success' })
+      navigate('/login')
     } catch (err) {
-        console.log(err)
-        enqueueSnackbar('Erro ao registrar', {variant: 'error'})
+      enqueueSnackbar('Erro ao registrar', { variant: 'error' })
     }
   }
-  
+
   useEffect(() => {
     setFieldsValid(name.length > 0 && email.length > 0 && password.length > 0)
   }, [name, email, password])
@@ -95,7 +94,8 @@ function Register() {
           Registrar
         </Button>
         <p>
-          Já tem conta?{' '}
+          Já tem conta?
+          {' '}
           <Link to="/login">
             <Box sx={{ textDecoration: 'none', color: '#676767' }}>Entrar</Box>
           </Link>

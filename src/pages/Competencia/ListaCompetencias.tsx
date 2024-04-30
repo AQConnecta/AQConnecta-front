@@ -1,14 +1,14 @@
 import { Box, Button, Typography } from '@mui/material';
 import { DataGrid, GridColDef } from '@mui/x-data-grid';
 import { useEffect, useState } from 'react';
+import { enqueueSnackbar } from 'notistack';
 import api from '../../services/api';
 import { Competencia } from '../../services/endpoints/competencia';
-import { enqueueSnackbar } from 'notistack';
 import { Usuario } from '../../services/endpoints/auth';
 
 const columns: GridColDef[] = [
-    { field: 'id', headerName: 'ID'},
-    { field: 'descricao', headerName: 'Descrição' }];
+  { field: 'id', headerName: 'ID' },
+  { field: 'descricao', headerName: 'Descrição' }];
 
 function ListCompetencia() {
   const [rows, setRows] = useState<Competencia[]>([]);
@@ -20,12 +20,12 @@ function ListCompetencia() {
 
   function reload() {
     setShouldReload((prev) => prev + 1);
-    }
+  }
 
   async function handleLinkWithMe() {
     try {
-        const competencias = []
-        selectedRows.forEach((comp) => { competencias.push({id: comp}) })
+      const competencias = []
+      selectedRows.forEach((comp) => { competencias.push({ id: comp }) })
       await api.competencia.linkCompetenciaToMe({
         competencias,
       });
@@ -41,8 +41,8 @@ function ListCompetencia() {
 
   async function handleUnlink() {
     try {
-        const competencias = []
-        selectedMyComp.forEach((comp) => { competencias.push({id: comp}) })
+      const competencias = []
+      selectedMyComp.forEach((comp) => { competencias.push({ id: comp }) })
       await api.competencia.removeCompetenciaFromMe({
         competencias,
       });
@@ -125,17 +125,17 @@ function ListCompetencia() {
         <Box width="100%" height="100%">
           <Typography variant="h4">Lista de Competências</Typography>
           <DataGrid
-          columnVisibilityModel={
-            {
-                id: false
+            columnVisibilityModel={
+              {
+                id: false,
+              }
             }
-          }
             rows={rows}
             columns={columns}
             pageSize={5}
             checkboxSelection
             onRowSelectionModelChange={(newselectedRows) => {
-                setSelectedRows(newselectedRows);
+              setSelectedRows(newselectedRows);
             }}
             rowSelectionModel={selectedRows}
             rowsPerPageOptions={[5]}
@@ -153,18 +153,18 @@ function ListCompetencia() {
         <Box width="100%" height="100%">
           <Typography variant="h4">Minhas Competências</Typography>
           <DataGrid
-          columnVisibilityModel={
-            {
-                id: false
+            columnVisibilityModel={
+              {
+                id: false,
+              }
             }
-          }
             rows={minhasCompetencias}
             columns={columns}
             pageSize={5}
             rowsPerPageOptions={[5]}
             checkboxSelection
             onRowSelectionModelChange={(newselectedRows) => {
-                setSelectedMyComp(newselectedRows);
+              setSelectedMyComp(newselectedRows);
             }}
             rowSelectionModel={selectedMyComp}
             sx={{ maxHeight: '400px', height: '100%' }}

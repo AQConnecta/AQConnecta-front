@@ -1,6 +1,6 @@
 import { Link } from 'react-router-dom';
+import { Box } from '@mui/material';
 import { Usuario } from '../../services/endpoints/auth';
-import { Box, Drawer, List, ListItem, ListItemButton, Toolbar } from '@mui/material';
 import Sidebar from '../../components/Sidebar';
 
 function Home() {
@@ -12,7 +12,7 @@ function Home() {
 
   return (
     <Box>
-        <Sidebar />
+      <Sidebar />
     </Box>
   );
 }

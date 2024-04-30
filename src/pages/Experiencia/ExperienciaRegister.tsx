@@ -1,9 +1,11 @@
-import { Box, Button, Switch, TextField, Typography } from '@mui/material';
+import {
+  Box, Button, Switch, TextField, Typography,
+} from '@mui/material';
 import { useEffect, useState } from 'react';
-import useHandleKeyPress from '../../hooks/useHandleKeyPress';
-import api from '../../services/api';
 import { useNavigate, useParams } from 'react-router-dom';
 import { useSnackbar } from 'notistack';
+import useHandleKeyPress from '../../hooks/useHandleKeyPress';
+import api from '../../services/api';
 import { Experiencia } from '../../services/endpoints/experiencia';
 
 function ExperienciaRegister() {
@@ -21,42 +23,8 @@ function ExperienciaRegister() {
   const user = JSON.parse(localStorage.getItem('user') || '{}');
   const isEdit = !!experienciaId;
 
-  useEffect(() => {
-    if (!experienciaId || !user) return;
-    async function getexperiencia() {
-      try {
-        const res = await api.experiencia.localizaExperiencia(experienciaId);
-        const exp = res.data.data;
-        exp.dataInicio = exp.dataInicio.split('T')[0];
-        if (exp.dataFim) exp.dataFim = exp.dataFim.split('T')[0];
-        setExperiencia(res.data.data);
-      } catch (err) {
-        enqueueSnackbar('Erro ao buscar endereço', { variant: 'error' });
-      }
-    }
-    getexperiencia();
-  }, [experienciaId]);
-
-  const handleKeyPress = useHandleKeyPress({
-    verification: validateFields(),
-    key: 'Enter',
-    callback: () => submitExperiencia(),
-  });
-
-  function setExperienciaValue(value: string, field: string) {
-    setExperiencia({ ...experiencia, [field]: value });
-  }
-
-  function validateFields() {
-    const { titulo, instituicao, dataInicio, dataFim, descricao } = experiencia;
-    if (experiencia.atualExperiencia) {
-      return !(titulo && instituicao && dataInicio && descricao);
-    }
-    return !(titulo && instituicao && dataInicio && dataFim && descricao);
-  }
-
   async function submitExperiencia() {
-    const newExperiencia = { ...experiencia, dataInicio: experiencia.dataInicio + 'T00:00:00', dataFim: experiencia.dataFim ? experiencia.dataFim + 'T00:00:00' : experiencia.dataFim};
+    const newExperiencia = { ...experiencia, dataInicio: `${experiencia.dataInicio}T00:00:00`, dataFim: experiencia.dataFim ? `${experiencia.dataFim}T00:00:00` : experiencia.dataFim };
     if (isEdit) {
       try {
         await api.experiencia.alterarExperiencia(experiencia.id, newExperiencia);
@@ -78,6 +46,42 @@ function ExperienciaRegister() {
     } catch (error) {
       enqueueSnackbar('Erro ao cadastrar experiência', { variant: 'error' });
     }
+  }
+
+  useEffect(() => {
+    if (!experienciaId || !user) return;
+    async function getexperiencia() {
+      try {
+        const res = await api.experiencia.localizaExperiencia(experienciaId);
+        const exp = res.data.data;
+        exp.dataInicio = exp.dataInicio.split('T')[0];
+        if (exp.dataFim) exp.dataFim = exp.dataFim.split('T')[0];
+        setExperiencia(res.data.data);
+      } catch (err) {
+        enqueueSnackbar('Erro ao buscar endereço', { variant: 'error' });
+      }
+    }
+    getexperiencia();
+  }, [experienciaId]);
+
+  function validateFields() {
+    const {
+      titulo, instituicao, dataInicio, dataFim, descricao,
+    } = experiencia;
+    if (experiencia.atualExperiencia) {
+      return !(titulo && instituicao && dataInicio && descricao);
+    }
+    return !(titulo && instituicao && dataInicio && dataFim && descricao);
+  }
+
+  const handleKeyPress = useHandleKeyPress({
+    verification: validateFields(),
+    key: 'Enter',
+    callback: () => submitExperiencia(),
+  });
+
+  function setExperienciaValue(value: string, field: string) {
+    setExperiencia({ ...experiencia, [field]: value });
   }
 
   useEffect(() => {
@@ -112,7 +116,9 @@ function ExperienciaRegister() {
         }}
       >
         <Typography variant="h6">
-          {isEdit ? 'Editar' : 'Cadastrar'} experiência
+          {isEdit ? 'Editar' : 'Cadastrar'}
+          {' '}
+          experiência
         </Typography>
         <TextField
           variant="outlined"
@@ -131,12 +137,13 @@ function ExperienciaRegister() {
           sx={{ width: '100%' }}
         />
         <Box>
-          <Box sx={{ display: 'flex', direction: 'column',alignItems: 'center', justifyContent: 'flex-end', width: '100%', paddingRight: '5px', paddingBottom: '8px' }}>
+          <Box sx={{
+            display: 'flex', direction: 'column', alignItems: 'center', justifyContent: 'flex-end', width: '100%', paddingRight: '5px', paddingBottom: '8px',
+          }}
+          >
             <Switch
               checked={experiencia.atualExperiencia}
-              onChange={(e) =>
-                setExperienciaValue(e.target.checked, 'atualExperiencia')
-              }
+              onChange={(e) => setExperienciaValue(e.target.checked, 'atualExperiencia')}
             />
             <Typography>Experiência atual</Typography>
           </Box>
@@ -151,18 +158,16 @@ function ExperienciaRegister() {
           >
             <TextField
               variant="outlined"
-              type='date'
+              type="date"
               placeholder="Data de início"
               label="Data de início"
               InputLabelProps={{ shrink: true }}
               value={experiencia.dataInicio || ''}
-              onChange={(e) =>
-                setExperienciaValue(e.target.value, 'dataInicio')
-              }
+              onChange={(e) => setExperienciaValue(e.target.value, 'dataInicio')}
               sx={{ width: '100%' }}
             />
             <TextField
-            type='date'
+              type="date"
               variant="outlined"
               placeholder="Data de fim"
               label="Data de fim"

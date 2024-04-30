@@ -1,24 +1,23 @@
-import { Box, Button, TextField } from "@mui/material";
-import { useSnackbar } from "notistack";
-import { useState } from "react";
-import api from "../../services/api";
-import { useNavigate } from "react-router-dom";
+import { Box, Button, TextField } from '@mui/material';
+import { useSnackbar } from 'notistack';
+import { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
+import api from '../../services/api';
 
 function ForgotPassword() {
-    const [email, setEmail] = useState('');
-    const {enqueueSnackbar} = useSnackbar()
-    const navigate = useNavigate()
+  const [email, setEmail] = useState('');
+  const { enqueueSnackbar } = useSnackbar()
+  const navigate = useNavigate()
 
-    async function handleForgotButtonPress() {
-        try {
-            await api.auth.forgotPassword({email})
-            enqueueSnackbar('E-mail enviado com sucesso', {variant: 'success'})
-            navigate('/login')
-        } catch (err) {
-            console.log(err)
-            enqueueSnackbar('Erro ao enviar e-mail', {variant: 'error'})
-        }
+  async function handleForgotButtonPress() {
+    try {
+      await api.auth.forgotPassword({ email })
+      enqueueSnackbar('E-mail enviado com sucesso', { variant: 'success' })
+      navigate('/login')
+    } catch (err) {
+      enqueueSnackbar('Erro ao enviar e-mail', { variant: 'error' })
     }
+  }
 
   return (
     <Box
@@ -56,7 +55,7 @@ function ForgotPassword() {
           Esqueci minha senha
         </Box>
         <Box>
-            Digite abaixo o seu e-mail para recuperar a sua senha
+          Digite abaixo o seu e-mail para recuperar a sua senha
         </Box>
         <TextField
           variant="outlined"
