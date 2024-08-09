@@ -1,45 +1,45 @@
-import { Box, Button, Typography } from '@mui/material';
-import { useEffect, useState } from 'react';
-import { enqueueSnackbar } from 'notistack';
-import { useNavigate } from 'react-router-dom';
-import api from '../../services/api';
-import { Usuario } from '../../services/endpoints/auth';
-import { Endereco } from '../../services/endpoints/endereco';
+import { Box, Button, Typography } from '@mui/material'
+import { useEffect, useState } from 'react'
+import { enqueueSnackbar } from 'notistack'
+import { useNavigate } from 'react-router-dom'
+import api from '../../services/api'
+import { Endereco } from '../../services/endpoints/endereco'
+import { useAuth } from '../../contexts/AuthContext'
 
 function MeuEndereco() {
-  const user: Usuario = JSON.parse(localStorage.getItem('user') || '{}');
-  const [enderecos, setEnderecos] = useState<Endereco[]>([]);
-  const [shouldReload, setShouldReload] = useState(0);
-  const navigate = useNavigate();
+  const { user } = useAuth()
+  const [enderecos, setEnderecos] = useState<Endereco[]>([])
+  const [shouldReload, setShouldReload] = useState(0)
+  const navigate = useNavigate()
 
   useEffect(() => {
     async function getEndereco() {
       try {
-        const res = await api.endereco.getEndereco(user.id);
-        setEnderecos(res.data.data);
+        const res = await api.endereco.getEndereco(user.id)
+        setEnderecos(res.data.data)
       } catch (err) {
-        enqueueSnackbar('Erro ao buscar endereço', { variant: 'error' });
+        enqueueSnackbar('Erro ao buscar endereço', { variant: 'error' })
       }
     }
 
-    getEndereco();
-  }, [shouldReload]);
+    getEndereco()
+  }, [shouldReload])
 
   function reload() {
-    setShouldReload((prev) => prev + 1);
+    setShouldReload((prev) => prev + 1)
   }
 
   function handleRegisterClick() {
-    navigate('register');
+    navigate('register')
   }
 
-  async function handleDelete(idEndereco:string) {
+  async function handleDelete(idEndereco: string) {
     try {
-      await api.endereco.deletarEndereco(idEndereco);
-      enqueueSnackbar('Endereço deletada com sucesso', { variant: 'success' });
+      await api.endereco.deletarEndereco(idEndereco)
+      enqueueSnackbar('Endereço deletada com sucesso', { variant: 'success' })
       reload()
     } catch (err) {
-      enqueueSnackbar('Erro ao deletar endereço', { variant: 'error' });
+      enqueueSnackbar('Erro ao deletar endereço', { variant: 'error' })
     }
   }
 
@@ -67,10 +67,12 @@ function MeuEndereco() {
           borderRadius: '5px',
         }}
       >
-        <Button variant="contained" onClick={() => navigate('register')}>Cadastrar endereço</Button>
+        <Button variant="contained" onClick={() => navigate('register')}>
+          Cadastrar endereço
+        </Button>
 
         {enderecos && enderecos.length > 0 ? (
-          enderecos.map((endereco:Endereco, index:number) => (
+          enderecos.map((endereco: Endereco, index: number) => (
             <Box key={index} sx={{ padding: '8px', border: '1px solid #000', borderRadius: '5px' }}>
               <Typography variant="h6">
                 Endereço
@@ -83,7 +85,6 @@ function MeuEndereco() {
                 </Typography>
                 <Typography variant="body1">
                   Número:
-                  {' '}
                   {endereco.numeroCasa}
                 </Typography>
                 <Typography variant="body1">
@@ -103,19 +104,16 @@ function MeuEndereco() {
                   {endereco.cep}
                 </Typography>
               </Box>
-              <Box sx={{
-                display: 'flex',
-                direction: 'column',
-                alignItems: 'center',
-                justifyContent: 'center',
-                gap: '16px',
-              }}
+              <Box
+                sx={{
+                  display: 'flex',
+                  direction: 'column',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  gap: '16px',
+                }}
               >
-                <Button
-                  variant="contained"
-                  sx={{ width: '100%', height: '50px' }}
-                  onClick={() => navigate(`register/${endereco.id}`)}
-                >
+                <Button variant="contained" sx={{ width: '100%', height: '50px' }} onClick={() => navigate(`register/${endereco.id}`)}>
                   Editar
                 </Button>
                 <Button
@@ -138,7 +136,7 @@ function MeuEndereco() {
         )}
       </Box>
     </Box>
-  );
+  )
 }
 
-export default MeuEndereco;
+export default MeuEndereco

@@ -8,7 +8,7 @@ import {
 } from '@mui/material';
 import { Link, useNavigate } from 'react-router-dom';
 import { removeBearerToken } from '../services/endpoints/_axios';
-import { Usuario } from '../services/endpoints/auth.ts';
+import { useAuth } from '../contexts/AuthContext.tsx';
 
 const routes = [
   {
@@ -26,7 +26,7 @@ const routes = [
 ]
 
 function Sidebar():React.JSX.Element {
-  const user: Usuario = JSON.parse(localStorage.getItem('user') || '');
+  const { user } = useAuth();
   const navigate = useNavigate();
   if (!user) {
     navigate('/login');

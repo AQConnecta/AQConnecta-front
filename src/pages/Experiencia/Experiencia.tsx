@@ -3,11 +3,11 @@ import { useEffect, useState } from 'react';
 import { enqueueSnackbar } from 'notistack';
 import { useNavigate } from 'react-router-dom';
 import api from '../../services/api';
-import { Usuario } from '../../services/endpoints/auth';
 import { Experiencia } from '../../services/endpoints/experiencia.ts';
+import { useAuth } from '../../contexts/AuthContext.tsx';
 
 function MinhaExperiencia() {
-  const user: Usuario = JSON.parse(localStorage.getItem('user') || '{}');
+  const { user } = useAuth();
   const [experiencias, setExperiencias] = useState<Experiencia[]>([]);
   const [shouldReload, setShouldReload] = useState(0);
   const navigate = useNavigate();
