@@ -10,7 +10,7 @@ const Container = styled.div`
   position: sticky;
   top: 0;
   left: 0;
-  width: 100vw;
+  width: 97.5%;
   z-index: 10;
 `
 

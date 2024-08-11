@@ -1,3 +1,4 @@
+/* eslint-disable no-unused-vars */
 import React, { createContext, useContext, useState, useMemo, useCallback, useEffect } from 'react'
 import { enqueueSnackbar } from 'notistack'
 import { jwtDecode } from 'jwt-decode'
@@ -21,12 +22,12 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   const [loading, setLoading] = useState(true)
 
   const checkLogged = useCallback(() => {
+    setLoading(true)
     const userFromLocalStorage = localStorage.getItem('user')
     const tokenExp = localStorage.getItem('tokenExp')
 
     if (userFromLocalStorage && tokenExp) {
       const isTokenValid = new Date() < new Date(+tokenExp * 1000)
-      
       if (isTokenValid) {
         const parsedUser = JSON.parse(userFromLocalStorage)
         setUser(parsedUser)
@@ -65,7 +66,10 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     } catch (err) {
       enqueueSnackbar('Usuário ou senha inválidos', { variant: 'error' })
       return false
+    } finally {
+      setLoading(false)
     }
+    return false
   }
 
   const value = useMemo(

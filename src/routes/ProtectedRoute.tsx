@@ -1,7 +1,7 @@
 import React from 'react';
 import { Navigate } from 'react-router-dom';
-import { useAuth } from '../contexts/AuthContext';
 import CircularProgress from '@mui/material/CircularProgress';
+import { useAuth } from '../contexts/AuthContext';
 
 type ProtectedRouteProps = {
     children: React.ReactNode

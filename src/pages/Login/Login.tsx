@@ -21,7 +21,7 @@ function Login() {
 
   return (
     <Box sx={{
-      display: 'flex', alignItems: 'center', justifyContent: 'center', flexDirection: 'column', gap: '10px', height: '100vh', width: '100vw', backgroundColor: '#f5f5f5',
+      display: 'flex', alignItems: 'center', justifyContent: 'center', flexDirection: 'column', gap: '10px', height: '98vh', backgroundColor: '#f4f2ee',
     }}
     >
       <Box sx={{

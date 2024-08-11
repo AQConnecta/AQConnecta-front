@@ -1,25 +1,16 @@
 import { Box, Typography } from '@mui/material';
-import styled from 'styled-components';
-import { colors } from '../../styles/colors';
-
-const Container = styled.div`
-    background-color: #fff;
-    border-bottom: 1px solid rgba(0, 0, 0, 0.08);
-    padding: 0px 24px;
-    position: sticky;
-    top: 0;
-    left: 0;
-    width: 70vw;
-    z-index: 10;
-`
+import Card from '../../components/Card';
 
 function Home() {
   return (
-    <Container>
-      <Box sx={{ borderBottom: '8px', backgroundColor: colors.primary, color: colors.background }}>
+    <Card sx={{ borderBottom: '1px solid #00000014', padding: '0px 24px', width: '100%', backgroundColor: 'white' }}>
+      <Box>
         <Typography variant="h1" sx={{ textDecoration: 'underline' }}>Home</Typography>
+        <Box>
+          <Box />
+        </Box>
       </Box>
-    </Container>
+    </Card>
   );
 }
 

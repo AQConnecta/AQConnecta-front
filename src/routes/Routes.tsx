@@ -21,16 +21,6 @@ const AppRoutes = () => {
         <Route path="register" element={<Register />} />
         <Route path="login" element={<Login />} />
         <Route path="forgot-password" element={<ForgotPassword />} />
-        <Route element={<HomeLayout />}>
-          <Route
-            path="home"
-            element={(
-              <ProtectedRoute>
-                <Home />
-              </ProtectedRoute>
-            )}
-          />
-        </Route>
         <Route
           path="competencias"
           element={(
@@ -113,6 +103,24 @@ const AppRoutes = () => {
             element={(
               <ProtectedRoute>
                 <FormacaoAcademicaRegister />
+              </ProtectedRoute>
+            )}
+          />
+        </Route>
+        <Route element={<HomeLayout />}>
+          <Route
+            path="home"
+            element={(
+              <ProtectedRoute>
+                <Home />
+              </ProtectedRoute>
+            )}
+          />
+          <Route
+            path=""
+            element={(
+              <ProtectedRoute>
+                <Home />
               </ProtectedRoute>
             )}
           />

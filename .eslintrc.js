@@ -37,6 +37,7 @@ module.exports = {
         "react/function-component-definition": 0,
         "import/extensions": 0,
         "react/jsx-no-undef": "error",
+        "react/require-default-props": 0,
     },
     settings: {
         react: {
