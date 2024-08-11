@@ -1,5 +1,11 @@
 import React from 'react'
 import styled from 'styled-components'
+import CompetencyCard from './CompetencyCard';
+import { useEffect, useState } from 'react';
+import { CompetenciaLevel } from '../../../services/endpoints/competencia';
+import { enqueueSnackbar } from 'notistack';
+import api from '../../../services/api';
+
 
 const Container = styled.div`
   grid-area: left;
@@ -65,7 +71,45 @@ const AddPhotoText = styled.div`
   font-weight: 400;
 `
 
+const competencies = [
+  {
+    competencia: { id: '1', descricao: 'PHP' },
+    level: 2,
+  },
+  {
+    competencia: { id: '2', descricao: 'Java' },
+    level: 4,
+  },
+  {
+    competencia: { id: '3', descricao: 'JavaScript' },
+    level: 1,
+  },
+];
+
+
 function Left() {
+  const [competenciasLevel, setCompetenciasLevel] = useState<CompetenciaLevel[]>([]);
+  const [shouldReload, setShouldReload] = useState(0);
+
+  useEffect(() => {
+    async function getFormacaoAcademica() {
+      try {
+        const res = await api.competencia.listHotCompetencies();
+        console.log(res.data.data)
+        setCompetenciasLevel(res.data.data);
+      } catch (err) {
+        enqueueSnackbar('Erro ao buscar as competencias mais usadas', { variant: 'error' });
+      }
+    }
+
+    getFormacaoAcademica();
+  }, [shouldReload]);
+
+  function reload() {
+    setShouldReload((prev) => prev + 1);
+  }
+
+
   return (
     <Container>
       <ArtCard>
@@ -90,6 +134,9 @@ function Left() {
               <img src="/images/widget-icon.svg" alt="" />
             </a>
           </Widget> */}
+      </ArtCard>
+      <ArtCard>
+        <CompetencyCard competencies={competenciasLevel} />
       </ArtCard>
     </Container>
   )
