@@ -75,8 +75,7 @@ function MeuEndereco() {
           enderecos.map((endereco: Endereco, index: number) => (
             <Box key={index} sx={{ padding: '8px', border: '1px solid #000', borderRadius: '5px' }}>
               <Typography variant="h6">
-                Endereço
-                {index + 1}
+                Endereço {index + 1}
               </Typography>
               <Box sx={{ padding: '8px' }}>
                 <Typography variant="body1">

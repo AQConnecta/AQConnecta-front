@@ -23,6 +23,10 @@ const routes = [
     path: '/experiencias',
     label: 'Experiencias',
   },
+  {
+    path: '/formacoes_academicas',
+    label: 'Formações Academicas',
+  },
 ]
 
 function Sidebar():React.JSX.Element {
@@ -64,7 +68,7 @@ function Sidebar():React.JSX.Element {
         >
           <Box>
             <Box>
-              Olá,
+              Olá, 
               {user.nome}
             </Box>
           </Box>

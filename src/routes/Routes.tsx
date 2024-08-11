@@ -11,6 +11,8 @@ import MinhaExperiencia from '../pages/Experiencia/Experiencia.tsx'
 import ExperienciaRegister from '../pages/Experiencia/ExperienciaRegister.tsx'
 import ProtectedRoute from './ProtectedRoute.tsx'
 import Home from '../pages/Home/Home.tsx'
+import MinhaFormacaoAcademica from '../pages/FormacaoAcademica/FormacaoAcademica.tsx'
+import FormacaoAcademicaRegister from '../pages/FormacaoAcademica/FormacaoAcademicaRegister.tsx'
 
 const AppRoutes = () => {
   return (
@@ -85,6 +87,32 @@ const AppRoutes = () => {
             element={(
               <ProtectedRoute>
                 <EnderecoRegister />
+              </ProtectedRoute>
+            )}
+          />
+        </Route>
+        <Route path="formacoes_academicas">
+          <Route
+            index
+            element={(
+              <ProtectedRoute>
+                <MinhaFormacaoAcademica />
+              </ProtectedRoute>
+            )}
+          />
+          <Route
+            path="register"
+            element={(
+              <ProtectedRoute>
+                <FormacaoAcademicaRegister />
+              </ProtectedRoute>
+            )}
+          />
+          <Route
+            path="register/:id"
+            element={(
+              <ProtectedRoute>
+                <FormacaoAcademicaRegister />
               </ProtectedRoute>
             )}
           />

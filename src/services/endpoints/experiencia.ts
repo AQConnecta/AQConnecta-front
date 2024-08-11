@@ -21,11 +21,11 @@ export class ExperienciaEndpoint {
     return await axios.post(`${PREFIX}/cadastrar`, data)
    }
 
-   async alterarExperiencia(idUsuario:string ,data: Experiencia) {
-    return await axios.put(`${PREFIX}/alterar/${idUsuario}`, data)
+   async alterarExperiencia(idExperiencia: string ,data: Experiencia) {
+    return await axios.put(`${PREFIX}/alterar/${idExperiencia}`, data)
    }
 
-   async deletarExperiencia(idExperiencia:string) {
+   async deletarExperiencia(idExperiencia: string) {
     return await axios.delete(`${PREFIX}/deletar/${idExperiencia}`)
    }
 

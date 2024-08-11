@@ -3,26 +3,27 @@ import { useEffect, useState } from 'react';
 import { enqueueSnackbar } from 'notistack';
 import { useNavigate } from 'react-router-dom';
 import api from '../../services/api';
-import { Experiencia } from '../../services/endpoints/experiencia.ts';
+import { FormacaoAcademica, Universidade } from '../../services/endpoints/formacaoAcademica.ts';
 import { useAuth } from '../../contexts/AuthContext.tsx';
 
-function MinhaExperiencia() {
+function MinhaFormacaoAcademica() {
   const { user } = useAuth();
-  const [experiencias, setExperiencias] = useState<Experiencia[]>([]);
+  const [formacoesAcademicas, setFormacoesAcademicas] = useState<FormacaoAcademica[]>([]);
   const [shouldReload, setShouldReload] = useState(0);
   const navigate = useNavigate();
 
   useEffect(() => {
-    async function getExperiencia() {
+    async function getFormacaoAcademica() {
       try {
-        const res = await api.experiencia.getExperiencia(user.id);
-        setExperiencias(res.data.data);
+        const res = await api.formacaoAcademica.getFormacaoAcademica(user.id);
+        console.log(res.data.data)
+        setFormacoesAcademicas(res.data.data);
       } catch (err) {
         enqueueSnackbar('Erro ao buscar experiencia', { variant: 'error' });
       }
     }
 
-    getExperiencia();
+    getFormacaoAcademica();
   }, [shouldReload]);
 
   function reload() {
@@ -34,13 +35,13 @@ function MinhaExperiencia() {
     return new Date(dateString).toLocaleDateString('pt-BR', options);
   };
 
-  async function handleDelete(idExperiencia: string) {
+  async function handleDelete(idFormacaoAcademica: string) {
     try {
-      await api.experiencia.deletarExperiencia(idExperiencia);
-      enqueueSnackbar('Experiência deletada com sucesso', { variant: 'success' });
+      await api.formacaoAcademica.deletarFormacaoAcademica(idFormacaoAcademica);
+      enqueueSnackbar('Formação Academica deletada com sucesso', { variant: 'success' });
       reload()
     } catch (err) {
-      enqueueSnackbar('Erro ao deletar experiência', { variant: 'error' });
+      enqueueSnackbar('Erro ao deletar formação', { variant: 'error' });
     }
   }
 
@@ -55,7 +56,7 @@ function MinhaExperiencia() {
         flexDirection: 'column',
       }}
     >
-      <Button variant="contained" onClick={() => navigate('register')}>Cadastrar experiência</Button>
+      <Button variant="contained" onClick={() => navigate('register')}>Cadastrar formação academica</Button>
 
       <Box
         width="100%"
@@ -65,31 +66,33 @@ function MinhaExperiencia() {
           gap: '10px',
           boxShadow: '0 1px 2px #0003',
           backgroundColor: 'white',
-          maxWidth: '350px',
+          maxWidth: '500px',
           padding: '20px',
           borderRadius: '5px',
         }}
       >
-        {experiencias && experiencias.length > 0 ? (
-          experiencias.map((experiencia, index) => (
+        {formacoesAcademicas && formacoesAcademicas.length > 0 ? (
+          formacoesAcademicas.map((formacaoAcademica, index) => (
             <Box key={index} sx={{ padding: '8px', border: '1px solid #000', borderRadius: '5px' }}>
               <Typography variant="h6">
-                Experiência {index + 1}
+                Formação {index + 1}
               </Typography>
               <Typography variant="body1">
-                {experiencia.titulo}
+                {formacaoAcademica.descricao}
                 {' '}
                 -
                 {' '}
-                {experiencia.instituicao}
+                {formacaoAcademica.universidade.nomeInstituicao}
               </Typography>
               <Typography
                 variant="body1"
               >
-                {formatDate(experiencia.dataInicio)}
+                {formatDate(formacaoAcademica.dataInicio)}
                 {' '}
                 -
-                {experiencia.atualExperiencia ? 'até o momento' : formatDate(experiencia.dataFim)}
+                {' '}
+                {formatDate(formacaoAcademica.dataFim)}
+                {formacaoAcademica.atualFormacao ? ' - Cursando' : ''}
               </Typography>
               <hr
                 style={{
@@ -97,15 +100,15 @@ function MinhaExperiencia() {
                   backgroundColor: 'red',
                 }}
               />
-              <Typography variant="body1">{experiencia.descricao}</Typography>
+              {/* <Typography variant="body1">{formacaoAcademica.descricao}</Typography> */}
               <Box sx={{
                 display: 'flex', direction: 'column', alignItems: 'center', justifyContent: 'center', gap: '16px',
               }}
               >
-                <Button variant="contained" sx={{ width: '100%', height: '50px' }} onClick={() => navigate(`register/${experiencia.id}`)}>
+                <Button variant="contained" sx={{ width: '100%', height: '50px' }} onClick={() => navigate(`register/${formacaoAcademica.id}`)}>
                   Editar
                 </Button>
-                <Button variant="contained" sx={{ width: '100%', height: '50px', backgroundColor: 'tomato' }} onClick={() => handleDelete(experiencia.id!)}>
+                <Button variant="contained" sx={{ width: '100%', height: '50px', backgroundColor: 'tomato' }} onClick={() => handleDelete(formacaoAcademica.id!)}>
                   Excluir
                 </Button>
               </Box>
@@ -113,7 +116,7 @@ function MinhaExperiencia() {
           ))
         ) : (
           <Box>
-            <Typography variant="body1">Sem experiências até o momento</Typography>
+            <Typography variant="body1">Sem formações até o momento</Typography>
           </Box>
         )}
       </Box>
@@ -121,4 +124,4 @@ function MinhaExperiencia() {
   );
 }
 
-export default MinhaExperiencia;
+export default MinhaFormacaoAcademica;

@@ -1,4 +1,4 @@
-import React, { createContext, useContext, useState, useMemo, useCallback } from 'react'
+import React, { createContext, useContext, useState, useMemo, useCallback, useEffect } from 'react'
 import { enqueueSnackbar } from 'notistack'
 import { jwtDecode } from 'jwt-decode'
 import { Usuario } from '../services/endpoints/auth'
@@ -7,10 +7,10 @@ import api from '../services/api'
 
 type AuthData = {
   user: Usuario | null
-  // eslint-disable-next-line no-unused-vars
   handleLogin: (email: string, password: string) => Promise<boolean>
   isLogged: boolean
   checkLogged: () => boolean
+  loading: boolean
 }
 
 export const AuthContext = createContext<AuthData>({} as AuthData)
@@ -18,20 +18,34 @@ export const AuthContext = createContext<AuthData>({} as AuthData)
 export function AuthProvider({ children }: { children: React.ReactNode }) {
   const [user, setUser] = useState<Usuario | null>(null)
   const [isLogged, setIsLogged] = useState(false)
+  const [loading, setLoading] = useState(true)
 
   const checkLogged = useCallback(() => {
     const userFromLocalStorage = localStorage.getItem('user')
-    if (userFromLocalStorage) {
-      setUser(JSON.parse(userFromLocalStorage))
+    const tokenExp = localStorage.getItem('tokenExp')
+
+    if (userFromLocalStorage && tokenExp) {
+      const isTokenValid = new Date() < new Date(+tokenExp * 1000)
+      
+      if (isTokenValid) {
+        const parsedUser = JSON.parse(userFromLocalStorage)
+        setUser(parsedUser)
+        setIsLogged(true)
+        setBearerToken(localStorage.getItem('token') || '')
+        setLoading(false)
+        return true
+      }
     }
-    if (!user && new Date() > new Date(+localStorage.getItem('tokenExp') * 1000)) {
-      setUser(null)
-      setIsLogged(false)
-      return false
-    }
-    setIsLogged(true)
-    return true
-  }, [user, setUser])
+
+    setUser(null)
+    setIsLogged(false)
+    setLoading(false)
+    return false
+  }, [])
+
+  useEffect(() => {
+    checkLogged()
+  }, [checkLogged])
 
   const handleLogin = async (email: string, password: string) => {
     try {
@@ -39,10 +53,11 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       const userRaw = res.data
       if (userRaw) {
         localStorage.setItem('token', userRaw.token)
+        localStorage.setItem('user', JSON.stringify(userRaw.usuario))
         setUser(userRaw.usuario)
         setIsLogged(true)
         setBearerToken(userRaw.token)
-        const decoded = jwtDecode(userRaw.token)
+        const decoded: any = jwtDecode(userRaw.token)
         const exp = decoded.exp
         localStorage.setItem('tokenExp', exp.toString())
         return true
@@ -59,8 +74,9 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       handleLogin,
       isLogged,
       checkLogged,
+      loading,
     }),
-    [user, isLogged],
+    [user, isLogged, loading],
   )
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>
