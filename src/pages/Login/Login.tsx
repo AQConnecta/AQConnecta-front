@@ -1,30 +1,18 @@
 import { Box, Button, TextField } from '@mui/material';
 import { useEffect, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom'
-import { useSnackbar } from 'notistack';
-import api from '../../services/api';
-import { setBearerToken } from '../../services/endpoints/_axios';
+import { useAuth } from '../../contexts/AuthContext';
 
 function Login() {
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
   const [validFields, setValidFields] = useState(false)
-  const { enqueueSnackbar } = useSnackbar()
+  const { handleLogin } = useAuth()
   const navigate = useNavigate()
 
-  async function handleLogin() {
-    try {
-      const res = await api.auth.login({ email, senha: password })
-      const user = res.data
-      if (user) {
-        localStorage.setItem('token', user.token)
-        localStorage.setItem('user', JSON.stringify(user.usuario))
-        setBearerToken(user.token)
-        navigate('/home')
-      }
-    } catch (err) {
-      enqueueSnackbar('Usuário ou senha inválidos', { variant: 'error' })
-    }
+  async function handleClickLogin() {
+    const logged = await handleLogin(email, password)
+    if (logged) navigate('/home')
   }
 
   useEffect(() => {
@@ -33,7 +21,7 @@ function Login() {
 
   return (
     <Box sx={{
-      display: 'flex', alignItems: 'center', justifyContent: 'center', flexDirection: 'column', gap: '10px', height: '100vh',
+      display: 'flex', alignItems: 'center', justifyContent: 'center', flexDirection: 'column', gap: '10px', height: '98vh', backgroundColor: '#f4f2ee',
     }}
     >
       <Box sx={{
@@ -49,7 +37,7 @@ function Login() {
         <TextField variant="outlined" placeholder="Digite seu E-mail" label="E-mail" onChange={(e) => setEmail(e.target.value)} sx={{ width: '100%' }} />
         <TextField variant="outlined" type="password" placeholder="Senha" label="Senha" onChange={(e) => setPassword(e.target.value)} sx={{ width: '100%' }} />
         <Box sx={{ alignSelf: 'flex-end' }}><Link to="/forgot-password">Esqueci minha senha</Link></Box>
-        <Button variant="contained" onClick={() => handleLogin()} sx={{ width: '100%', height: '50px' }} disabled={!validFields}>Entrar</Button>
+        <Button variant="contained" onClick={() => handleClickLogin()} sx={{ width: '100%', height: '50px' }} disabled={!validFields}>Entrar</Button>
         <p>
           Não tem conta?
           <Link to="/register"><Box sx={{ textDecoration: 'none', color: '#676767' }}>Registre-se</Box></Link>

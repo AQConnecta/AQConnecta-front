@@ -7,6 +7,11 @@ export type Competencia = {
     descricao: string
 }
 
+export type CompetenciaLevel = {
+    competencia: Competencia,
+    level: number
+}
+
 export class CompetenciaEndpoint {
     async listAll(): Promise<AxiosResponse<Array<Competencia>>> {
         return await axios.get(`${PREFIX}/listar`)
@@ -22,5 +27,9 @@ export class CompetenciaEndpoint {
 
     async removeCompetenciaFromMe(data: {competencias: Array<{id: string}>}): Promise<any> {
         return await axios.delete(`${PREFIX}/remover_relacao_usuario`, { data })
+    }
+    
+    async listHotCompetencies(): Promise<AxiosResponse<Array<CompetenciaLevel>>> {
+        return await axios.get(`${PREFIX}/competencias_quentes`)
     }
 }

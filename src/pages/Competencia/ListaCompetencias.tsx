@@ -10,7 +10,7 @@ import { useEffect, useState } from 'react'
 import { enqueueSnackbar } from 'notistack'
 import api from '../../services/api'
 import { Competencia } from '../../services/endpoints/competencia'
-import { Usuario } from '../../services/endpoints/auth'
+import { useAuth } from '../../contexts/AuthContext'
 
 const columns: GridColDef[] = [
   { field: 'id', headerName: 'ID' },
@@ -23,7 +23,7 @@ function ListCompetencia() {
   const [shouldReload, setShouldReload] = useState(0)
   const [selectedRows, setSelectedRows] = useState<GridRowSelectionModel>([])
   const [selectedMyComp, setSelectedMyComp] = useState<GridRowSelectionModel>([])
-  const user: Usuario = JSON.parse(localStorage.getItem('user') || '{}')
+  const { user } = useAuth()
 
   function reload() {
     setShouldReload((prev) => prev + 1)

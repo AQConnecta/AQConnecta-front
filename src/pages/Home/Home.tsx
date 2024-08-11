@@ -1,19 +1,16 @@
-import { Link } from 'react-router-dom';
-import { Box } from '@mui/material';
-import { Usuario } from '../../services/endpoints/auth';
-import Sidebar from '../../components/Sidebar';
+import { Box, Typography } from '@mui/material';
+import Card from '../../components/Card';
 
 function Home() {
-  const user: Usuario = JSON.parse(localStorage.getItem('user') || '');
-
-  if (!user) {
-    return <Link to="/login">Login</Link>;
-  }
-
   return (
-    <Box>
-      <Sidebar />
-    </Box>
+    <Card sx={{ borderBottom: '1px solid #00000014', padding: '0px 24px', width: '100%', backgroundColor: 'white' }}>
+      <Box>
+        <Typography variant="h1" sx={{ textDecoration: 'underline' }}>Home</Typography>
+        <Box>
+          <Box />
+        </Box>
+      </Box>
+    </Card>
   );
 }
 
