@@ -74,7 +74,9 @@ function MinhaExperiencia() {
           experiencias.map((experiencia, index) => (
             <Box key={index} sx={{ padding: '8px', border: '1px solid #000', borderRadius: '5px' }}>
               <Typography variant="h6">
-                Experiência {index + 1}
+                Experiência
+                {' '}
+                {index + 1}
               </Typography>
               <Typography variant="body1">
                 {experiencia.titulo}

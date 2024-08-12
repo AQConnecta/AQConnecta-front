@@ -1,6 +1,6 @@
 import styled from 'styled-components';
 import { Box, Typography } from '@mui/material';
-import { CompetenciaLevel } from '../../../services/endpoints/competencia';
+import { CompetenciaLevel } from '../../services/endpoints/competencia';
 
 const CompetencyContainer = styled.div`
   display: flex;

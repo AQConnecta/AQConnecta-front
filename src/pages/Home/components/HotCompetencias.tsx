@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import styled from 'styled-components'
 import { enqueueSnackbar } from 'notistack';
-import CompetencyCard from './CompetencyCard';
+import CompetencyCard from '../../../layout/components/CompetencyCard';
 import { CompetenciaLevel } from '../../../services/endpoints/competencia';
 import api from '../../../services/api';
 
@@ -62,7 +62,7 @@ const competencies = [
   },
 ];
 
-function Left() {
+function HotCompentencias() {
   const [competenciasLevel, setCompetenciasLevel] = useState<CompetenciaLevel[]>(competencies);
 
   useEffect(() => {
@@ -90,4 +90,4 @@ function Left() {
   )
 }
 
-export default Left
+export default HotCompentencias

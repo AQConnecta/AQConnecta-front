@@ -1,7 +1,7 @@
 /* eslint-disable jsx-a11y/anchor-is-valid */
 import React from 'react'
 import styled from 'styled-components'
-import LogoSvg from '../../../../public/AqConnectaIcon.svg'
+import LogoSvg from '../../../public/AqConnectaIcon.svg'
 
 const Container = styled.div`
   background-color: #fff;
