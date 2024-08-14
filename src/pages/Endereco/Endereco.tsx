@@ -115,7 +115,7 @@ function MeuEndereco() {
                 }}
               >
                 {/*<Button variant="contained" sx={{ width: '100%', height: '50px',  display: 'flex', alignItems: 'center', justifyContent: 'space-between' }} onClick={() => navigate(`register/${endereco.id}`)}>*/}
-                <Button variant="contained" sx={{ width: '100%', height: '50px',  display: 'flex', alignItems: 'center', justifyContent: 'space-between', backgroundColor: '#fff', color: '#000', border: '1px solid white',  '&:hover':{backgroundColor: '#fff', border: '1px solid green', color: 'green'}}} onClick={() => navigate(`register/${endereco.id}`)}>
+                <Button variant="contained" sx={{ width: '100%', height: '50px',  display: 'flex', alignItems: 'center', justifyContent: 'space-between', backgroundColor: '#fff', color: '#000', border: '1px solid black',  '&:hover':{backgroundColor: '#fff', border: '1px solid green', color: 'green'}}} onClick={() => navigate(`register/${endereco.id}`)}>
                 <Typography>  
                      Editar
                   </Typography>
@@ -123,7 +123,7 @@ function MeuEndereco() {
                 </Button>
                 <Button
                   variant="contained"
-                  sx={{ width: '100%', height: '50px',  display: 'flex', alignItems: 'center', justifyContent: 'space-between',  backgroundColor: '#fff', color: '#000', border: '1px solid white',  '&:hover':{backgroundColor: '#fff', border: '1px solid red', color: 'red'}}}
+                  sx={{ width: '100%', height: '50px',  display: 'flex', alignItems: 'center', justifyContent: 'space-between',  backgroundColor: '#fff', color: '#000', border: '1px solid black',  '&:hover':{backgroundColor: '#fff', border: '1px solid red', color: 'red'}}}
                   onClick={() => handleDelete(endereco.id!)}
                 >
                   <Typography>  
