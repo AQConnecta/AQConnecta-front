@@ -1,6 +1,5 @@
 #root {
   all: unset;
-  overflow-x: hidden;
   height: 100vh;
   width: 100%;
   max-width: 100%;

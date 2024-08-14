@@ -1,7 +1,9 @@
 import {
   Box,
+  Button,
   Chip,
   Dialog,
+  DialogActions,
   DialogContent,
   DialogTitle,
   FormControl,
@@ -17,12 +19,15 @@ import {
 } from '@mui/material'
 // eslint-disable-next-line import/no-extraneous-dependencies
 import CloseIcon from '@mui/icons-material/Close'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
+import { useSnackbar } from 'notistack'
 import { Vaga } from '../../../services/endpoints/vaga'
+import api from '../../../services/api'
 
 type VagaModalProps = {
   isOpen: boolean
   handleClose: () => void
+  vagaToEdit?: Vaga | null
 }
 
 const MenuProps = {
@@ -34,14 +39,65 @@ const MenuProps = {
   },
 }
 
+const vagaDefaultValues: Vaga = {
+  titulo: '',
+  descricao: '',
+  localDaVaga: '',
+  aceitaRemoto: false,
+  dataLimiteCandidatura: '',
+}
+
 function VagaModal(props: VagaModalProps) {
-  const { isOpen, handleClose } = props
-  const [vaga, setVaga] = useState<Vaga>({} as Vaga)
-  const [competencias, setCompetencias] = useState<string[]>([])
+  const { isOpen, handleClose, vagaToEdit } = props
+  const [vaga, setVaga] = useState<Vaga>(vagaToEdit || vagaDefaultValues)
+  const [competenciasList, setCompetenciasList] = useState<string[]>([])
+  const [competencias, setCompetencias] = useState(vagaToEdit?.competencias || [])
+  const [reload, setReload] = useState(0)
+  const { enqueueSnackbar } = useSnackbar()
 
   function setVagaValue(value: string, field: string) {
     setVaga({ ...vaga, [field]: value })
   }
+
+  function clearFields() {
+    setVaga(vagaDefaultValues)
+    setCompetencias([])
+  }
+
+  function onClose() {
+    clearFields()
+    handleClose()
+  }
+
+  useEffect(() => {
+    console.log(competencias)
+    console.log(vagaToEdit)
+  }, [competencias])
+
+  async function handleSubmit() {
+    try {
+      const vagaResponse = await api.vaga.cadastrarVaga({ ...vaga, atualizadoEm: new Date().toISOString(), criadoEm: new Date().toISOString(), dataLimiteCandidatura: `${vaga.dataLimiteCandidatura}T00:00:00`, competencias })
+      const vagaId = vagaResponse.data.data.id
+      await api.competencia.linkCompetenciaVaga({ competencias, idVaga: vagaId })
+      enqueueSnackbar('Vaga criada com sucesso', { variant: 'success' })
+      onClose()
+    } catch (error) {
+      enqueueSnackbar('Erro ao criar vaga', { variant: 'error' })
+    }
+  }
+
+  useEffect(() => {
+    async function loadCompetencias() {
+      try {
+        const competenciasListRaw = await api.competencia.listAll()
+        setCompetenciasList(competenciasListRaw.data.data)
+      } catch (error) {
+        enqueueSnackbar('Erro ao carregar competências', { variant: 'error' })
+        setReload((prev) => prev + 1)
+      }
+    }
+    loadCompetencias()
+  }, [reload])
 
   const handleChange = (event: SelectChangeEvent<typeof competencias>) => {
     const {
@@ -51,83 +107,83 @@ function VagaModal(props: VagaModalProps) {
   }
 
   return (
-    <Dialog open={isOpen} onClose={() => handleClose()}>
+    <Dialog open={isOpen} onClose={() => onClose()}>
       <DialogTitle>
         <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', width: '100%', gap: '8px', padding: '8px' }}>
           Nova vaga
-          <IconButton onClick={() => handleClose()}>
+          <IconButton onClick={() => onClose()}>
             <CloseIcon />
           </IconButton>
         </Box>
       </DialogTitle>
       <DialogContent>
-        <FormControl>
-          <Box
-            sx={{
-              display: 'flex',
-              flexDirection: 'column',
-              justifyContent: 'center',
-              alignItems: 'flex-start',
-              gap: '32px',
-              maxWidth: '500px',
-              padding: '8px',
-            }}
-          >
-            <Box sx={{ display: 'flex', flexDirection: 'row', justifyContent: 'center', alignItems: 'center', gap: '16px' }}>
-              <TextField
-                variant="outlined"
-                placeholder="Título da vaga"
-                label="Titulo"
-                value={vaga.titulo}
-                onChange={(e) => setVagaValue(e.target.value, 'titulo')}
-                sx={{ width: '100%' }}
-              />
-              <TextField
-                variant="outlined"
-                placeholder="Cidade da vaga"
-                label="Cidade"
-                value={vaga.localDaVaga}
-                onChange={(e) => setVagaValue(e.target.value, 'localDaVaga')}
-                sx={{ width: '100%' }}
-              />
-            </Box>
+        <Box
+          sx={{
+            display: 'flex',
+            flexDirection: 'column',
+            justifyContent: 'center',
+            alignItems: 'flex-start',
+            gap: '32px',
+            maxWidth: '500px',
+            padding: '8px',
+          }}
+        >
+          <Box sx={{ display: 'flex', flexDirection: 'row', justifyContent: 'center', alignItems: 'center', gap: '16px' }}>
             <TextField
-              multiline
-              rows={3}
               variant="outlined"
-              placeholder="Descrição da vaga"
-              label="Descrição"
-              value={vaga.descricao}
-              onChange={(e) => setVagaValue(e.target.value, 'descricao')}
-              sx={{ width: '100%', height: '100px' }}
+              placeholder="Título da vaga"
+              label="Titulo"
+              value={vaga.titulo}
+              onChange={(e) => setVagaValue(e.target.value, 'titulo')}
+              sx={{ width: '100%' }}
             />
-            <Box sx={{ display: 'flex', flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', gap: '16px', width: '100%' }}>
-              <TextField
-                variant="outlined"
-                type="date"
-                placeholder="Data limite para candidatura"
-                label="Data limite"
-                InputLabelProps={{ shrink: true }}
-                value={vaga.dataLimiteCandidatura || ''}
-                onChange={(e) => setVagaValue(e.target.value, 'dataLimiteCandidatura')}
-                sx={{ width: '100%' }}
-              />
-              <Box
-                sx={{
-                  display: 'flex',
-                  direction: 'column',
-                  alignItems: 'center',
-                  justifyContent: 'flex-end',
-                  width: '100%',
-                  paddingRight: '5px',
-                  paddingBottom: '8px',
-                }}
-              >
-                <Switch checked={vaga.aceitaRemoto} onChange={() => setVagaValue(!vaga.aceitaRemoto, 'aceitaRemoto')} />
-                <Typography>Aceita remoto</Typography>
-              </Box>
+            <TextField
+              variant="outlined"
+              placeholder="Cidade da vaga"
+              label="Cidade"
+              value={vaga.localDaVaga}
+              onChange={(e) => setVagaValue(e.target.value, 'localDaVaga')}
+              sx={{ width: '100%' }}
+            />
+          </Box>
+          <TextField
+            multiline
+            rows={3}
+            variant="outlined"
+            placeholder="Descrição da vaga"
+            label="Descrição"
+            value={vaga.descricao}
+            onChange={(e) => setVagaValue(e.target.value, 'descricao')}
+            sx={{ width: '100%', height: '100px' }}
+          />
+          <Box sx={{ display: 'flex', flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', gap: '16px', width: '100%' }}>
+            <TextField
+              variant="outlined"
+              type="date"
+              placeholder="Data limite para candidatura"
+              label="Data limite"
+              InputLabelProps={{ shrink: true }}
+              value={vaga.dataLimiteCandidatura || ''}
+              onChange={(e) => setVagaValue(e.target.value, 'dataLimiteCandidatura')}
+              sx={{ width: '100%' }}
+            />
+            <Box
+              sx={{
+                display: 'flex',
+                direction: 'column',
+                alignItems: 'center',
+                justifyContent: 'flex-end',
+                width: '100%',
+                paddingRight: '5px',
+                paddingBottom: '8px',
+              }}
+            >
+              <Switch checked={vaga.aceitaRemoto} onChange={() => setVagaValue(!vaga.aceitaRemoto, 'aceitaRemoto')} />
+              <Typography>Aceita remoto</Typography>
             </Box>
+          </Box>
 
+          <FormControl fullWidth>
             <InputLabel htmlFor="demo-multiple-chip" id="demo-multiple-chip-label">Competências relacionadas</InputLabel>
             <Select
               labelId="demo-multiple-chip-label"
@@ -141,19 +197,37 @@ function VagaModal(props: VagaModalProps) {
               renderValue={(selected) => (
                 <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 0.5 }}>
                   {selected.map((value) => (
-                    <Chip key={value} label={value} />
+                    <Chip key={value} label={value.descricao} />
                   ))}
                 </Box>
               )}
               MenuProps={MenuProps}
             >
-              <MenuItem value="CLT">CLT</MenuItem>
-              <MenuItem value="PJ">PJ</MenuItem>
-              <MenuItem value="Estágio">Estágio</MenuItem>
+              {competenciasList.map((competencia) => (
+                <MenuItem key={competencia.id} value={competencia}>
+                  {competencia.descricao}
+                </MenuItem>
+              ))}
             </Select>
-          </Box>
-        </FormControl>
+          </FormControl>
+        </Box>
       </DialogContent>
+      <DialogActions>
+        <Box sx={{ display: 'flex', flexDirection: 'row', justifyContent: 'flex-end', alignItems: 'flex-end', gap: '32px', width: '100%', padding: '0px 24px 16px 24px' }}>
+          <Box sx={{ display: 'flex', flexDirection: 'row', justifyContent: 'flex-end', alignItems: 'flex-end', gap: '16px' }}>
+            <Button onClick={() => onClose()} color="primary" variant="outlined">
+              Cancelar
+            </Button>
+            <Button
+              onClick={() => handleSubmit()}
+              color="primary"
+              variant="contained"
+            >
+              Criar
+            </Button>
+          </Box>
+        </Box>
+      </DialogActions>
     </Dialog>
   )
 }

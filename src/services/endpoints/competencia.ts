@@ -32,4 +32,8 @@ export class CompetenciaEndpoint {
     async listHotCompetencies(): Promise<AxiosResponse<Array<CompetenciaLevel>>> {
         return await axios.get(`${PREFIX}/competencias_quentes`)
     }
+
+    async linkCompetenciaVaga(data: {competencias: Array<string>, idVaga: string}): Promise<any> {
+        return await axios.post(`${PREFIX}/relacionar_competencia_vaga`, data)
+    }
 }

@@ -19,7 +19,7 @@ const Layout = styled.div`
 
 function HomeLayout() {
   return (
-    <Box sx={{ backgroundColor: '#f4f2ee', height: '100vh', overflow: 'hidden' }}>
+    <Box sx={{ backgroundColor: '#f4f2ee', height: '100vh' }}>
       <Header />
       <Layout>
         <Left />

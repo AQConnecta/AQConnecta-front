@@ -1,5 +1,6 @@
 import axios from './_axios'
 import { Usuario } from './auth'
+import { Competencia } from './competencia'
 
 const PREFIX = '/vaga'
 
@@ -14,6 +15,7 @@ export type Vaga = {
     criadoEm: Date
     atualizadoEm: Date
     deletadoEm: Date
+    competencias?: Array<Competencia>
 }
 
 export class VagaEndpoint {
