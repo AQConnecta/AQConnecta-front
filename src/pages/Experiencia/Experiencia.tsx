@@ -5,6 +5,7 @@ import { useNavigate } from 'react-router-dom';
 import api from '../../services/api';
 import { Experiencia } from '../../services/endpoints/experiencia.ts';
 import { useAuth } from '../../contexts/AuthContext.tsx';
+import { FaTrash, FaPencil  } from "react-icons/fa6";
 
 function MinhaExperiencia() {
   const { user } = useAuth();
@@ -53,9 +54,25 @@ function MinhaExperiencia() {
         alignItems: 'center',
         justifyContent: 'center',
         flexDirection: 'column',
+        gap: '15px',
+        padding: '10px',
       }}
     >
-      <Button variant="contained" onClick={() => navigate('register')}>Cadastrar experiência</Button>
+      <Box sx={{
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center',
+        flexDirection: 'column',
+      }}>
+        <Typography fontWeight='bold' fontSize='40px' variant="h1">
+        Experiências
+        </Typography>
+
+        <Typography color='grey'>
+        Destaque suas conquistas!
+        </Typography>
+      </Box>
+      <Button variant="contained" onClick={() => navigate('register')}>Adicionar experiência</Button>
 
       <Box
         width="100%"
@@ -91,6 +108,7 @@ function MinhaExperiencia() {
                 {formatDate(experiencia.dataInicio)}
                 {' '}
                 -
+                {' '}
                 {experiencia.atualExperiencia ? 'até o momento' : formatDate(experiencia.dataFim)}
               </Typography>
               <hr
@@ -104,11 +122,17 @@ function MinhaExperiencia() {
                 display: 'flex', direction: 'column', alignItems: 'center', justifyContent: 'center', gap: '16px',
               }}
               >
-                <Button variant="contained" sx={{ width: '100%', height: '50px' }} onClick={() => navigate(`register/${experiencia.id}`)}>
-                  Editar
+                <Button variant="contained" sx={{ width: '100%', height: '50px', display: 'flex', alignItems: 'center', justifyContent: 'space-between'}} onClick={() => navigate(`register/${experiencia.id}`)}>
+                  <Typography>  
+                     Editar
+                  </Typography>
+                  <FaPencil />
                 </Button>
-                <Button variant="contained" sx={{ width: '100%', height: '50px', backgroundColor: 'tomato' }} onClick={() => handleDelete(experiencia.id!)}>
-                  Excluir
+                <Button variant="contained" sx={{ width: '100%', height: '50px', backgroundColor: 'tomato', display: 'flex', alignItems: 'center', justifyContent: 'space-between'}} onClick={() => handleDelete(experiencia.id!)}>
+                <Typography>  
+                    Excluir
+                </Typography>
+                  <FaTrash />
                 </Button>
               </Box>
             </Box>

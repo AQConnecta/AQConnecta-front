@@ -40,12 +40,12 @@ function ExperienciaRegister() {
     }
     try {
       await api.experiencia.cadastrarExperiencia(newExperiencia);
-      enqueueSnackbar('Experiência cadastrada com sucesso', {
+      enqueueSnackbar('Experiência adicionada com sucesso', {
         variant: 'success',
       });
       navigate('/experiencias');
     } catch (error) {
-      enqueueSnackbar('Erro ao cadastrar experiência', { variant: 'error' });
+      enqueueSnackbar('Erro ao adicionar experiência', { variant: 'error' });
     }
   }
 
@@ -117,7 +117,7 @@ function ExperienciaRegister() {
         }}
       >
         <Typography variant="h6">
-          {isEdit ? 'Editar' : 'Cadastrar'}
+          {isEdit ? 'Editar' : 'Adicionar'}
           {' '}
           experiência
         </Typography>
@@ -198,7 +198,7 @@ function ExperienciaRegister() {
           }
           onClick={() => submitExperiencia()}
         >
-          {isEdit ? 'Salvar' : 'Cadastrar'}
+          {isEdit ? 'Salvar' : 'Adicionar'}
         </Button>
       </Box>
     </Box>

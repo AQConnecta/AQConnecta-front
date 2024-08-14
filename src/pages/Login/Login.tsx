@@ -2,6 +2,7 @@ import { Box, Button, TextField } from '@mui/material';
 import { useEffect, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom'
 import { useAuth } from '../../contexts/AuthContext';
+import {colors} from '../../styles/colors'
 
 function Login() {
   const [email, setEmail] = useState('')
@@ -21,7 +22,7 @@ function Login() {
 
   return (
     <Box sx={{
-      display: 'flex', alignItems: 'center', justifyContent: 'center', flexDirection: 'column', gap: '10px', height: '98vh', backgroundColor: '#f4f2ee',
+      display: 'flex', alignItems: 'center', justifyContent: 'center', flexDirection: 'column', gap: '10px', height: '98vh', backgroundColor: colors.background,
     }}
     >
       <Box sx={{
