@@ -1,3 +1,5 @@
+
+
 #root {
   all: unset;
   height: 100vh;
@@ -16,6 +18,10 @@
 }
 .container::-webkit-scrollbar { 
   display: none;  /* Safari and Chrome */
+}
+
+body{
+  background-color: #f4f2ee;
 }
 
 /* * { 

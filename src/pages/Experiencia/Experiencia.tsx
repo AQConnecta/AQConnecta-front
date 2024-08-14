@@ -6,6 +6,7 @@ import api from '../../services/api';
 import { Experiencia } from '../../services/endpoints/experiencia.ts';
 import { useAuth } from '../../contexts/AuthContext.tsx';
 import { FaTrash, FaPencil  } from "react-icons/fa6";
+import { colors } from '../../styles/colors.ts';
 
 function MinhaExperiencia() {
   const { user } = useAuth();
@@ -81,7 +82,6 @@ function MinhaExperiencia() {
           flexDirection: 'column',
           gap: '10px',
           boxShadow: '0 1px 2px #0003',
-          backgroundColor: 'white',
           maxWidth: '350px',
           padding: '20px',
           borderRadius: '5px',
@@ -89,14 +89,14 @@ function MinhaExperiencia() {
       >
         {experiencias && experiencias.length > 0 ? (
           experiencias.map((experiencia, index) => (
-            <Box key={index} sx={{ padding: '8px', border: '1px solid #000', borderRadius: '5px' }}>
-              <Typography variant="h6">
+           <Box key={index} sx={{padding: '15px', border: '1px solid lightgrey', borderRadius: '5px', backgroundColor: 'white'}}>
+              <Typography variant="h7" sx={{color: 'grey'}}>
                 Experiência
                 {' '}
                 {index + 1}
               </Typography>
-              <Typography variant="body1">
-                {experiencia.titulo}
+              <Typography variant="body1" fontWeight='bold'>
+                {experiencia.titulo.toUpperCase()}
                 {' '}
                 -
                 {' '}
@@ -104,6 +104,9 @@ function MinhaExperiencia() {
               </Typography>
               <Typography
                 variant="body1"
+                sx={{
+                  color: 'grey'
+                }}
               >
                 {formatDate(experiencia.dataInicio)}
                 {' '}
@@ -117,7 +120,9 @@ function MinhaExperiencia() {
                   backgroundColor: 'red',
                 }}
               />
-              <Typography variant="body1">{experiencia.descricao}</Typography>
+              <Typography variant="body1">
+                 {experiencia.descricao}
+              </Typography>
               <Box sx={{
                 display: 'flex', direction: 'column', alignItems: 'center', justifyContent: 'center', gap: '16px',
               }}
@@ -128,7 +133,7 @@ function MinhaExperiencia() {
                   </Typography>
                   <FaPencil />
                 </Button>
-                <Button variant="contained" sx={{ width: '100%', height: '50px', backgroundColor: 'tomato', display: 'flex', alignItems: 'center', justifyContent: 'space-between'}} onClick={() => handleDelete(experiencia.id!)}>
+                <Button variant="contained" sx={{ width: '100%', height: '50px', backgroundColor: 'tomato', display: 'flex', alignItems: 'center', justifyContent: 'space-between', '&:hover':{backgroundColor: 'red'}}} onClick={() => handleDelete(experiencia.id!)}>
                 <Typography>  
                     Excluir
                 </Typography>

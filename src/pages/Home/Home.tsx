@@ -79,7 +79,7 @@ function Home() {
   }, [shouldReload]);
 
   return (
-    <Box sx={{ maxWidth: '608px' }}>
+    <Box sx={{ maxWidth: '608px'}}>
       <CreateVaga />
       { isOpenEditVaga && (
         <VagaModal isOpen={isOpenEditVaga} handleClose={() => handleCloseEditModal()} vagaToEdit={vagaToEdit} />
@@ -102,12 +102,12 @@ function Home() {
                         open={open}
                         onClose={handleClose}
                       >
-                        <MenuItem onClick={() => handleEdit(vaga)} sx={{ display: 'flex', gap: '8px' }}>
+                        <MenuItem onClick={() => handleEdit(vaga)} sx={{ display: 'flex', gap: '8px'}}>
                           <EditOutlinedIcon />
                           {' '}
                           Editar
                         </MenuItem>
-                        <MenuItem onClick={() => handleDelete(vaga)} sx={{ display: 'flex', gap: '8px' }}>
+                        <MenuItem onClick={() => handleDelete(vaga)} sx={{ display: 'flex', gap: '8px'}}>
                           <DeleteOutlineOutlinedIcon />
                           {' '}
                           Excluir
