@@ -109,7 +109,7 @@ function VagaModal(props: VagaModalProps) {
   return (
     <Dialog open={isOpen} onClose={() => onClose()}>
       <DialogTitle>
-        <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', width: '100%', gap: '8px', padding: '8px' }}>
+        <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', width: '100%', gap: '8px', padding: '8px'}}>
           Nova vaga
           <IconButton onClick={() => onClose()}>
             <CloseIcon />
@@ -125,7 +125,7 @@ function VagaModal(props: VagaModalProps) {
             alignItems: 'flex-start',
             gap: '32px',
             maxWidth: '500px',
-            padding: '8px',
+            padding: '8px'
           }}
         >
           <Box sx={{ display: 'flex', flexDirection: 'row', justifyContent: 'center', alignItems: 'center', gap: '16px' }}>

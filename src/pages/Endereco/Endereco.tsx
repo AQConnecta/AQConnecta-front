@@ -5,6 +5,8 @@ import { useNavigate } from 'react-router-dom'
 import api from '../../services/api'
 import { Endereco } from '../../services/endpoints/endereco'
 import { useAuth } from '../../contexts/AuthContext'
+import { FaTrash, FaPencil  } from "react-icons/fa6";
+import { colors } from '../../styles/colors'
 
 function MeuEndereco() {
   const { user } = useAuth()
@@ -61,47 +63,47 @@ function MeuEndereco() {
           flexDirection: 'column',
           gap: '10px',
           boxShadow: '0 1px 2px #0003',
-          backgroundColor: 'white',
+          backgroundColor: colors.background,
           maxWidth: '350px',
           padding: '20px',
           borderRadius: '5px',
         }}
       >
-        <Button variant="contained" onClick={() => navigate('register')}>
+        <Button variant="contained" sx={{marginBottom: '20px'}} onClick={() => navigate('register')}>
           Cadastrar endereço
         </Button>
 
         {enderecos && enderecos.length > 0 ? (
           enderecos.map((endereco: Endereco, index: number) => (
-            <Box key={index} sx={{ padding: '8px', border: '1px solid #000', borderRadius: '5px' }}>
-              <Typography variant="h6">
+            <Box key={index} sx={{ padding: '15px', border: '1px solid lightgrey', borderRadius: '5px', backgroundColor: '#fff', color: '#000'}}>
+              <Typography variant="h6" fontWeight="bold">
                 Endereço {index + 1}
               </Typography>
               <Box sx={{ padding: '8px' }}>
-                <Typography variant="body1">
-                  Rua:
-                  {endereco.rua}
+                <Typography variant="body1" display="inline" fontWeight="bold">
+                  Rua: {''}
                 </Typography>
-                <Typography variant="body1">
-                  Número:
-                  {endereco.numeroCasa}
+                {endereco.rua} <br />
+                <Typography variant="body1" display="inline" fontWeight="bold">
+                  Número: {' '}
                 </Typography>
-                <Typography variant="body1">
-                  Bairro:
-                  {endereco.bairro}
+                {endereco.numeroCasa} <br />
+                <Typography variant="body1" display="inline" fontWeight="bold">
+                  Bairro: {' '}
                 </Typography>
-                <Typography variant="body1">
-                  Cidade:
-                  {endereco.cidade}
+                {endereco.bairro} <br />
+                <Typography variant="body1" display="inline" fontWeight="bold">
+                  Cidade: {' '}
                 </Typography>
-                <Typography variant="body1">
-                  Estado:
-                  {endereco.estado}
+                {endereco.cidade} <br />
+                <Typography variant="body1" display="inline" fontWeight="bold">
+                  Estado: {' '}
                 </Typography>
-                <Typography variant="body1">
-                  CEP:
-                  {endereco.cep}
+                {endereco.estado} <br />
+                <Typography variant="body1" display="inline" fontWeight="bold">
+                  CEP: {' '}
                 </Typography>
+                {endereco.cep} <br />
               </Box>
               <Box
                 sx={{
@@ -112,25 +114,29 @@ function MeuEndereco() {
                   gap: '16px',
                 }}
               >
-                <Button variant="contained" sx={{ width: '100%', height: '50px' }} onClick={() => navigate(`register/${endereco.id}`)}>
-                  Editar
+                {/*<Button variant="contained" sx={{ width: '100%', height: '50px',  display: 'flex', alignItems: 'center', justifyContent: 'space-between' }} onClick={() => navigate(`register/${endereco.id}`)}>*/}
+                <Button variant="contained" sx={{ width: '100%', height: '50px',  display: 'flex', alignItems: 'center', justifyContent: 'space-between', backgroundColor: '#fff', color: '#000', border: '1px solid black',  '&:hover':{backgroundColor: '#fff', border: '1px solid green', color: 'green'}}} onClick={() => navigate(`register/${endereco.id}`)}>
+                <Typography>  
+                     Editar
+                  </Typography>
+                  <FaPencil />
                 </Button>
                 <Button
                   variant="contained"
-                  sx={{ width: '100%', height: '50px', backgroundColor: 'tomato' }}
+                  sx={{ width: '100%', height: '50px',  display: 'flex', alignItems: 'center', justifyContent: 'space-between',  backgroundColor: '#fff', color: '#000', border: '1px solid black',  '&:hover':{backgroundColor: '#fff', border: '1px solid red', color: 'red'}}}
                   onClick={() => handleDelete(endereco.id!)}
                 >
-                  Excluir
+                  <Typography>  
+                    Excluir
+                </Typography>
+                  <FaTrash />
                 </Button>
               </Box>
             </Box>
           ))
         ) : (
-          <Box>
+          <Box sx={{display: 'flex', alignItems: 'center', justifyContent: 'center'}}>
             <Typography variant="body1">Endereço não encontrado</Typography>
-            <Button variant="contained" onClick={() => handleRegisterClick()}>
-              Cadastrar endereço
-            </Button>
           </Box>
         )}
       </Box>
