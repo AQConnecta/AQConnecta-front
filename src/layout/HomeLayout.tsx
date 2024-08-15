@@ -9,12 +9,12 @@ const Layout = styled.div`
   display: flex;
   flex-direction: row;
   align-items: flex-start;
-  justify-content: space-between;
-  column-gap: 25px;
+  justify-content: center;
+  column-gap: 16px;
   padding: 0px 32px;
   width: 100%;
   max-width: 96.68%;
-  margin: 25px 0;
+  margin: 25px 0px;
 `
 
 function HomeLayout() {

@@ -79,14 +79,14 @@ function Home() {
   }, [shouldReload]);
 
   return (
-    <Box sx={{ maxWidth: '608px' }}>
-      <CreateVaga />
+    <Box sx={{ maxWidth: '608px', width: '100%', padding: '0px 16px' }}>
+      <CreateVaga sx={{ width: '592px' }} />
       { isOpenEditVaga && (
         <VagaModal isOpen={isOpenEditVaga} handleClose={() => handleCloseEditModal()} vagaToEdit={vagaToEdit} />
       )}
       {vagas.length ? vagas.map((vaga) => {
         return (
-          <Card sx={{ borderBottom: '1px solid #00000014', padding: '0px 24px', width: '592px', backgroundColor: 'white' }}>
+          <Card sx={{ borderBottom: '1px solid #00000014', padding: '0px 24px', width: '560px', backgroundColor: 'white' }}>
             <Box sx={{ display: 'flex', flexDirection: 'column', gap: '8px', padding: '8px 0px 16px 0px' }}>
               <Box sx={{ display: 'flex', flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between' }}>
                 <Typography sx={{ fontSize: '24px', fontWeight: 600 }}>{vaga.titulo}</Typography>
