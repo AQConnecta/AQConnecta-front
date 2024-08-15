@@ -7,6 +7,7 @@ import { Endereco } from '../../services/endpoints/endereco'
 import { useAuth } from '../../contexts/AuthContext'
 import { FaTrash, FaPencil  } from "react-icons/fa6";
 import { colors } from '../../styles/colors'
+import EnderecoRegister from './EnderecoRegister'
 
 function MeuEndereco() {
   const { user } = useAuth()
@@ -31,10 +32,6 @@ function MeuEndereco() {
     setShouldReload((prev) => prev + 1)
   }
 
-  function handleRegisterClick() {
-    navigate('register')
-  }
-
   async function handleDelete(idEndereco: string) {
     try {
       await api.endereco.deletarEndereco(idEndereco)
@@ -44,6 +41,8 @@ function MeuEndereco() {
       enqueueSnackbar('Erro ao deletar endereço', { variant: 'error' })
     }
   }
+
+  const [open, setOpen] = useState<boolean>(false);
 
   return (
     <Box
@@ -69,8 +68,8 @@ function MeuEndereco() {
           borderRadius: '5px',
         }}
       >
-        <Button variant="contained" sx={{marginBottom: '20px'}} onClick={() => navigate('register')}>
-          Cadastrar endereço
+        <Button variant="contained" sx={{marginBottom: '20px'}} onClick={() => setOpen(!open)}>
+          Adicionar endereço
         </Button>
 
         {enderecos && enderecos.length > 0 ? (
@@ -115,21 +114,21 @@ function MeuEndereco() {
                 }}
               >
                 {/*<Button variant="contained" sx={{ width: '100%', height: '50px',  display: 'flex', alignItems: 'center', justifyContent: 'space-between' }} onClick={() => navigate(`register/${endereco.id}`)}>*/}
-                <Button variant="contained" sx={{ width: '100%', height: '50px',  display: 'flex', alignItems: 'center', justifyContent: 'space-between', backgroundColor: '#fff', color: '#000', border: '1px solid black',  '&:hover':{backgroundColor: '#fff', border: '1px solid green', color: 'green'}}} onClick={() => navigate(`register/${endereco.id}`)}>
+                <Button variant="contained" sx={{ width: '100%', height: '50px', display: 'flex', alignItems: 'center', justifyContent: 'space-between'}} onClick={() => setOpen(!open)}>
+                <FaPencil />
                 <Typography>  
                      Editar
                   </Typography>
-                  <FaPencil />
                 </Button>
                 <Button
                   variant="contained"
-                  sx={{ width: '100%', height: '50px',  display: 'flex', alignItems: 'center', justifyContent: 'space-between',  backgroundColor: '#fff', color: '#000', border: '1px solid black',  '&:hover':{backgroundColor: '#fff', border: '1px solid red', color: 'red'}}}
+                  sx={{ width: '100%', height: '50px', backgroundColor: 'tomato', display: 'flex', alignItems: 'center', justifyContent: 'space-between', '&:hover':{backgroundColor: 'red'}}}
                   onClick={() => handleDelete(endereco.id!)}
                 >
+                  <FaTrash />
                   <Typography>  
                     Excluir
                 </Typography>
-                  <FaTrash />
                 </Button>
               </Box>
             </Box>
@@ -140,6 +139,7 @@ function MeuEndereco() {
           </Box>
         )}
       </Box>
+      <EnderecoRegister isOpen={open} setOpen={setOpen}/>
     </Box>
   )
 }
