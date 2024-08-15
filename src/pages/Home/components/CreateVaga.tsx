@@ -3,7 +3,12 @@ import { useState } from 'react';
 import Card from '../../../components/Card';
 import VagaModal from './VagaModal';
 
-function CreateVaga() {
+type CreateVagaProps = {
+  sx?: object
+}
+
+function CreateVaga(props: CreateVagaProps) {
+  const { sx } = props
   const [isOpen, setIsOpen] = useState(false);
 
   function handleClose() {
@@ -11,7 +16,7 @@ function CreateVaga() {
   }
 
   return (
-    <Card sx={{ width: '100%' }}>
+    <Card sx={[{ width: '100%' }, sx]}>
       <VagaModal isOpen={isOpen} handleClose={() => handleClose()} />
       <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center' }}>
         <Typography variant="caption" sx={{ fontSize: '16px', fontWeight: 600 }}>Tem algum projeto e precisa se conectar com alguém?</Typography>
