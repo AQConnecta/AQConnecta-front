@@ -1,5 +1,5 @@
-import { Box, Button, Chip, IconButton, Menu, MenuItem, Typography } from '@mui/material';
 import React, { useEffect, useState } from 'react';
+import { Box, Button, Chip, IconButton, Menu, MenuItem, Typography } from '@mui/material';
 import { enqueueSnackbar } from 'notistack';
 import FmdGoodOutlined from '@mui/icons-material/FmdGoodOutlined';
 import MoreVertOutlinedIcon from '@mui/icons-material/MoreVertOutlined';
@@ -11,11 +11,14 @@ import api from '../../services/api';
 import CreateVaga from './components/CreateVaga';
 import { useAuth } from '../../contexts/AuthContext';
 import VagaModal from './components/VagaModal';
+import SelecionarCurriculo from './components/SelecionarCurriculo';
 
 function Home() {
   const [vagas, setVagas] = useState<Array<Vaga>>([]);
   const [isOpenEditVaga, setIsOpenEditVaga] = useState(false);
   const [vagaToEdit, setVagaToEdit] = useState<Vaga | null>(null);
+  const [isCurriculoModalOpen, setIsCurriculoModalOpen] = useState(false);
+  const [vagaToApply, setVagaToApply] = useState<Vaga | null>(null);
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
   const [shouldReload, setShouldReload] = useState(0);
   const { user } = useAuth();
@@ -54,12 +57,20 @@ function Home() {
     setIsOpenEditVaga(false);
   }
 
-  async function handleApply(vaga: Vaga) {
-    try {
-      await api.vaga.candidatarVaga(vaga.id);
-      enqueueSnackbar('Candidatura realizada com sucesso', { variant: 'success' });
-    } catch (err) {
-      enqueueSnackbar('Erro ao se candidatar', { variant: 'error' });
+  function handleOpenCurriculoModal(vaga: Vaga) {
+    setVagaToApply(vaga);
+    setIsCurriculoModalOpen(true);
+  }
+
+  async function handleSelectCurriculo(curriculoId: string) {
+    if (vagaToApply) {
+      try {
+        await api.vaga.candidatarVaga(vagaToApply.id, curriculoId);
+        enqueueSnackbar('Candidatura realizada com sucesso', { variant: 'success' });
+        setIsCurriculoModalOpen(false);
+      } catch (err) {
+        enqueueSnackbar('Erro ao se candidatar', { variant: 'error' });
+      }
     }
   }
 
@@ -72,7 +83,7 @@ function Home() {
         }
         setVagas(res.data.data);
       } catch (err) {
-        enqueueSnackbar('Erro ao buscar as competencias mais usadas', { variant: 'error' });
+        enqueueSnackbar('Erro ao buscar as vagas', { variant: 'error' });
       }
     }
 
@@ -85,9 +96,16 @@ function Home() {
       { isOpenEditVaga && (
         <VagaModal isOpen={isOpenEditVaga} handleClose={() => handleCloseEditModal()} vagaToEdit={vagaToEdit} />
       )}
+      { isCurriculoModalOpen && (
+        <SelecionarCurriculo
+          isOpen={isCurriculoModalOpen}
+          handleClose={() => setIsCurriculoModalOpen(false)}
+          onSelect={handleSelectCurriculo}
+        />
+      )}
       {vagas.length ? vagas.map((vaga) => {
         return (
-          <Card sx={{ borderBottom: '1px solid #00000014', padding: '0px 24px', width: '560px', backgroundColor: 'white' }}>
+          <Card sx={{ borderBottom: '1px solid #00000014', padding: '0px 24px', width: '560px', backgroundColor: 'white' }} key={vaga.id}>
             <Box sx={{ display: 'flex', flexDirection: 'column', gap: '8px', padding: '8px 0px 16px 0px' }}>
               <Box sx={{ display: 'flex', flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between' }}>
                 <Typography sx={{ fontSize: '24px', fontWeight: 600 }}>{vaga.titulo}</Typography>
@@ -142,14 +160,14 @@ function Home() {
                 <Typography sx={{ fontSize: '16px', fontWeight: 600 }}>Competências:</Typography>
                 <Box sx={{ display: 'flex', flexDirection: 'row', gap: '8px' }}>
                   {vaga.competencias.map((competencia) => (
-                    <Chip label={competencia.descricao} sx={{ backgroundColor: '#dad5fc', height: '24px' }} />
+                    <Chip label={competencia.descricao} sx={{ backgroundColor: '#dad5fc', height: '24px' }} key={competencia.id} />
                   ))}
                 </Box>
               </Box>
               <Box sx={{ display: 'flex', justifyContent: 'flex-end' }}>
-                {/* <Button variant="contained" color="primary" sx={{ height: '30px' }} onClick={() => handleApply(vaga)}>Quero me candidatar</Button> */}
-                {' '}
-                <Button variant="contained" disabled={vaga.publicador.id === user?.id} color="primary" sx={{ height: '30px' }} onClick={() => handleApply(vaga)}>Quero me candidatar</Button>
+                <Button variant="contained" color="primary" sx={{ height: '30px' }} onClick={() => handleOpenCurriculoModal(vaga)}>
+                  Quero me candidatar
+                </Button>
               </Box>
             </Box>
           </Card>
