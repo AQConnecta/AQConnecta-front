@@ -5,6 +5,9 @@ import { useNavigate } from 'react-router-dom';
 import api from '../../services/api';
 import { FormacaoAcademica, Universidade } from '../../services/endpoints/formacaoAcademica.ts';
 import { useAuth } from '../../contexts/AuthContext.tsx';
+import { colors } from '../../styles/colors.ts';
+import { FaTrash, FaPencil  } from "react-icons/fa6";
+import FormacaoAcademicaRegister from './FormacaoAcademicaRegister.tsx';
 
 function MinhaFormacaoAcademica() {
   const { user } = useAuth();
@@ -45,6 +48,8 @@ function MinhaFormacaoAcademica() {
     }
   }
 
+  const [open, setOpen] = useState<boolean>(false);
+
   return (
     <Box
       height="100%"
@@ -54,9 +59,10 @@ function MinhaFormacaoAcademica() {
         alignItems: 'center',
         justifyContent: 'center',
         flexDirection: 'column',
+        gap: '15px',
       }}
     >
-      <Button variant="contained" onClick={() => navigate('register')}>Cadastrar formação academica</Button>
+      <Button variant="contained" onClick={() => setOpen(!open)}>Cadastrar formação academica</Button>
 
       <Box
         width="100%"
@@ -65,7 +71,7 @@ function MinhaFormacaoAcademica() {
           flexDirection: 'column',
           gap: '10px',
           boxShadow: '0 1px 2px #0003',
-          backgroundColor: 'white',
+          backgroundColor: colors.background,
           maxWidth: '500px',
           padding: '20px',
           borderRadius: '5px',
@@ -73,12 +79,12 @@ function MinhaFormacaoAcademica() {
       >
         {formacoesAcademicas && formacoesAcademicas.length > 0 ? (
           formacoesAcademicas.map((formacaoAcademica, index) => (
-            <Box key={index} sx={{ padding: '8px', border: '1px solid #000', borderRadius: '5px' }}>
-              <Typography variant="h6">
+            <Box key={index} sx={{padding: '15px', border: '1px solid lightgrey', borderRadius: '5px', backgroundColor: 'white' }}>
+              <Typography variant="h6" color='grey'>
                 Formação {index + 1}
               </Typography>
-              <Typography variant="body1">
-                {formacaoAcademica.descricao}
+              <Typography variant="body1" fontWeight='bold'>
+                {formacaoAcademica.descricao.toUpperCase()}
                 {' '}
                 -
                 {' '}
@@ -86,6 +92,7 @@ function MinhaFormacaoAcademica() {
               </Typography>
               <Typography
                 variant="body1"
+                color='grey'
               >
                 {formatDate(formacaoAcademica.dataInicio)}
                 {' '}
@@ -102,24 +109,31 @@ function MinhaFormacaoAcademica() {
               />
               {/* <Typography variant="body1">{formacaoAcademica.descricao}</Typography> */}
               <Box sx={{
-                display: 'flex', direction: 'column', alignItems: 'center', justifyContent: 'center', gap: '16px',
+                display: 'flex', direction: 'column', alignItems: 'center', justifyContent: 'space-around', gap: '16px',
               }}
               >
-                <Button variant="contained" sx={{ width: '100%', height: '50px' }} onClick={() => navigate(`register/${formacaoAcademica.id}`)}>
+                <Button variant="contained" sx={{ width: '150px', height: '50px', display: 'flex', alignItems: 'center', justifyContent: 'space-between'}} onClick={() => setOpen(!open)}>
+                  <FaPencil />
                   Editar
                 </Button>
-                <Button variant="contained" sx={{ width: '100%', height: '50px', backgroundColor: 'tomato' }} onClick={() => handleDelete(formacaoAcademica.id!)}>
+                <Button variant="contained" sx={{ width: '150px', height: '50px', backgroundColor: 'tomato', display: 'flex', alignItems: 'center', justifyContent: 'space-between', '&:hover':{backgroundColor: 'red'}}} onClick={() => handleDelete(formacaoAcademica.id!)}>
+                  <FaTrash />
                   Excluir
                 </Button>
               </Box>
             </Box>
           ))
         ) : (
-          <Box>
+          <Box sx={{
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+          }}>
             <Typography variant="body1">Sem formações até o momento</Typography>
           </Box>
         )}
       </Box>
+      <FormacaoAcademicaRegister isOpen={open} setOpen={setOpen}/>
     </Box>
   );
 }

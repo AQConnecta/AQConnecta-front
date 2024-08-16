@@ -1,5 +1,5 @@
 import { Box, Button, Typography } from '@mui/material';
-import { useEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { enqueueSnackbar } from 'notistack';
 import { useNavigate } from 'react-router-dom';
 import api from '../../services/api';
@@ -7,10 +7,14 @@ import { Experiencia } from '../../services/endpoints/experiencia.ts';
 import { useAuth } from '../../contexts/AuthContext.tsx';
 import { FaTrash, FaPencil  } from "react-icons/fa6";
 import { colors } from '../../styles/colors.ts';
+import ExperienciaRegister from './ExperienciaRegister.tsx';
 
 function MinhaExperiencia() {
   const { user } = useAuth();
   const [experiencias, setExperiencias] = useState<Experiencia[]>([]);
+  const [isOpenEditExperiencia, setIsOpenEditExperiencia] = useState(false);
+  const [experienciaToEdit, setExperienciaToEdit] = useState<Experiencia | null>(null);
+  const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
   const [shouldReload, setShouldReload] = useState(0);
   const navigate = useNavigate();
 
@@ -36,6 +40,10 @@ function MinhaExperiencia() {
     return new Date(dateString).toLocaleDateString('pt-BR', options);
   };
 
+  const handleClose = () => {
+    setAnchorEl(null);
+  };
+
   async function handleDelete(idExperiencia: string) {
     try {
       await api.experiencia.deletarExperiencia(idExperiencia);
@@ -45,6 +53,14 @@ function MinhaExperiencia() {
       enqueueSnackbar('Erro ao deletar experiência', { variant: 'error' });
     }
   }
+
+  async function handleEdit(experiencia: Experiencia) {
+    setIsOpenEditExperiencia(true);
+    setExperienciaToEdit(experiencia);
+    handleClose();
+  }
+
+const [open, setOpen] = useState<boolean>(false);
 
   return (
     <Box
@@ -73,8 +89,7 @@ function MinhaExperiencia() {
         Destaque suas conquistas!
         </Typography>
       </Box>
-      <Button variant="contained" onClick={() => navigate('register')}>Adicionar experiência</Button>
-
+      <Button variant="contained" onClick={() => setOpen(!open)}>Adicionar experiência</Button>
       <Box
         width="100%"
         sx={{
@@ -127,28 +142,34 @@ function MinhaExperiencia() {
                 display: 'flex', direction: 'column', alignItems: 'center', justifyContent: 'center', gap: '16px',
               }}
               >
-                <Button variant="contained" sx={{ width: '100%', height: '50px', display: 'flex', alignItems: 'center', justifyContent: 'space-between'}} onClick={() => navigate(`register/${experiencia.id}`)}>
+                <Button variant="contained" sx={{ width: '100%', height: '50px', display: 'flex', alignItems: 'center', justifyContent: 'space-between'}} onClick={() => setOpen(!open)}>
+                  <FaPencil />
                   <Typography>  
                      Editar
                   </Typography>
-                  <FaPencil />
                 </Button>
                 <Button variant="contained" sx={{ width: '100%', height: '50px', backgroundColor: 'tomato', display: 'flex', alignItems: 'center', justifyContent: 'space-between', '&:hover':{backgroundColor: 'red'}}} onClick={() => handleDelete(experiencia.id!)}>
+                <FaTrash />
                 <Typography>  
                     Excluir
                 </Typography>
-                  <FaTrash />
                 </Button>
               </Box>
             </Box>
           ))
         ) : (
-          <Box>
+          <Box sx={{
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+          }}>
             <Typography variant="body1">Sem experiências até o momento</Typography>
           </Box>
         )}
       </Box>
+      <ExperienciaRegister isOpen={open} setOpen={setOpen}/>
     </Box>
+
   );
 }
 
