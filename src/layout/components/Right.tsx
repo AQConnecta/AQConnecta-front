@@ -1,4 +1,5 @@
 import React from 'react'
+import { useNavigate } from 'react-router-dom'
 import styled from 'styled-components'
 
 const Container = styled.div`
@@ -58,12 +59,13 @@ const Text = styled.div`
 `
 
 function Right() {
+  const navigate = useNavigate()
   return (
     <Container>
       <ArtCard>
         <UserInfo>
           <CardBackground />
-          <Photo photoUrl="https://pbs.twimg.com/media/FTkEZfxWIAA0f4P.jpg" />
+          <Photo photoUrl="https://pbs.twimg.com/media/FTkEZfxWIAA0f4P.jpg" onClick={() => navigate('/usuario')} />
           <Text>
             Welcome
           </Text>

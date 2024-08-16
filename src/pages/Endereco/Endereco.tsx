@@ -1,19 +1,16 @@
 import { Box, Button, Typography } from '@mui/material'
 import { useEffect, useState } from 'react'
 import { enqueueSnackbar } from 'notistack'
-import { useNavigate } from 'react-router-dom'
+import { FaTrash, FaPencil } from 'react-icons/fa6';
 import api from '../../services/api'
 import { Endereco } from '../../services/endpoints/endereco'
 import { useAuth } from '../../contexts/AuthContext'
-import { FaTrash, FaPencil  } from "react-icons/fa6";
-import { colors } from '../../styles/colors'
 import EnderecoRegister from './EnderecoRegister'
 
 function MeuEndereco() {
   const { user } = useAuth()
   const [enderecos, setEnderecos] = useState<Endereco[]>([])
   const [shouldReload, setShouldReload] = useState(0)
-  const navigate = useNavigate()
 
   useEffect(() => {
     async function getEndereco() {
@@ -47,7 +44,7 @@ function MeuEndereco() {
   return (
     <Box
       height="100%"
-      width="100%"
+      width="592px"
       sx={{
         display: 'flex',
         alignItems: 'center',
@@ -56,53 +53,79 @@ function MeuEndereco() {
       }}
     >
       <Box
-        width="100%"
+        width="592px"
         sx={{
           display: 'flex',
           flexDirection: 'column',
           gap: '10px',
           boxShadow: '0 1px 2px #0003',
-          backgroundColor: colors.background,
+          backgroundColor: 'white',
           maxWidth: '350px',
           padding: '20px',
           borderRadius: '5px',
         }}
       >
-        <Button variant="contained" sx={{marginBottom: '20px'}} onClick={() => setOpen(!open)}>
+        <Button variant="contained" sx={{ marginBottom: '20px' }} onClick={() => setOpen(!open)}>
           Adicionar endereço
         </Button>
 
         {enderecos && enderecos.length > 0 ? (
           enderecos.map((endereco: Endereco, index: number) => (
-            <Box key={index} sx={{ padding: '15px', border: '1px solid lightgrey', borderRadius: '5px', backgroundColor: '#fff', color: '#000'}}>
+            <Box key={index} sx={{ padding: '15px', border: '1px solid lightgrey', borderRadius: '5px', backgroundColor: '#fff', color: '#000' }}>
               <Typography variant="h6" fontWeight="bold">
-                Endereço {index + 1}
+                Endereço
+                {' '}
+                {index + 1}
               </Typography>
               <Box sx={{ padding: '8px' }}>
                 <Typography variant="body1" display="inline" fontWeight="bold">
-                  Rua: {''}
+                  Rua:
+                  {' '}
+
                 </Typography>
-                {endereco.rua} <br />
+                {endereco.rua}
+                {' '}
+                <br />
                 <Typography variant="body1" display="inline" fontWeight="bold">
-                  Número: {' '}
+                  Número:
+                  {' '}
+                  {' '}
                 </Typography>
-                {endereco.numeroCasa} <br />
+                {endereco.numeroCasa}
+                {' '}
+                <br />
                 <Typography variant="body1" display="inline" fontWeight="bold">
-                  Bairro: {' '}
+                  Bairro:
+                  {' '}
+                  {' '}
                 </Typography>
-                {endereco.bairro} <br />
+                {endereco.bairro}
+                {' '}
+                <br />
                 <Typography variant="body1" display="inline" fontWeight="bold">
-                  Cidade: {' '}
+                  Cidade:
+                  {' '}
+                  {' '}
                 </Typography>
-                {endereco.cidade} <br />
+                {endereco.cidade}
+                {' '}
+                <br />
                 <Typography variant="body1" display="inline" fontWeight="bold">
-                  Estado: {' '}
+                  Estado:
+                  {' '}
+                  {' '}
                 </Typography>
-                {endereco.estado} <br />
+                {endereco.estado}
+                {' '}
+                <br />
                 <Typography variant="body1" display="inline" fontWeight="bold">
-                  CEP: {' '}
+                  CEP:
+                  {' '}
+                  {' '}
                 </Typography>
-                {endereco.cep} <br />
+                {endereco.cep}
+                {' '}
+                <br />
               </Box>
               <Box
                 sx={{
@@ -113,33 +136,33 @@ function MeuEndereco() {
                   gap: '16px',
                 }}
               >
-                {/*<Button variant="contained" sx={{ width: '100%', height: '50px',  display: 'flex', alignItems: 'center', justifyContent: 'space-between' }} onClick={() => navigate(`register/${endereco.id}`)}>*/}
-                <Button variant="contained" sx={{ width: '100%', height: '50px', display: 'flex', alignItems: 'center', justifyContent: 'space-between'}} onClick={() => setOpen(!open)}>
-                <FaPencil />
-                <Typography>  
-                     Editar
+                {/* <Button variant="contained" sx={{ width: '100%', height: '50px',  display: 'flex', alignItems: 'center', justifyContent: 'space-between' }} onClick={() => navigate(`register/${endereco.id}`)}> */}
+                <Button variant="contained" sx={{ width: '100%', height: '50px', display: 'flex', alignItems: 'center', justifyContent: 'space-between' }} onClick={() => setOpen(!open)}>
+                  <FaPencil />
+                  <Typography>
+                    Editar
                   </Typography>
                 </Button>
                 <Button
                   variant="contained"
-                  sx={{ width: '100%', height: '50px', backgroundColor: 'tomato', display: 'flex', alignItems: 'center', justifyContent: 'space-between', '&:hover':{backgroundColor: 'red'}}}
+                  sx={{ width: '100%', height: '50px', backgroundColor: 'tomato', display: 'flex', alignItems: 'center', justifyContent: 'space-between', '&:hover': { backgroundColor: 'red' } }}
                   onClick={() => handleDelete(endereco.id!)}
                 >
                   <FaTrash />
-                  <Typography>  
+                  <Typography>
                     Excluir
-                </Typography>
+                  </Typography>
                 </Button>
               </Box>
             </Box>
           ))
         ) : (
-          <Box sx={{display: 'flex', alignItems: 'center', justifyContent: 'center'}}>
+          <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
             <Typography variant="body1">Endereço não encontrado</Typography>
           </Box>
         )}
       </Box>
-      <EnderecoRegister isOpen={open} setOpen={setOpen}/>
+      <EnderecoRegister isOpen={open} setOpen={setOpen} />
     </Box>
   )
 }

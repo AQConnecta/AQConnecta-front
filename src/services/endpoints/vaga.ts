@@ -42,4 +42,8 @@ export class VagaEndpoint {
     async localizarVaga(idVaga: string) {
         return await axios.get(`${PREFIX}/localizar/${idVaga}`)
     }
+
+    async candidatarVaga(idVaga: string) {
+        return await axios.post(`${PREFIX}/candidatar/${idVaga}`)
+    }
 }

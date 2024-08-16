@@ -1,136 +1,105 @@
-import {
-  Box, Button, TextField, Typography,
-} from '@mui/material';
-import { useEffect, useState } from 'react';
-import { useNavigate, useParams } from 'react-router-dom';
-import { useSnackbar } from 'notistack';
-import { Endereco } from '../../services/endpoints/endereco';
-import useHandleKeyPress from '../../hooks/useHandleKeyPress';
-import api from '../../services/api';
-import {IconButton} from '@mui/material'
+/* eslint-disable no-unused-vars */
+import { Box, Button, TextField, Typography, IconButton, Dialog, DialogTitle, DialogActions, DialogContent } from '@mui/material'
+import { useEffect, useState } from 'react'
+import { useNavigate, useParams } from 'react-router-dom'
+import { useSnackbar } from 'notistack'
 import CloseIcon from '@mui/icons-material/Close'
+import { Endereco } from '../../services/endpoints/endereco'
+import useHandleKeyPress from '../../hooks/useHandleKeyPress'
+import api from '../../services/api'
 
-interface IModal{
-  isOpen: boolean;
-  setOpen: (isOpen: boolean) => void;
+interface IModal {
+  isOpen: boolean
+  setOpen: (isOpen: boolean) => void
 }
 
-function EnderecoRegister({isOpen, setOpen}: IModal) {
-  if(isOpen){
-    const [endereco, setEndereco] = useState<Endereco>({
-      cep: '',
-      rua: '',
-      bairro: '',
-      cidade: '',
-      estado: '',
-      pais: 'Brasil',
-      numeroCasa: '',
-      complemento: '',
-    });
-    const navigate = useNavigate();
-    const { enqueueSnackbar } = useSnackbar();
-    const { id: enderecoId } = useParams();
-    const user = JSON.parse(localStorage.getItem('user') || '{}');
-    const isEdit = !!enderecoId;
+function EnderecoRegister({ isOpen, setOpen }: IModal) {
+  const [endereco, setEndereco] = useState<Endereco>({
+    cep: '',
+    rua: '',
+    bairro: '',
+    cidade: '',
+    estado: '',
+    pais: 'Brasil',
+    numeroCasa: '',
+    complemento: '',
+  })
+  const navigate = useNavigate()
+  const { enqueueSnackbar } = useSnackbar()
+  const { id: enderecoId } = useParams()
+  const user = JSON.parse(localStorage.getItem('user') || '{}')
+  const isEdit = !!enderecoId
 
-    async function submitEndereco() {
-      if (isEdit) {
-        try {
-          await api.endereco.alterarEndereco(endereco.id!, endereco);
-          enqueueSnackbar('Endereço editado com sucesso', {
-            variant: 'success',
-          });
-          navigate('/endereco');
-        } catch (error) {
-          enqueueSnackbar('Erro ao editar endereço', { variant: 'error' });
-        }
-        return;
-      }
+  async function submitEndereco() {
+    if (isEdit) {
       try {
-        await api.endereco.cadastrarEndereco(endereco);
-        enqueueSnackbar('Endereço adicionado com sucesso', {
+        await api.endereco.alterarEndereco(endereco.id!, endereco)
+        enqueueSnackbar('Endereço editado com sucesso', {
           variant: 'success',
-        });
-        navigate('/endereco');
+        })
+        navigate('/endereco')
       } catch (error) {
-        enqueueSnackbar('Erro ao adicionar endereço', { variant: 'error' });
+        enqueueSnackbar('Erro ao editar endereço', { variant: 'error' })
+      }
+      return
+    }
+    try {
+      await api.endereco.cadastrarEndereco(endereco)
+      enqueueSnackbar('Endereço adicionado com sucesso', {
+        variant: 'success',
+      })
+      navigate('/endereco')
+    } catch (error) {
+      enqueueSnackbar('Erro ao adicionar endereço', { variant: 'error' })
+    }
+  }
+
+  useEffect(() => {
+    if (!enderecoId || !user) return
+    async function getEndereco() {
+      try {
+        const res = await api.endereco.getEndereco(user.id)
+        setEndereco(res.data.data[0])
+      } catch (err) {
+        enqueueSnackbar('Erro ao buscar endereço', { variant: 'error' })
       }
     }
+    getEndereco()
+  }, [enderecoId])
 
-    useEffect(() => {
-      if (!enderecoId || !user) return;
-      async function getEndereco() {
-        try {
-          const res = await api.endereco.getEndereco(user.id);
-          setEndereco(res.data.data[0]);
-        } catch (err) {
-          enqueueSnackbar('Erro ao buscar endereço', { variant: 'error' });
-        }
-      }
-      getEndereco();
-    }, [enderecoId]);
+  const handleKeyPress = useHandleKeyPress({
+    verification: Object.values(endereco).every((value) => value.length > 0),
+    key: 'Enter',
+    callback: () => submitEndereco(),
+  })
 
-    const handleKeyPress = useHandleKeyPress({
-      verification: Object.values(endereco).every((value) => value.length > 0),
-      key: 'Enter',
-      callback: () => submitEndereco(),
-    });
+  function setEnderecoValue(value: string, field: string) {
+    setEndereco({ ...endereco, [field]: value })
+  }
 
-    function setEnderecoValue(value: string, field: string) {
-      setEndereco({ ...endereco, [field]: value });
+  useEffect(() => {
+    window.addEventListener('keydown', handleKeyPress)
+    return () => {
+      window.removeEventListener('keydown', handleKeyPress)
     }
+  }, [handleKeyPress])
 
-    useEffect(() => {
-      window.addEventListener('keydown', handleKeyPress);
-      return () => {
-        window.removeEventListener('keydown', handleKeyPress);
-      };
-    }, [handleKeyPress]);
-
-    return (
-      <Box
-        height="100%"
-        width="100%"
-        sx={{
-          position: 'fixed',
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'center',
-          flexDirection: 'column',
-          backgroundColor: '#0000009f',
-          top: '0',
-          bottom: '0',
-          left: '0',
-          right: '0'
-        }}
-      >
-        <Box
-          width="100%"
-          sx={{
-            display: 'flex',
-            flexDirection: 'column',
-            gap: '10px',
-            boxShadow: '0 1px 2px #0003',
-            backgroundColor: 'white',
-            maxWidth: '350px',
-            padding: '20px',
-            borderRadius: '5px',
-          }}
-        >
-          <Box sx={{
-             display: 'flex',
-             alignItems: 'center',
-             justifyContent: 'space-between',
-          }}>
-            <Typography variant="h6">
-              {isEdit ? 'Editar' : 'Adicionar'}
-              {' '}
-              endereço
-            </Typography>
-            <IconButton onClick={() => setOpen(!isOpen)}>
-              <CloseIcon />
-            </IconButton>
-          </Box>
+  return (
+    <Dialog open={isOpen}>
+      <DialogTitle>
+        <Box sx={{ display: 'flex', flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between' }}>
+          <Typography variant="h6">
+            {isEdit ? 'Editar' : 'Adicionar'}
+            {' '}
+            endereço
+          </Typography>
+          <IconButton onClick={() => setOpen(!isOpen)}>
+            <CloseIcon />
+          </IconButton>
+        </Box>
+      </DialogTitle>
+      <DialogContent>
+        <Box sx={{ width: '340px', display: 'flex', gap: '8px', flexDirection: 'column' }}>
           <TextField
             variant="outlined"
             placeholder="Digite seu CEP"
@@ -187,19 +156,21 @@ function EnderecoRegister({isOpen, setOpen}: IModal) {
             onChange={(e) => setEnderecoValue(e.target.value, 'complemento')}
             sx={{ width: '100%' }}
           />
-
+        </Box>
+      </DialogContent>
+      <DialogActions>
+        <Box sx={{ padding: '0px 16px 8px 0px' }}>
           <Button
             variant="contained"
-            sx={{ width: '100%', height: '50px' }}
             disabled={!Object.values(endereco).every((value) => value.length > 0)}
             onClick={() => submitEndereco()}
           >
             {isEdit ? 'Salvar' : 'Adicionar'}
           </Button>
         </Box>
-      </Box>
-    );
-  }
+      </DialogActions>
+    </Dialog>
+  )
 }
 
-export default EnderecoRegister;
+export default EnderecoRegister

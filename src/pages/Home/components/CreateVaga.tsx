@@ -5,13 +5,15 @@ import VagaModal from './VagaModal';
 
 type CreateVagaProps = {
   sx?: object
+  reloadVagas: () => void
 }
 
 function CreateVaga(props: CreateVagaProps) {
-  const { sx } = props
+  const { sx, reloadVagas } = props
   const [isOpen, setIsOpen] = useState(false);
 
   function handleClose() {
+    reloadVagas();
     setIsOpen(false);
   }
 

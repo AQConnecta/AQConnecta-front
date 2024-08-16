@@ -13,6 +13,7 @@ import ProtectedRoute from './ProtectedRoute.tsx'
 import Home from '../pages/Home/Home.tsx'
 import MinhaFormacaoAcademica from '../pages/FormacaoAcademica/FormacaoAcademica.tsx'
 import FormacaoAcademicaRegister from '../pages/FormacaoAcademica/FormacaoAcademicaRegister.tsx'
+import Usuario from '../pages/Usuario/Usuario.tsx'
 
 const AppRoutes = () => {
   return (
@@ -26,6 +27,14 @@ const AppRoutes = () => {
           element={(
             <ProtectedRoute>
               <ListCompetencia />
+            </ProtectedRoute>
+          )}
+        />
+        <Route
+          path="usuario"
+          element={(
+            <ProtectedRoute>
+              <Usuario />
             </ProtectedRoute>
           )}
         />

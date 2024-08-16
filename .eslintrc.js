@@ -38,6 +38,7 @@ module.exports = {
         "import/extensions": 0,
         "react/jsx-no-undef": "error",
         "react/require-default-props": 0,
+        "react/jsx-no-bind": 0,
     },
     settings: {
         react: {

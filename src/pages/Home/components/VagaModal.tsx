@@ -54,6 +54,7 @@ function VagaModal(props: VagaModalProps) {
   const [competencias, setCompetencias] = useState(vagaToEdit?.competencias || [])
   const [reload, setReload] = useState(0)
   const { enqueueSnackbar } = useSnackbar()
+  const isEdit = !!vagaToEdit
 
   function setVagaValue(value: string, field: string) {
     setVaga({ ...vaga, [field]: value })
@@ -69,13 +70,15 @@ function VagaModal(props: VagaModalProps) {
     handleClose()
   }
 
-  useEffect(() => {
-    console.log(competencias)
-    console.log(vagaToEdit)
-  }, [competencias])
-
   async function handleSubmit() {
     try {
+      if (isEdit) {
+        const vagaResponse = await api.vaga.alterarVaga(vagaToEdit?.id, { ...vaga, atualizadoEm: new Date().toISOString(), dataLimiteCandidatura: `${vaga.dataLimiteCandidatura}T00:00:00`, competencias })
+        await api.competencia.linkCompetenciaVaga({ competencias, idVaga: vagaResponse.data.data.id })
+        enqueueSnackbar('Vaga editada com sucesso', { variant: 'success' })
+        onClose()
+        return
+      }
       const vagaResponse = await api.vaga.cadastrarVaga({ ...vaga, atualizadoEm: new Date().toISOString(), criadoEm: new Date().toISOString(), dataLimiteCandidatura: `${vaga.dataLimiteCandidatura}T00:00:00`, competencias })
       const vagaId = vagaResponse.data.data.id
       await api.competencia.linkCompetenciaVaga({ competencias, idVaga: vagaId })
@@ -109,8 +112,8 @@ function VagaModal(props: VagaModalProps) {
   return (
     <Dialog open={isOpen} onClose={() => onClose()}>
       <DialogTitle>
-        <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', width: '100%', gap: '8px', padding: '8px'}}>
-          Nova vaga
+        <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', width: '100%', gap: '8px', padding: '8px' }}>
+          {isEdit ? 'Editar vaga' : 'Nova vaga'}
           <IconButton onClick={() => onClose()}>
             <CloseIcon />
           </IconButton>
@@ -125,7 +128,7 @@ function VagaModal(props: VagaModalProps) {
             alignItems: 'flex-start',
             gap: '32px',
             maxWidth: '500px',
-            padding: '8px'
+            padding: '8px',
           }}
         >
           <Box sx={{ display: 'flex', flexDirection: 'row', justifyContent: 'center', alignItems: 'center', gap: '16px' }}>
@@ -223,7 +226,7 @@ function VagaModal(props: VagaModalProps) {
               color="primary"
               variant="contained"
             >
-              Criar
+              {isEdit ? 'Editar' : 'Criar'}
             </Button>
           </Box>
         </Box>

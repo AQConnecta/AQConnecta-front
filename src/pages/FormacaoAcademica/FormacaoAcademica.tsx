@@ -1,19 +1,17 @@
 import { Box, Button, Typography } from '@mui/material';
 import { useEffect, useState } from 'react';
 import { enqueueSnackbar } from 'notistack';
-import { useNavigate } from 'react-router-dom';
+import { FaTrash, FaPencil } from 'react-icons/fa6';
 import api from '../../services/api';
-import { FormacaoAcademica, Universidade } from '../../services/endpoints/formacaoAcademica.ts';
+import { FormacaoAcademica } from '../../services/endpoints/formacaoAcademica.ts';
 import { useAuth } from '../../contexts/AuthContext.tsx';
-import { colors } from '../../styles/colors.ts';
-import { FaTrash, FaPencil  } from "react-icons/fa6";
 import FormacaoAcademicaRegister from './FormacaoAcademicaRegister.tsx';
+import Card from '../../components/Card.tsx';
 
 function MinhaFormacaoAcademica() {
   const { user } = useAuth();
   const [formacoesAcademicas, setFormacoesAcademicas] = useState<FormacaoAcademica[]>([]);
   const [shouldReload, setShouldReload] = useState(0);
-  const navigate = useNavigate();
 
   useEffect(() => {
     async function getFormacaoAcademica() {
@@ -51,90 +49,96 @@ function MinhaFormacaoAcademica() {
   const [open, setOpen] = useState<boolean>(false);
 
   return (
-    <Box
-      height="100%"
-      width="100%"
-      sx={{
-        display: 'flex',
-        alignItems: 'center',
-        justifyContent: 'center',
-        flexDirection: 'column',
-        gap: '15px',
-      }}
-    >
-      <Button variant="contained" onClick={() => setOpen(!open)}>Cadastrar formação academica</Button>
-
+    <Card>
       <Box
+        height="100%"
         width="100%"
         sx={{
           display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
           flexDirection: 'column',
-          gap: '10px',
-          boxShadow: '0 1px 2px #0003',
-          backgroundColor: colors.background,
-          maxWidth: '500px',
-          padding: '20px',
-          borderRadius: '5px',
+          gap: '15px',
         }}
       >
-        {formacoesAcademicas && formacoesAcademicas.length > 0 ? (
-          formacoesAcademicas.map((formacaoAcademica, index) => (
-            <Box key={index} sx={{padding: '15px', border: '1px solid lightgrey', borderRadius: '5px', backgroundColor: 'white' }}>
-              <Typography variant="h6" color='grey'>
-                Formação {index + 1}
-              </Typography>
-              <Typography variant="body1" fontWeight='bold'>
-                {formacaoAcademica.descricao.toUpperCase()}
-                {' '}
-                -
-                {' '}
-                {formacaoAcademica.universidade.nomeInstituicao}
-              </Typography>
-              <Typography
-                variant="body1"
-                color='grey'
-              >
-                {formatDate(formacaoAcademica.dataInicio)}
-                {' '}
-                -
-                {' '}
-                {formatDate(formacaoAcademica.dataFim)}
-                {formacaoAcademica.atualFormacao ? ' - Cursando' : ''}
-              </Typography>
-              <hr
-                style={{
-                  color: 'black',
-                  backgroundColor: 'red',
-                }}
-              />
-              {/* <Typography variant="body1">{formacaoAcademica.descricao}</Typography> */}
-              <Box sx={{
-                display: 'flex', direction: 'column', alignItems: 'center', justifyContent: 'space-around', gap: '16px',
-              }}
-              >
-                <Button variant="contained" sx={{ width: '150px', height: '50px', display: 'flex', alignItems: 'center', justifyContent: 'space-between'}} onClick={() => setOpen(!open)}>
-                  <FaPencil />
-                  Editar
-                </Button>
-                <Button variant="contained" sx={{ width: '150px', height: '50px', backgroundColor: 'tomato', display: 'flex', alignItems: 'center', justifyContent: 'space-between', '&:hover':{backgroundColor: 'red'}}} onClick={() => handleDelete(formacaoAcademica.id!)}>
-                  <FaTrash />
-                  Excluir
-                </Button>
-              </Box>
-            </Box>
-          ))
-        ) : (
-          <Box sx={{
+        <Button variant="contained" onClick={() => setOpen(!open)}>Cadastrar formação academica</Button>
+
+        <Box
+          width="100%"
+          sx={{
             display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center',
-          }}>
-            <Typography variant="body1">Sem formações até o momento</Typography>
-          </Box>
-        )}
+            flexDirection: 'column',
+            gap: '10px',
+            boxShadow: '0 1px 2px #0003',
+            backgroundColor: 'white',
+            maxWidth: '500px',
+            padding: '20px',
+            borderRadius: '5px',
+          }}
+        >
+          {formacoesAcademicas && formacoesAcademicas.length > 0 ? (
+            formacoesAcademicas.map((formacaoAcademica, index) => (
+              <Box key={index} sx={{ padding: '15px', border: '1px solid lightgrey', borderRadius: '5px', backgroundColor: 'white' }}>
+                <Typography variant="h6" color="grey">
+                  Formação
+                  {' '}
+                  {index + 1}
+                </Typography>
+                <Typography variant="body1" fontWeight="bold">
+                  {formacaoAcademica.descricao.toUpperCase()}
+                  {' '}
+                  -
+                  {' '}
+                  {formacaoAcademica.universidade.nomeInstituicao}
+                </Typography>
+                <Typography
+                  variant="body1"
+                  color="grey"
+                >
+                  {formatDate(formacaoAcademica.dataInicio)}
+                  {' '}
+                  -
+                  {' '}
+                  {formatDate(formacaoAcademica.dataFim)}
+                  {formacaoAcademica.atualFormacao ? ' - Cursando' : ''}
+                </Typography>
+                <hr
+                  style={{
+                    color: 'black',
+                    backgroundColor: 'red',
+                  }}
+                />
+                {/* <Typography variant="body1">{formacaoAcademica.descricao}</Typography> */}
+                <Box sx={{
+                  display: 'flex', direction: 'column', alignItems: 'center', justifyContent: 'space-around', gap: '16px',
+                }}
+                >
+                  <Button variant="contained" sx={{ width: '150px', height: '50px', display: 'flex', alignItems: 'center', justifyContent: 'space-between' }} onClick={() => setOpen(!open)}>
+                    <FaPencil />
+                    Editar
+                  </Button>
+                  <Button variant="contained" sx={{ width: '150px', height: '50px', backgroundColor: 'tomato', display: 'flex', alignItems: 'center', justifyContent: 'space-between', '&:hover': { backgroundColor: 'red' } }} onClick={() => handleDelete(formacaoAcademica.id!)}>
+                    <FaTrash />
+                    Excluir
+                  </Button>
+                </Box>
+              </Box>
+            ))
+          ) : (
+            <Box sx={{
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+            }}
+            >
+              <Typography variant="body1">Sem formações até o momento</Typography>
+            </Box>
+          )}
+        </Box>
+        <FormacaoAcademicaRegister isOpen={open} setOpen={setOpen} />
       </Box>
-      <FormacaoAcademicaRegister isOpen={open} setOpen={setOpen}/>
-    </Box>
+    </Card>
+
   );
 }
 

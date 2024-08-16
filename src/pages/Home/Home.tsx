@@ -50,12 +50,13 @@ function Home() {
   }
 
   function handleCloseEditModal() {
+    reloadVagas();
     setIsOpenEditVaga(false);
   }
 
-  async function handleApply() {
+  async function handleApply(vaga: Vaga) {
     try {
-      // await api.vaga.candidatarVaga(vaga.id);
+      await api.vaga.candidatarVaga(vaga.id);
       enqueueSnackbar('Candidatura realizada com sucesso', { variant: 'success' });
     } catch (err) {
       enqueueSnackbar('Erro ao se candidatar', { variant: 'error' });
@@ -80,7 +81,7 @@ function Home() {
 
   return (
     <Box sx={{ maxWidth: '608px', width: '100%', padding: '0px 16px' }}>
-      <CreateVaga sx={{ width: '592px' }} />
+      <CreateVaga sx={{ width: '592px' }} reloadVagas={reloadVagas} />
       { isOpenEditVaga && (
         <VagaModal isOpen={isOpenEditVaga} handleClose={() => handleCloseEditModal()} vagaToEdit={vagaToEdit} />
       )}
@@ -91,8 +92,8 @@ function Home() {
               <Box sx={{ display: 'flex', flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between' }}>
                 <Typography sx={{ fontSize: '24px', fontWeight: 600 }}>{vaga.titulo}</Typography>
                 {
-                // vaga.publicador.id === user?.id &&
-                  true && (
+                  vaga.publicador.id === user?.id
+                  && (
                     <>
                       <IconButton onClick={handleClick}>
                         <MoreVertOutlinedIcon sx={{ height: '24px', width: '24px' }} />
@@ -120,7 +121,8 @@ function Home() {
               <Box>
                 <Typography sx={{ fontSize: '14px', fontWeight: 400, fontStyle: 'italic' }}>
                   Criado por
-                  {/* {vaga.publicador.nome} */}
+                  {' '}
+                  {vaga.publicador.nome}
                 </Typography>
               </Box>
               <Box sx={{ display: 'flex', flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between' }}>
@@ -145,10 +147,9 @@ function Home() {
                 </Box>
               </Box>
               <Box sx={{ display: 'flex', justifyContent: 'flex-end' }}>
-                <Button variant="contained" color="primary" sx={{ height: '30px' }} onClick={() => handleApply()}>Quero me candidatar</Button>
+                {/* <Button variant="contained" color="primary" sx={{ height: '30px' }} onClick={() => handleApply(vaga)}>Quero me candidatar</Button> */}
                 {' '}
-                {/* VERIFICAR SE JÁ ME CANDIDATEI A VAGA */}
-                {/* <Button variant="contained" disabled={vaga.publicador.id === user?.id} color="primary" sx={{ height: '30px' }} onClick={() => handleApply()}>Quero me candidatar</Button> */}
+                <Button variant="contained" disabled={vaga.publicador.id === user?.id} color="primary" sx={{ height: '30px' }} onClick={() => handleApply(vaga)}>Quero me candidatar</Button>
               </Box>
             </Box>
           </Card>
