@@ -1,7 +1,10 @@
 /* eslint-disable jsx-a11y/anchor-is-valid */
 import React from 'react'
 import styled from 'styled-components'
+import { Box, IconButton } from '@mui/material'
+import LogoutIcon from '@mui/icons-material/Logout';
 import LogoSvg from '../../../public/AqConnectaIcon.svg'
+import { useAuth } from '../../contexts/AuthContext';
 
 const Container = styled.div`
   background-color: #fff;
@@ -17,6 +20,7 @@ const Container = styled.div`
 const Content = styled.div`
   display: flex;
   align-items: center;
+  justify-content: space-between;
   margin: 0 auto;
   height: 100%; 
   padding: 8px 32px;
@@ -73,6 +77,11 @@ const SearchIcon = styled.div`
 `
 
 function Header() {
+  const { logout } = useAuth()
+  function logoutUser() {
+    logout()
+  }
+
   return (
     <Container>
       <Content>
@@ -81,14 +90,19 @@ function Header() {
             <img src={LogoSvg} alt="" width="24px" height="24px" />
           </a>
         </Logo>
-        <Search>
-          <div>
-            <input type="text" placeholder="Search" />
-          </div>
-          <SearchIcon>
-            <img src="/images/search-icon.svg" alt="" />
-          </SearchIcon>
-        </Search>
+        {/* <Search> */}
+        {/* <div> */}
+        {/* <input type="text" placeholder="Search" /> */}
+        {/* </div> */}
+        {/* <SearchIcon> */}
+        {/* <img src="/images/search-icon.svg" alt="" /> */}
+        {/* </SearchIcon> */}
+        {/* </Search> */}
+        <Box>
+          <IconButton variant="contained" color="primary" onClick={() => logoutUser()}>
+            <LogoutIcon />
+          </IconButton>
+        </Box>
       </Content>
     </Container>
   )

@@ -3,7 +3,7 @@ import React, { createContext, useContext, useState, useMemo, useCallback, useEf
 import { enqueueSnackbar } from 'notistack'
 import { jwtDecode } from 'jwt-decode'
 import { Usuario } from '../services/endpoints/auth'
-import { setBearerToken } from '../services/endpoints/_axios'
+import { setBearerToken, removeBearerToken } from '../services/endpoints/_axios'
 import api from '../services/api'
 
 type AuthData = {
@@ -11,6 +11,7 @@ type AuthData = {
   handleLogin: (email: string, password: string) => Promise<boolean>
   isLogged: boolean
   checkLogged: () => boolean
+  logout: () => void
   loading: boolean
 }
 
@@ -72,12 +73,22 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     return false
   }
 
+  const logout = () => {
+    localStorage.removeItem('token')
+    localStorage.removeItem('user')
+    localStorage.removeItem('tokenExp')
+    setUser(null)
+    setIsLogged(false)
+    removeBearerToken()
+  }
+
   const value = useMemo(
     () => ({
       user,
       handleLogin,
       isLogged,
       checkLogged,
+      logout,
       loading,
     }),
     [user, isLogged, loading],

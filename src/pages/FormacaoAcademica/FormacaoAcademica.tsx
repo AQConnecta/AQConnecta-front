@@ -108,7 +108,6 @@ function MinhaFormacaoAcademica() {
                     backgroundColor: 'red',
                   }}
                 />
-                {/* <Typography variant="body1">{formacaoAcademica.descricao}</Typography> */}
                 <Box sx={{
                   display: 'flex', direction: 'column', alignItems: 'center', justifyContent: 'space-around', gap: '16px',
                 }}
