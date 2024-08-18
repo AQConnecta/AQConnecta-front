@@ -2,7 +2,7 @@ import {
   Box, Button, Switch, TextField, Typography,
 } from '@mui/material';
 import { useEffect, useState } from 'react';
-import { useNavigate, useParams } from 'react-router-dom';
+import { useParams } from 'react-router-dom';
 import { useSnackbar } from 'notistack';
 import useHandleKeyPress from '../../hooks/useHandleKeyPress';
 import api from '../../services/api';
@@ -25,7 +25,6 @@ function ExperienciaRegister({isOpen, setOpen}: IModal) {
       dataFim: '',
       atualExperiencia: false,
     });
-    const navigate = useNavigate();
     const { enqueueSnackbar } = useSnackbar();
     const { id: experienciaId } = useParams();
     const user = JSON.parse(localStorage.getItem('user') || '{}');
@@ -40,7 +39,6 @@ function ExperienciaRegister({isOpen, setOpen}: IModal) {
           enqueueSnackbar('Experiência editada com sucesso', {
             variant: 'success',
           });
-          navigate('/experiencias');
         } catch (error) {
           enqueueSnackbar('Erro ao editar experiência', { variant: 'error' });
         }
@@ -51,7 +49,6 @@ function ExperienciaRegister({isOpen, setOpen}: IModal) {
         enqueueSnackbar('Experiência adicionada com sucesso', {
           variant: 'success',
         });
-        navigate('/experiencias');
       } catch (error) {
         enqueueSnackbar('Erro ao adicionar experiência', { variant: 'error' });
       }

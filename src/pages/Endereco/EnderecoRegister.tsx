@@ -1,7 +1,7 @@
 /* eslint-disable no-unused-vars */
 import { Box, Button, TextField, Typography, IconButton, Dialog, DialogTitle, DialogActions, DialogContent } from '@mui/material'
 import { useEffect, useState } from 'react'
-import { useNavigate, useParams } from 'react-router-dom'
+import { useParams } from 'react-router-dom'
 import { useSnackbar } from 'notistack'
 import CloseIcon from '@mui/icons-material/Close'
 import { Endereco } from '../../services/endpoints/endereco'
@@ -24,7 +24,6 @@ function EnderecoRegister({ isOpen, setOpen }: IModal) {
     numeroCasa: '',
     complemento: '',
   })
-  const navigate = useNavigate()
   const { enqueueSnackbar } = useSnackbar()
   const { id: enderecoId } = useParams()
   const user = JSON.parse(localStorage.getItem('user') || '{}')
@@ -37,7 +36,6 @@ function EnderecoRegister({ isOpen, setOpen }: IModal) {
         enqueueSnackbar('Endereço editado com sucesso', {
           variant: 'success',
         })
-        navigate('/endereco')
       } catch (error) {
         enqueueSnackbar('Erro ao editar endereço', { variant: 'error' })
       }
@@ -48,7 +46,6 @@ function EnderecoRegister({ isOpen, setOpen }: IModal) {
       enqueueSnackbar('Endereço adicionado com sucesso', {
         variant: 'success',
       })
-      navigate('/endereco')
     } catch (error) {
       enqueueSnackbar('Erro ao adicionar endereço', { variant: 'error' })
     }

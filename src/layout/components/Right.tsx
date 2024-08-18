@@ -1,6 +1,7 @@
 import React from 'react'
 import { useNavigate } from 'react-router-dom'
 import styled from 'styled-components'
+import { useAuth } from '../../contexts/AuthContext'  // Importe o useAuth
 
 const Container = styled.div`
   min-width: 200px;
@@ -35,9 +36,8 @@ const CardBackground = styled.div`
   margin: -12px -12px 0;
 `
 
-const Photo = styled.div`
+const Photo = styled.img`
   box-shadow: none;
-  background: url(${(props) => props.photoUrl});
   width: 72px;
   height: 72px;
   box-sizing: border-box;
@@ -49,6 +49,7 @@ const Photo = styled.div`
   border: 2px solid white;
   margin: -38px auto 12px;
   border-radius: 50%;
+  cursor: pointer;
 `
 
 const Text = styled.div`
@@ -60,14 +61,21 @@ const Text = styled.div`
 
 function Right() {
   const navigate = useNavigate()
+  const { user } = useAuth()
+
+  const photoUrl = user?.fotoPerfil || 'https://via.placeholder.com/72x72.png?text=No+Image'
+
   return (
     <Container>
       <ArtCard>
         <UserInfo>
           <CardBackground />
-          <Photo photoUrl="https://pbs.twimg.com/media/FTkEZfxWIAA0f4P.jpg" onClick={() => navigate('/usuario')} />
+          <Photo 
+            src={photoUrl}
+            onClick={() => navigate('/usuario')}
+          />
           <Text>
-            Welcome
+            Olá, {user.nome}
           </Text>
         </UserInfo>
       </ArtCard>

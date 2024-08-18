@@ -6,6 +6,7 @@ export type Usuario = {
     id: string;
     nome: string;
     email: string;
+    fotoPerfil: string;
 }
 
 export type AuthLogin = {

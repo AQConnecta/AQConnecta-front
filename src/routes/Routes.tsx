@@ -14,6 +14,8 @@ import Home from '../pages/Home/Home.tsx'
 import MinhaFormacaoAcademica from '../pages/FormacaoAcademica/FormacaoAcademica.tsx'
 import FormacaoAcademicaRegister from '../pages/FormacaoAcademica/FormacaoAcademicaRegister.tsx'
 import Usuario from '../pages/Usuario/Usuario.tsx'
+import MinhasVagas from '../pages/MinhasVagas/MinhasVagas.tsx'
+import MinhasCandidaturas from '../pages/MinhasCandidaturas/MinhasCandidaturas.tsx'
 
 const AppRoutes = () => {
   return (
@@ -35,6 +37,22 @@ const AppRoutes = () => {
           element={(
             <ProtectedRoute>
               <Usuario />
+            </ProtectedRoute>
+          )}
+        />
+        <Route
+          path="minhas-vagas"
+          element={(
+            <ProtectedRoute>
+              <MinhasVagas />
+            </ProtectedRoute>
+          )}
+        />
+        <Route
+          path="minhas-candidaturas"
+          element={(
+            <ProtectedRoute>
+              <MinhasCandidaturas />
             </ProtectedRoute>
           )}
         />

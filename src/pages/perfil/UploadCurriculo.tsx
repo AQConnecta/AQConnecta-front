@@ -1,11 +1,33 @@
-import React, { useState } from 'react';
-import { Box, Button, Typography, Input, Modal } from '@mui/material';
+import React, { useState, useEffect } from 'react';
+import { Box, Button, Typography, Input, Modal, IconButton } from '@mui/material';
 import { enqueueSnackbar } from 'notistack';
 import { PerfilEndpoint } from '../../services/endpoints/perfil';
+import EditOutlinedIcon from '@mui/icons-material/EditOutlined';
+import DeleteOutlineOutlinedIcon from '@mui/icons-material/DeleteOutlineOutlined';
 
 function UploadCurriculo() {
   const [file, setFile] = useState<File | null>(null);
+  const [curriculos, setCurriculos] = useState<Array<{ id: string, nome: string, url: string }>>([]);
   const perfilEndpoint = new PerfilEndpoint();
+
+  useEffect(() => {
+    async function fetchCurriculos() {
+      try {
+        const res = await perfilEndpoint.getCurriculos();
+        const fetchedCurriculos = Object.keys(res.data.data).map((key) => ({
+          id: key,
+          nome: res.data.data[key].split('/').pop(), // Extrai o nome do arquivo da URL
+          url: res.data.data[key],
+        }));
+        setCurriculos(fetchedCurriculos);
+      } catch (error) {
+        enqueueSnackbar('Erro ao buscar currículos', { variant: 'error' });
+        console.error('Erro ao buscar currículos:', error);
+      }
+    }
+
+    fetchCurriculos();
+  }, []);
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.files) {
@@ -23,9 +45,23 @@ function UploadCurriculo() {
       const response = await perfilEndpoint.uploadCurriculo(file);
       enqueueSnackbar('Currículo enviado com sucesso!', { variant: 'success' });
       console.log(response.data);
+      // Adiciona o novo currículo à lista
+      setCurriculos((prev) => [...prev, { id: response.data.id, nome: file.name, url: response.data.url }]);
     } catch (error) {
       console.error('Erro ao fazer upload do currículo:', error);
       enqueueSnackbar('Erro ao fazer upload do currículo. Tente novamente.', { variant: 'error' });
+    }
+  };
+
+  const handleDelete = async (id: string) => {
+    try {
+      // Adicione a lógica de exclusão aqui
+      enqueueSnackbar('Currículo excluído com sucesso!', { variant: 'success' });
+      // Remove o currículo da lista
+      setCurriculos((prev) => prev.filter((curriculo) => curriculo.id !== id));
+    } catch (error) {
+      enqueueSnackbar('Erro ao excluir currículo', { variant: 'error' });
+      console.error('Erro ao excluir currículo:', error);
     }
   };
 
@@ -45,13 +81,45 @@ function UploadCurriculo() {
       }}
     >
       <Typography variant="h4" sx={{ fontWeight: 'bold', color: '#0a66c2', marginBottom: '16px' }}>
-        Upload de Currículo
+        Gerenciar Currículos
       </Typography>
+
+      {/* Listagem dos currículos */}
+      <Box sx={{ width: '100%', marginBottom: '20px' }}>
+        {curriculos.map((curriculo) => (
+          <Box
+            key={curriculo.id}
+            sx={{
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'space-between',
+              padding: '10px',
+              border: '1px solid #ddd',
+              borderRadius: '5px',
+              marginBottom: '10px',
+              backgroundColor: '#fff',
+            }}
+          >
+            <a href={curriculo.url} target="_blank" rel="noopener noreferrer">
+              <Typography variant="body1" sx={{ color: '#0a66c2', fontWeight: 'bold' }}>
+                {curriculo.nome}
+              </Typography>
+            </a>
+            <Box>
+              <IconButton onClick={() => handleDelete(curriculo.id)} color="error">
+                <DeleteOutlineOutlinedIcon />
+              </IconButton>
+            </Box>
+          </Box>
+        ))}
+      </Box>
+
+      {/* Adicionar novo currículo */}
       <Input
         type="file"
         onChange={handleFileChange}
         sx={{ marginBottom: '20px' }}
-        inputProps={{ accept: '.pdf,.doc,.docx' }}  // Permite apenas arquivos de currículo
+        inputProps={{ accept: '.pdf,.doc,.docx' }}
       />
       <Button
         variant="contained"
@@ -65,7 +133,7 @@ function UploadCurriculo() {
         }}
         onClick={handleUpload}
       >
-        Enviar Currículo
+        Adicionar Currículo
       </Button>
     </Box>
   );
