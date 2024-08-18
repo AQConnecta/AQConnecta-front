@@ -164,8 +164,13 @@ function Home() {
                   ))}
                 </Box>
               </Box>
-              <Box sx={{ display: 'flex', justifyContent: 'flex-end' }}>
-                <Button variant="contained" color="primary" sx={{ height: '30px' }} onClick={() => handleOpenCurriculoModal(vaga)}>
+              <Box sx={{ display: 'flex', justifyContent: 'space-between' }}>
+                {vaga.publicador.id === user?.id ? (
+                  <Box>
+                    Ver candidatos
+                  </Box>
+                ) : (<Box />)}
+                <Button variant="contained" disabled={vaga.publicador.id === user?.id} color="primary" sx={{ height: '30px' }} onClick={() => handleOpenCurriculoModal(vaga)}>
                   Quero me candidatar
                 </Button>
               </Box>
