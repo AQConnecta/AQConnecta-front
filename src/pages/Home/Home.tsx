@@ -170,7 +170,9 @@ function Home() {
                     Ver candidatos
                   </Box>
                 ) : (<Box />)}
-                <Button variant="contained" disabled={vaga.publicador.id === user?.id} color="primary" sx={{ height: '30px' }} onClick={() => handleApply(vaga)}>Quero me candidatar</Button>
+                <Button variant="contained" disabled={vaga.publicador.id === user?.id} color="primary" sx={{ height: '30px' }} onClick={() => handleOpenCurriculoModal(vaga)}>
+                  Quero me candidatar
+                </Button>
               </Box>
             </Box>
           </Card>
