@@ -50,4 +50,8 @@ export class VagaEndpoint {
             },
         });
     }
+
+    async listarCandidatos(idVaga) {
+        return await axios.get(`${PREFIX}/candidaturas/${idVaga}`)
+    }
 }

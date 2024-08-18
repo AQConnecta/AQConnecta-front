@@ -28,4 +28,8 @@ export class PerfilEndpoint {
   async getCurriculos() {
     return await axios.get(`${PREFIX}/curriculos`)
   }
+
+  async listarMinhasCandidaturas() {
+    return await axios.get(`${PREFIX}/candidaturas`)
+  }
 }
