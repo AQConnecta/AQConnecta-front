@@ -1,12 +1,10 @@
 import { Box, Button, Typography } from '@mui/material';
 import React, { useEffect, useState } from 'react';
 import { enqueueSnackbar } from 'notistack';
-import { useNavigate } from 'react-router-dom';
+import { FaTrash, FaPencil } from "react-icons/fa6";
 import api from '../../services/api';
 import { Experiencia } from '../../services/endpoints/experiencia.ts';
 import { useAuth } from '../../contexts/AuthContext.tsx';
-import { FaTrash, FaPencil  } from "react-icons/fa6";
-import { colors } from '../../styles/colors.ts';
 import ExperienciaRegister from './ExperienciaRegister.tsx';
 
 function MinhaExperiencia() {
@@ -14,9 +12,8 @@ function MinhaExperiencia() {
   const [experiencias, setExperiencias] = useState<Experiencia[]>([]);
   const [isOpenEditExperiencia, setIsOpenEditExperiencia] = useState(false);
   const [experienciaToEdit, setExperienciaToEdit] = useState<Experiencia | null>(null);
-  const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
   const [shouldReload, setShouldReload] = useState(0);
-  const navigate = useNavigate();
+  const [open, setOpen] = useState<boolean>(false);
 
   useEffect(() => {
     async function getExperiencia() {
@@ -40,15 +37,11 @@ function MinhaExperiencia() {
     return new Date(dateString).toLocaleDateString('pt-BR', options);
   };
 
-  const handleClose = () => {
-    setAnchorEl(null);
-  };
-
   async function handleDelete(idExperiencia: string) {
     try {
       await api.experiencia.deletarExperiencia(idExperiencia);
       enqueueSnackbar('Experiência deletada com sucesso', { variant: 'success' });
-      reload()
+      reload();
     } catch (err) {
       enqueueSnackbar('Erro ao deletar experiência', { variant: 'error' });
     }
@@ -57,119 +50,115 @@ function MinhaExperiencia() {
   async function handleEdit(experiencia: Experiencia) {
     setIsOpenEditExperiencia(true);
     setExperienciaToEdit(experiencia);
-    handleClose();
   }
-
-const [open, setOpen] = useState<boolean>(false);
 
   return (
     <Box
-      height="100%"
-      width="100%"
       sx={{
         display: 'flex',
         alignItems: 'center',
         justifyContent: 'center',
         flexDirection: 'column',
-        gap: '15px',
-        padding: '10px',
+        gap: '20px',
+        padding: '40px',
+        width: '90%',
+        margin: 'auto',
+        backgroundColor: '#f8f9fa',
+        borderRadius: '8px',
+        boxShadow: '0 4px 8px rgba(0, 0, 0, 0.1)',
       }}
     >
-      <Box sx={{
-        display: 'flex',
-        alignItems: 'center',
-        justifyContent: 'center',
-        flexDirection: 'column',
-      }}>
-        <Typography fontWeight='bold' fontSize='40px' variant="h1">
+      <Typography variant="h4" sx={{ fontWeight: 'bold', color: '#0a66c2' }}>
         Experiências
-        </Typography>
-
-        <Typography color='grey'>
+      </Typography>
+      <Typography variant="body1" sx={{ color: 'grey', marginBottom: '16px' }}>
         Destaque suas conquistas!
-        </Typography>
-      </Box>
-      <Button variant="contained" onClick={() => setOpen(!open)}>Adicionar experiência</Button>
+      </Typography>
       <Box
-        width="100%"
         sx={{
           display: 'flex',
           flexDirection: 'column',
-          gap: '10px',
-          boxShadow: '0 1px 2px #0003',
-          maxWidth: '350px',
-          padding: '20px',
-          borderRadius: '5px',
+          gap: '20px',
+          width: '100%',
         }}
       >
         {experiencias && experiencias.length > 0 ? (
           experiencias.map((experiencia, index) => (
-           <Box key={index} sx={{padding: '15px', border: '1px solid lightgrey', borderRadius: '5px', backgroundColor: 'white'}}>
-              <Typography variant="h7" sx={{color: 'grey'}}>
-                Experiência
-                {' '}
-                {index + 1}
-              </Typography>
-              <Typography variant="body1" fontWeight='bold'>
-                {experiencia.titulo.toUpperCase()}
-                {' '}
-                -
-                {' '}
-                {experiencia.instituicao}
-              </Typography>
-              <Typography
-                variant="body1"
-                sx={{
-                  color: 'grey'
-                }}
-              >
-                {formatDate(experiencia.dataInicio)}
-                {' '}
-                -
-                {' '}
-                {experiencia.atualExperiencia ? 'até o momento' : formatDate(experiencia.dataFim)}
-              </Typography>
-              <hr
-                style={{
-                  color: 'black',
-                  backgroundColor: 'red',
-                }}
-              />
-              <Typography variant="body1">
-                 {experiencia.descricao}
-              </Typography>
-              <Box sx={{
-                display: 'flex', direction: 'column', alignItems: 'center', justifyContent: 'center', gap: '16px',
+            <Box
+              key={index}
+              sx={{
+                padding: '20px',
+                border: '1px solid #e1e4e8',
+                borderRadius: '8px',
+                backgroundColor: '#fff',
+                boxShadow: '0 1px 3px rgba(0, 0, 0, 0.1)',
               }}
-              >
-                <Button variant="contained" sx={{ width: '100%', height: '50px', display: 'flex', alignItems: 'center', justifyContent: 'space-between'}} onClick={() => setOpen(!open)}>
-                  <FaPencil />
-                  <Typography>  
-                     Editar
-                  </Typography>
+            >
+              <Typography variant="h6" sx={{ color: '#495057' }}>
+              </Typography>
+              <Typography variant="body1" sx={{ fontWeight: 'bold', marginBottom: '8px' }}>
+                {experiencia.titulo.toUpperCase()} - {experiencia.instituicao}
+              </Typography>
+              <Typography variant="body2" sx={{ color: '#868e96', marginBottom: '8px' }}>
+                {formatDate(experiencia.dataInicio)} - {experiencia.atualExperiencia ? 'até o momento' : formatDate(experiencia.dataFim)}
+              </Typography>
+              <Typography variant="body2" sx={{ marginBottom: '16px' }}>
+                {experiencia.descricao}
+              </Typography>
+              <Box sx={{ display: 'flex', gap: '10px' }}>
+                <Button
+                  variant="outlined"
+                  sx={{
+                    color: '#0a66c2',
+                    borderColor: '#0a66c2',
+                    flexGrow: 1,
+                    textTransform: 'none',
+                    '&:hover': { backgroundColor: '#e1e4e8', borderColor: '#0a66c2' },
+                  }}
+                  onClick={() => handleEdit(experiencia)}
+                >
+                  <FaPencil style={{ marginRight: '8px' }} />
+                  Editar
                 </Button>
-                <Button variant="contained" sx={{ width: '100%', height: '50px', backgroundColor: 'tomato', display: 'flex', alignItems: 'center', justifyContent: 'space-between', '&:hover':{backgroundColor: 'red'}}} onClick={() => handleDelete(experiencia.id!)}>
-                <FaTrash />
-                <Typography>  
-                    Excluir
-                </Typography>
+                <Button
+                  variant="contained"
+                  sx={{
+                    backgroundColor: '#d9534f',
+                    color: 'white',
+                    flexGrow: 1,
+                    textTransform: 'none',
+                    '&:hover': { backgroundColor: '#c9302c' },
+                  }}
+                  onClick={() => handleDelete(experiencia.id!)}
+                >
+                  <FaTrash style={{ marginRight: '8px' }} />
+                  Excluir
                 </Button>
               </Box>
             </Box>
           ))
         ) : (
-          <Box sx={{
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center',
-          }}>
-            <Typography variant="body1">Sem experiências até o momento</Typography>
-          </Box>
+          <Typography variant="body1" sx={{ color: 'grey', textAlign: 'center' }}>
+            Sem experiências até o momento
+          </Typography>
         )}
       </Box>
-      <ExperienciaRegister isOpen={open} setOpen={setOpen}/>
+      <Button
+        variant="contained"
+        sx={{
+          backgroundColor: '#0a66c2',
+          color: 'white',
+          padding: '10px 20px',
+          borderRadius: '25px',
+          textTransform: 'none',
+          '&:hover': { backgroundColor: '#004182' },
+        }}
+        onClick={() => setOpen(!open)}
+      >
+        Adicionar experiência
+      </Button>
+      <ExperienciaRegister isOpen={open} setOpen={setOpen} />
     </Box>
-
   );
 }
 
