@@ -1,9 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import { Box, Button, Typography, Input, Modal, IconButton } from '@mui/material';
 import { enqueueSnackbar } from 'notistack';
-import { PerfilEndpoint } from '../../services/endpoints/perfil';
-import EditOutlinedIcon from '@mui/icons-material/EditOutlined';
 import DeleteOutlineOutlinedIcon from '@mui/icons-material/DeleteOutlineOutlined';
+import { PerfilEndpoint } from '../../services/endpoints/perfil';
+import api from '../../services/api';
 
 function UploadCurriculo() {
   const [file, setFile] = useState<File | null>(null);
@@ -13,16 +13,15 @@ function UploadCurriculo() {
   useEffect(() => {
     async function fetchCurriculos() {
       try {
-        const res = await perfilEndpoint.getCurriculos();
+        const res = await api.perfil.getCurriculos();
         const fetchedCurriculos = Object.keys(res.data.data).map((key) => ({
           id: key,
-          nome: res.data.data[key].split('/').pop(), // Extrai o nome do arquivo da URL
+          nome: res.data.data[key].split('/').pop(),
           url: res.data.data[key],
         }));
         setCurriculos(fetchedCurriculos);
       } catch (error) {
         enqueueSnackbar('Erro ao buscar currículos', { variant: 'error' });
-        console.error('Erro ao buscar currículos:', error);
       }
     }
 
@@ -44,24 +43,18 @@ function UploadCurriculo() {
     try {
       const response = await perfilEndpoint.uploadCurriculo(file);
       enqueueSnackbar('Currículo enviado com sucesso!', { variant: 'success' });
-      console.log(response.data);
-      // Adiciona o novo currículo à lista
       setCurriculos((prev) => [...prev, { id: response.data.id, nome: file.name, url: response.data.url }]);
     } catch (error) {
-      console.error('Erro ao fazer upload do currículo:', error);
       enqueueSnackbar('Erro ao fazer upload do currículo. Tente novamente.', { variant: 'error' });
     }
   };
 
   const handleDelete = async (id: string) => {
     try {
-      // Adicione a lógica de exclusão aqui
       enqueueSnackbar('Currículo excluído com sucesso!', { variant: 'success' });
-      // Remove o currículo da lista
       setCurriculos((prev) => prev.filter((curriculo) => curriculo.id !== id));
     } catch (error) {
       enqueueSnackbar('Erro ao excluir currículo', { variant: 'error' });
-      console.error('Erro ao excluir currículo:', error);
     }
   };
 
@@ -84,7 +77,6 @@ function UploadCurriculo() {
         Gerenciar Currículos
       </Typography>
 
-      {/* Listagem dos currículos */}
       <Box sx={{ width: '100%', marginBottom: '20px' }}>
         {curriculos.map((curriculo) => (
           <Box
@@ -114,7 +106,6 @@ function UploadCurriculo() {
         ))}
       </Box>
 
-      {/* Adicionar novo currículo */}
       <Input
         type="file"
         onChange={handleFileChange}
@@ -177,7 +168,8 @@ function App() {
           borderRadius: '8px',
           boxShadow: 24,
           p: 4,
-        }}>
+        }}
+        >
           <UploadCurriculo />
         </Box>
       </Modal>

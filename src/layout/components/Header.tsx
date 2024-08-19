@@ -1,8 +1,11 @@
 /* eslint-disable jsx-a11y/anchor-is-valid */
 import React from 'react'
 import styled from 'styled-components'
-import { Box, IconButton } from '@mui/material'
+import { Box, IconButton, Typography } from '@mui/material'
 import LogoutIcon from '@mui/icons-material/Logout';
+import { Link } from 'react-router-dom';
+import PermIdentityOutlinedIcon from '@mui/icons-material/PermIdentityOutlined';
+import BusinessCenterOutlinedIcon from '@mui/icons-material/BusinessCenterOutlined';
 import LogoSvg from '../../../public/AqConnectaIcon.svg'
 import { useAuth } from '../../contexts/AuthContext';
 
@@ -98,6 +101,23 @@ function Header() {
         {/* <img src="/images/search-icon.svg" alt="" /> */}
         {/* </SearchIcon> */}
         {/* </Search> */}
+        <Box />
+        <Box />
+        <Box />
+        <Box sx={{ display: 'flex', flexDirection: 'row', gap: '16px' }}>
+          <Link to="/usuario">
+            <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center', flexDirection: 'column', gap: '0px' }}>
+              <PermIdentityOutlinedIcon />
+              <Typography sx={{ fontSize: '14px' }}>Meu Perfil</Typography>
+            </Box>
+          </Link>
+          <Link to="/minhas-vagas">
+            <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center', flexDirection: 'column', gap: '0px' }}>
+              <BusinessCenterOutlinedIcon />
+              <Typography sx={{ fontSize: '14px' }}>Minhas vagas</Typography>
+            </Box>
+          </Link>
+        </Box>
         <Box>
           <IconButton variant="contained" color="primary" onClick={() => logoutUser()}>
             <LogoutIcon />

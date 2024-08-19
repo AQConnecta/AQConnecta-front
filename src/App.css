@@ -24,6 +24,15 @@ body{
   background-color: #f4f2ee;
 }
 
+a {
+  text-decoration: none;
+  color: #5E63B6;
+
+  &:hover {
+    color: #464555;
+  }
+}
+
 /* * { 
   outline: 1px solid red; 
 } */

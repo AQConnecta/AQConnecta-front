@@ -1,7 +1,7 @@
 import React from 'react'
 import { useNavigate } from 'react-router-dom'
 import styled from 'styled-components'
-import { useAuth } from '../../contexts/AuthContext'  // Importe o useAuth
+import { useAuth } from '../../contexts/AuthContext' // Importe o useAuth
 
 const Container = styled.div`
   min-width: 200px;
@@ -40,12 +40,7 @@ const Photo = styled.img`
   box-shadow: none;
   width: 72px;
   height: 72px;
-  box-sizing: border-box;
-  background-clip: content-box;
-  background-color: #fff;
-  background-position: center;
-  background-size: 150%;
-  background-repeat: no-repeat;
+  object-fit: cover;
   border: 2px solid white;
   margin: -38px auto 12px;
   border-radius: 50%;
@@ -65,20 +60,26 @@ function Right() {
 
   const photoUrl = user?.fotoPerfil || 'https://via.placeholder.com/72x72.png?text=No+Image'
 
+  console.log(user)
+
   return (
     <Container>
-      <ArtCard>
-        <UserInfo>
-          <CardBackground />
-          <Photo 
-            src={photoUrl}
-            onClick={() => navigate('/usuario')}
-          />
-          <Text>
-            Olá, {user.nome}
-          </Text>
-        </UserInfo>
-      </ArtCard>
+      { user && (
+        <ArtCard>
+          <UserInfo>
+            <CardBackground />
+            <Photo
+              src={photoUrl}
+              onClick={() => navigate('/usuario')}
+            />
+            <Text>
+              Olá,
+              {' '}
+              {user.nome || ''}
+            </Text>
+          </UserInfo>
+        </ArtCard>
+      )}
     </Container>
   )
 }

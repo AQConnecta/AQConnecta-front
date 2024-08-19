@@ -4,12 +4,16 @@ import { enqueueSnackbar } from 'notistack';
 import { FaTrash, FaPencil } from 'react-icons/fa6';
 import api from '../../services/api';
 import { FormacaoAcademica } from '../../services/endpoints/formacaoAcademica.ts';
-import { useAuth } from '../../contexts/AuthContext.tsx';
 import FormacaoAcademicaRegister from './FormacaoAcademicaRegister.tsx';
 import Card from '../../components/Card.tsx';
+import { Usuario } from '../../services/endpoints/auth.ts';
 
-function MinhaFormacaoAcademica() {
-  const { user } = useAuth();
+type FormacaoAcademicaProps = {
+  user: Usuario;
+};
+
+function MinhaFormacaoAcademica(props: FormacaoAcademicaProps) {
+  const { user } = props;
   const [formacoesAcademicas, setFormacoesAcademicas] = useState<FormacaoAcademica[]>([]);
   const [shouldReload, setShouldReload] = useState(0);
 
@@ -17,7 +21,6 @@ function MinhaFormacaoAcademica() {
     async function getFormacaoAcademica() {
       try {
         const res = await api.formacaoAcademica.getFormacaoAcademica(user.id);
-        console.log(res.data.data)
         setFormacoesAcademicas(res.data.data);
       } catch (err) {
         enqueueSnackbar('Erro ao buscar experiencia', { variant: 'error' });

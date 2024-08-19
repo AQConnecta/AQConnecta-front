@@ -4,11 +4,15 @@ import { enqueueSnackbar } from 'notistack'
 import { FaTrash, FaPencil } from 'react-icons/fa6';
 import api from '../../services/api'
 import { Endereco } from '../../services/endpoints/endereco'
-import { useAuth } from '../../contexts/AuthContext'
 import EnderecoRegister from './EnderecoRegister'
+import { Usuario } from '../../services/endpoints/auth';
 
-function MeuEndereco() {
-  const { user } = useAuth()
+type EnderecoProps ={
+  user: Usuario
+}
+
+function MeuEndereco(props: EnderecoProps) {
+  const { user } = props
   const [enderecos, setEnderecos] = useState<Endereco[]>([])
   const [shouldReload, setShouldReload] = useState(0)
 

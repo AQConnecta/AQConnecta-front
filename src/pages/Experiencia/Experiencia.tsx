@@ -1,14 +1,19 @@
 import { Box, Button, Typography } from '@mui/material';
 import React, { useEffect, useState } from 'react';
 import { enqueueSnackbar } from 'notistack';
-import { FaTrash, FaPencil } from "react-icons/fa6";
+import { FaTrash, FaPencil } from 'react-icons/fa6';
 import api from '../../services/api';
 import { Experiencia } from '../../services/endpoints/experiencia.ts';
-import { useAuth } from '../../contexts/AuthContext.tsx';
 import ExperienciaRegister from './ExperienciaRegister.tsx';
+import { Usuario } from '../../services/endpoints/auth.ts';
 
-function MinhaExperiencia() {
-  const { user } = useAuth();
+type ExperienciaProps = {
+  user: Usuario;
+};
+
+// eslint-disable-next-line import/prefer-default-export
+export function MinhaExperiencia(props:ExperienciaProps) {
+  const { user } = props;
   const [experiencias, setExperiencias] = useState<Experiencia[]>([]);
   const [isOpenEditExperiencia, setIsOpenEditExperiencia] = useState(false);
   const [experienciaToEdit, setExperienciaToEdit] = useState<Experiencia | null>(null);
@@ -94,13 +99,17 @@ function MinhaExperiencia() {
                 boxShadow: '0 1px 3px rgba(0, 0, 0, 0.1)',
               }}
             >
-              <Typography variant="h6" sx={{ color: '#495057' }}>
-              </Typography>
               <Typography variant="body1" sx={{ fontWeight: 'bold', marginBottom: '8px' }}>
-                {experiencia.titulo.toUpperCase()} - {experiencia.instituicao}
+                {experiencia.titulo.toUpperCase()}
+                {' '}
+                -
+                {experiencia.instituicao}
               </Typography>
               <Typography variant="body2" sx={{ color: '#868e96', marginBottom: '8px' }}>
-                {formatDate(experiencia.dataInicio)} - {experiencia.atualExperiencia ? 'até o momento' : formatDate(experiencia.dataFim)}
+                {formatDate(experiencia.dataInicio)}
+                {' '}
+                -
+                {experiencia.atualExperiencia ? 'até o momento' : formatDate(experiencia.dataFim)}
               </Typography>
               <Typography variant="body2" sx={{ marginBottom: '16px' }}>
                 {experiencia.descricao}
@@ -161,5 +170,3 @@ function MinhaExperiencia() {
     </Box>
   );
 }
-
-export default MinhaExperiencia;

@@ -1,11 +1,10 @@
 import React, { useState } from 'react';
 import { Box, Button, Typography, Input, Modal } from '@mui/material';
 import { enqueueSnackbar } from 'notistack';
-import { PerfilEndpoint } from '../../services/endpoints/perfil';
+import api from '../../services/api';
 
 function UploadImagemPerfil() {
   const [file, setFile] = useState<File | null>(null);
-  const imagemPerfilEndpoint = new PerfilEndpoint();
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.files) {
@@ -20,11 +19,9 @@ function UploadImagemPerfil() {
     }
 
     try {
-      const response = await imagemPerfilEndpoint.uploadImagemPerfil(file);
+      await api.perfil.uploadImagemPerfil(file);
       enqueueSnackbar('Imagem de perfil enviada com sucesso!', { variant: 'success' });
-      console.log(response.data);
     } catch (error) {
-      console.error('Erro ao fazer upload da imagem:', error);
       enqueueSnackbar('Erro ao fazer upload da imagem. Tente novamente.', { variant: 'error' });
     }
   };
@@ -109,7 +106,8 @@ function App() {
           borderRadius: '8px',
           boxShadow: 24,
           p: 4,
-        }}>
+        }}
+        >
           <UploadImagemPerfil />
         </Box>
       </Modal>
