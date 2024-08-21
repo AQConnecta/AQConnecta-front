@@ -52,7 +52,7 @@ function MinhaFormacaoAcademica(props: FormacaoAcademicaProps) {
   const [open, setOpen] = useState<boolean>(false);
 
   return (
-    <Card>
+    <Card sx={{ width: '100%' }}>
       <Box
         height="100%"
         width="100%"
@@ -64,15 +64,14 @@ function MinhaFormacaoAcademica(props: FormacaoAcademicaProps) {
           gap: '15px',
         }}
       >
-        <Button variant="contained" onClick={() => setOpen(!open)}>Cadastrar formação academica</Button>
 
+        <Typography sx={{ fontSize: '20px', alignSelf: 'flex-start', padding: '8px', fontWeight: 600 }}>Formações acadêmicas</Typography>
         <Box
           width="100%"
           sx={{
             display: 'flex',
             flexDirection: 'column',
-            gap: '10px',
-            boxShadow: '0 1px 2px #0003',
+            gap: '8px',
             backgroundColor: 'white',
             maxWidth: '500px',
             padding: '20px',
@@ -112,7 +111,7 @@ function MinhaFormacaoAcademica(props: FormacaoAcademicaProps) {
                   }}
                 />
                 <Box sx={{
-                  display: 'flex', direction: 'column', alignItems: 'center', justifyContent: 'space-around', gap: '16px',
+                  display: 'flex', direction: 'column', alignItems: 'center', justifyContent: 'center', gap: '8px',
                 }}
                 >
                   <Button variant="contained" sx={{ width: '150px', height: '50px', display: 'flex', alignItems: 'center', justifyContent: 'space-between' }} onClick={() => setOpen(!open)}>
@@ -137,6 +136,8 @@ function MinhaFormacaoAcademica(props: FormacaoAcademicaProps) {
             </Box>
           )}
         </Box>
+        <Button variant="contained" onClick={() => setOpen(!open)}>Cadastrar formação academica</Button>
+
         <FormacaoAcademicaRegister isOpen={open} setOpen={setOpen} />
       </Box>
     </Card>

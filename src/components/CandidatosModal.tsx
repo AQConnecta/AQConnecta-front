@@ -43,11 +43,11 @@ function CandidatosModal(props: CandidatoModalProps) {
                 <Avatar src={candidato.usuario.fotoPerfil} alt={candidato.usuario.nome} />
                 <Box sx={{ display: 'flex', flexDirection: 'column' }}>
                   <Typography>{candidato.usuario.nome}</Typography>
-                  {candidato.curriculoUrl && (
+                  {/* {candidato.curriculoUrl && (
                     <Link href={`/usuario/${candidato.usuario.id}`} target="_blank" rel="noopener noreferrer">
                       Ver perfil
                     </Link>
-                  )}
+                  )} */}
                 </Box>
               </Box>
               <Tooltip title="Baixar currículo">

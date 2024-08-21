@@ -6,16 +6,16 @@ import api from '../../services/api';
 import { Experiencia } from '../../services/endpoints/experiencia.ts';
 import ExperienciaRegister from './ExperienciaRegister.tsx';
 import { Usuario } from '../../services/endpoints/auth.ts';
+import Card from '../../components/Card.tsx';
+import CustomDialog from '../../components/CustomDialog.tsx';
 
 type ExperienciaProps = {
   user: Usuario;
 };
 
-// eslint-disable-next-line import/prefer-default-export
-export function MinhaExperiencia(props:ExperienciaProps) {
+function MinhaExperiencia(props:ExperienciaProps) {
   const { user } = props;
   const [experiencias, setExperiencias] = useState<Experiencia[]>([]);
-  const [isOpenEditExperiencia, setIsOpenEditExperiencia] = useState(false);
   const [experienciaToEdit, setExperienciaToEdit] = useState<Experiencia | null>(null);
   const [shouldReload, setShouldReload] = useState(0);
   const [open, setOpen] = useState<boolean>(false);
@@ -53,120 +53,105 @@ export function MinhaExperiencia(props:ExperienciaProps) {
   }
 
   async function handleEdit(experiencia: Experiencia) {
-    setIsOpenEditExperiencia(true);
     setExperienciaToEdit(experiencia);
+    setOpen(true);
   }
 
   return (
-    <Box
-      sx={{
-        display: 'flex',
-        alignItems: 'center',
-        justifyContent: 'center',
-        flexDirection: 'column',
-        gap: '20px',
-        padding: '40px',
-        width: '90%',
-        margin: 'auto',
-        backgroundColor: '#f8f9fa',
-        borderRadius: '8px',
-        boxShadow: '0 4px 8px rgba(0, 0, 0, 0.1)',
-      }}
-    >
-      <Typography variant="h4" sx={{ fontWeight: 'bold', color: '#0a66c2' }}>
-        Experiências
-      </Typography>
-      <Typography variant="body1" sx={{ color: 'grey', marginBottom: '16px' }}>
-        Destaque suas conquistas!
-      </Typography>
+    <Card sx={{ width: '100%' }}>
       <Box
         sx={{
           display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
           flexDirection: 'column',
           gap: '20px',
-          width: '100%',
+          backgroundColor: '#f8f9fa',
+          borderRadius: '8px',
         }}
       >
-        {experiencias && experiencias.length > 0 ? (
-          experiencias.map((experiencia, index) => (
-            <Box
-              key={index}
-              sx={{
-                padding: '20px',
-                border: '1px solid #e1e4e8',
-                borderRadius: '8px',
-                backgroundColor: '#fff',
-                boxShadow: '0 1px 3px rgba(0, 0, 0, 0.1)',
-              }}
-            >
-              <Typography variant="body1" sx={{ fontWeight: 'bold', marginBottom: '8px' }}>
-                {experiencia.titulo.toUpperCase()}
-                {' '}
-                -
-                {experiencia.instituicao}
-              </Typography>
-              <Typography variant="body2" sx={{ color: '#868e96', marginBottom: '8px' }}>
-                {formatDate(experiencia.dataInicio)}
-                {' '}
-                -
-                {experiencia.atualExperiencia ? 'até o momento' : formatDate(experiencia.dataFim)}
-              </Typography>
-              <Typography variant="body2" sx={{ marginBottom: '16px' }}>
-                {experiencia.descricao}
-              </Typography>
-              <Box sx={{ display: 'flex', gap: '10px' }}>
-                <Button
-                  variant="outlined"
-                  sx={{
-                    color: '#0a66c2',
-                    borderColor: '#0a66c2',
-                    flexGrow: 1,
-                    textTransform: 'none',
-                    '&:hover': { backgroundColor: '#e1e4e8', borderColor: '#0a66c2' },
-                  }}
-                  onClick={() => handleEdit(experiencia)}
-                >
-                  <FaPencil style={{ marginRight: '8px' }} />
-                  Editar
-                </Button>
-                <Button
-                  variant="contained"
-                  sx={{
-                    backgroundColor: '#d9534f',
-                    color: 'white',
-                    flexGrow: 1,
-                    textTransform: 'none',
-                    '&:hover': { backgroundColor: '#c9302c' },
-                  }}
-                  onClick={() => handleDelete(experiencia.id!)}
-                >
-                  <FaTrash style={{ marginRight: '8px' }} />
-                  Excluir
-                </Button>
+        <Typography sx={{ fontSize: '20px', alignSelf: 'flex-start', padding: '8px', fontWeight: 600 }}>Experiências</Typography>
+        <Box
+          sx={{
+            display: 'flex',
+            flexDirection: 'column',
+            gap: '8px',
+            width: '100%',
+          }}
+        >
+          {experiencias && experiencias.length > 0 ? (
+            experiencias.map((experiencia, index) => (
+              <Box
+                key={index}
+                sx={{
+                  padding: '20px',
+                  border: '1px solid #e1e4e8',
+                  borderRadius: '8px',
+                  backgroundColor: '#fff',
+                  boxShadow: '0 1px 3px rgba(0, 0, 0, 0.1)',
+                }}
+              >
+                <Typography variant="body1" sx={{ fontWeight: 'bold', marginBottom: '8px' }}>
+                  {experiencia.titulo.toUpperCase()}
+                  {' '}
+                  -
+                  {experiencia.instituicao}
+                </Typography>
+                <Typography variant="body2" sx={{ color: '#868e96', marginBottom: '8px' }}>
+                  {formatDate(experiencia.dataInicio)}
+                  {' '}
+                  -
+                  {experiencia.atualExperiencia ? 'até o momento' : formatDate(experiencia.dataFim)}
+                </Typography>
+                <Typography variant="body2" sx={{ marginBottom: '16px' }}>
+                  {experiencia.descricao}
+                </Typography>
+                <Box sx={{ display: 'flex', gap: '8px', alignItems: 'center', justifyContent: 'center' }}>
+                  <Button
+                    variant="contained"
+                    onClick={() => handleEdit(experiencia)}
+                    sx={{ width: '150px', height: '50px' }}
+                  >
+                    <FaPencil style={{ marginRight: '8px' }} />
+                    Editar
+                  </Button>
+                  <Button
+                    variant="contained"
+                    sx={{
+                      backgroundColor: 'tomato',
+                      width: '150px',
+                      height: '50px',
+                      color: 'white',
+                      '&:hover': { backgroundColor: 'red' },
+                    }}
+                    onClick={() => handleDelete(experiencia.id!)}
+                  >
+                    <FaTrash style={{ marginRight: '8px' }} />
+                    Excluir
+                  </Button>
+                </Box>
               </Box>
-            </Box>
-          ))
-        ) : (
-          <Typography variant="body1" sx={{ color: 'grey', textAlign: 'center' }}>
-            Sem experiências até o momento
-          </Typography>
-        )}
+            ))
+          ) : (
+            <Typography variant="body1" sx={{ color: 'grey', textAlign: 'center' }}>
+              Sem experiências até o momento
+            </Typography>
+          )}
+        </Box>
+        <Button
+          color="primary"
+          variant="contained"
+          onClick={() => setOpen(!open)}
+        >
+          Adicionar experiência
+        </Button>
+
+        <CustomDialog isOpen={open} onClose={() => setOpen(false)} title={`${experienciaToEdit ? 'Editar' : 'Adicionar'} experiência`}>
+          <ExperienciaRegister experienciaEdit={experienciaToEdit} />
+        </CustomDialog>
       </Box>
-      <Button
-        variant="contained"
-        sx={{
-          backgroundColor: '#0a66c2',
-          color: 'white',
-          padding: '10px 20px',
-          borderRadius: '25px',
-          textTransform: 'none',
-          '&:hover': { backgroundColor: '#004182' },
-        }}
-        onClick={() => setOpen(!open)}
-      >
-        Adicionar experiência
-      </Button>
-      <ExperienciaRegister isOpen={open} setOpen={setOpen} />
-    </Box>
+    </Card>
   );
 }
+
+export default MinhaExperiencia;

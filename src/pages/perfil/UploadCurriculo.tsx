@@ -1,32 +1,15 @@
 import React, { useState, useEffect } from 'react';
-import { Box, Button, Typography, Input, Modal, IconButton } from '@mui/material';
+import { Box, Button, Typography, Input, IconButton } from '@mui/material';
 import { enqueueSnackbar } from 'notistack';
 import DeleteOutlineOutlinedIcon from '@mui/icons-material/DeleteOutlineOutlined';
 import { PerfilEndpoint } from '../../services/endpoints/perfil';
 import api from '../../services/api';
+import Card from '../../components/Card';
+import CustomDialog from '../../components/CustomDialog';
 
-function UploadCurriculo() {
+function UploadCurriculo({ setCurriculos }: { setCurriculos: React.Dispatch<React.SetStateAction<{ id: string; nome: string; url: string; }[]>> }) {
   const [file, setFile] = useState<File | null>(null);
-  const [curriculos, setCurriculos] = useState<Array<{ id: string, nome: string, url: string }>>([]);
   const perfilEndpoint = new PerfilEndpoint();
-
-  useEffect(() => {
-    async function fetchCurriculos() {
-      try {
-        const res = await api.perfil.getCurriculos();
-        const fetchedCurriculos = Object.keys(res.data.data).map((key) => ({
-          id: key,
-          nome: res.data.data[key].split('/').pop(),
-          url: res.data.data[key],
-        }));
-        setCurriculos(fetchedCurriculos);
-      } catch (error) {
-        enqueueSnackbar('Erro ao buscar currículos', { variant: 'error' });
-      }
-    }
-
-    fetchCurriculos();
-  }, []);
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.files) {
@@ -49,15 +32,6 @@ function UploadCurriculo() {
     }
   };
 
-  const handleDelete = async (id: string) => {
-    try {
-      enqueueSnackbar('Currículo excluído com sucesso!', { variant: 'success' });
-      setCurriculos((prev) => prev.filter((curriculo) => curriculo.id !== id));
-    } catch (error) {
-      enqueueSnackbar('Erro ao excluir currículo', { variant: 'error' });
-    }
-  };
-
   return (
     <Box
       sx={{
@@ -65,46 +39,9 @@ function UploadCurriculo() {
         flexDirection: 'column',
         alignItems: 'center',
         justifyContent: 'center',
-        padding: '40px',
         maxWidth: '500px',
-        margin: 'auto',
-        backgroundColor: '#f8f9fa',
-        borderRadius: '8px',
-        boxShadow: '0 4px 8px rgba(0, 0, 0, 0.1)',
       }}
     >
-      <Typography variant="h4" sx={{ fontWeight: 'bold', color: '#0a66c2', marginBottom: '16px' }}>
-        Gerenciar Currículos
-      </Typography>
-
-      <Box sx={{ width: '100%', marginBottom: '20px' }}>
-        {curriculos.map((curriculo) => (
-          <Box
-            key={curriculo.id}
-            sx={{
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'space-between',
-              padding: '10px',
-              border: '1px solid #ddd',
-              borderRadius: '5px',
-              marginBottom: '10px',
-              backgroundColor: '#fff',
-            }}
-          >
-            <a href={curriculo.url} target="_blank" rel="noopener noreferrer">
-              <Typography variant="body1" sx={{ color: '#0a66c2', fontWeight: 'bold' }}>
-                {curriculo.nome}
-              </Typography>
-            </a>
-            <Box>
-              <IconButton onClick={() => handleDelete(curriculo.id)} color="error">
-                <DeleteOutlineOutlinedIcon />
-              </IconButton>
-            </Box>
-          </Box>
-        ))}
-      </Box>
 
       <Input
         type="file"
@@ -114,14 +51,7 @@ function UploadCurriculo() {
       />
       <Button
         variant="contained"
-        sx={{
-          backgroundColor: '#0a66c2',
-          color: 'white',
-          padding: '10px 20px',
-          borderRadius: '25px',
-          textTransform: 'none',
-          '&:hover': { backgroundColor: '#004182' },
-        }}
+        color="primary"
         onClick={handleUpload}
       >
         Adicionar Currículo
@@ -130,8 +60,9 @@ function UploadCurriculo() {
   );
 }
 
-function App() {
+function Curriculo() {
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [curriculos, setCurriculos] = useState<Array<{ id: string, nome: string, url: string }>>([]);
 
   const handleOpenModal = () => {
     setIsModalOpen(true);
@@ -141,40 +72,78 @@ function App() {
     setIsModalOpen(false);
   };
 
-  return (
-    <Box sx={{ textAlign: 'center', marginTop: '100px' }}>
-      <Button
-        variant="contained"
-        onClick={handleOpenModal}
-        sx={{
-          backgroundColor: '#0a66c2',
-          color: 'white',
-          padding: '10px 20px',
-          borderRadius: '25px',
-          textTransform: 'none',
-          '&:hover': { backgroundColor: '#004182' },
-        }}
-      >
-        Abrir Upload de Currículo
-      </Button>
+  const handleDelete = async (id: string) => {
+    try {
+      enqueueSnackbar('Currículo excluído com sucesso!', { variant: 'success' });
+      setCurriculos((prev) => prev.filter((curriculo) => curriculo.id !== id));
+    } catch (error) {
+      enqueueSnackbar('Erro ao excluir currículo', { variant: 'error' });
+    }
+  };
 
-      <Modal open={isModalOpen} onClose={handleCloseModal}>
-        <Box sx={{
-          position: 'absolute',
-          top: '50%',
-          left: '50%',
-          transform: 'translate(-50%, -50%)',
-          bgcolor: 'background.paper',
-          borderRadius: '8px',
-          boxShadow: 24,
-          p: 4,
-        }}
-        >
-          <UploadCurriculo />
+  useEffect(() => {
+    async function fetchCurriculos() {
+      try {
+        const res = await api.perfil.getCurriculos();
+        const fetchedCurriculos = Object.keys(res.data.data).map((key) => ({
+          id: key,
+          nome: res.data.data[key].split('/').pop(),
+          url: res.data.data[key],
+        }));
+        setCurriculos(fetchedCurriculos);
+      } catch (error) {
+        enqueueSnackbar('Erro ao buscar currículos', { variant: 'error' });
+      }
+    }
+
+    fetchCurriculos();
+  }, []);
+
+  return (
+    <Card sx={{ width: '100%' }}>
+      <Typography sx={{ fontSize: '20px', alignSelf: 'flex-start', padding: '8px', gap: '16px', fontWeight: 600 }}>Currículos</Typography>
+      <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center', flexDirection: 'column', gap: '8px' }}>
+        <Box sx={{ width: '70%' }}>
+          {curriculos.map((curriculo) => (
+            <Box
+              key={curriculo.id}
+              sx={{
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'space-between',
+                padding: '8px',
+                border: '1px solid #ddd',
+                borderRadius: '5px',
+                backgroundColor: '#fff',
+              }}
+            >
+              <a href={curriculo.url} target="_blank" rel="noopener noreferrer">
+                <Typography variant="body1" sx={{ color: '#0a66c2', fontWeight: 'bold' }}>
+                  {curriculo.nome}
+                </Typography>
+              </a>
+              <Box>
+                <IconButton onClick={() => handleDelete(curriculo.id)} color="error">
+                  <DeleteOutlineOutlinedIcon />
+                </IconButton>
+              </Box>
+            </Box>
+          ))}
         </Box>
-      </Modal>
-    </Box>
+        <Button
+          variant="contained"
+          onClick={handleOpenModal}
+          color="primary"
+        >
+          Enviar novo currículo
+        </Button>
+
+        <CustomDialog isOpen={isModalOpen} onClose={handleCloseModal} title="Enviar Currículo">
+          <UploadCurriculo />
+        </CustomDialog>
+      </Box>
+    </Card>
   );
 }
 
-export default App;
+export default Curriculo;

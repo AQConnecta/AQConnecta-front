@@ -11,10 +11,11 @@ import api from '../../services/api'
 interface IModal {
   isOpen: boolean
   setOpen: (isOpen: boolean) => void
+  enderecoEdit: Endereco
 }
 
-function EnderecoRegister({ isOpen, setOpen }: IModal) {
-  const [endereco, setEndereco] = useState<Endereco>({
+function EnderecoRegister({ isOpen, setOpen, enderecoEdit }: IModal) {
+  const [endereco, setEndereco] = useState<Endereco>(enderecoEdit || {
     cep: '',
     rua: '',
     bairro: '',
@@ -25,9 +26,7 @@ function EnderecoRegister({ isOpen, setOpen }: IModal) {
     complemento: '',
   })
   const { enqueueSnackbar } = useSnackbar()
-  const { id: enderecoId } = useParams()
-  const user = JSON.parse(localStorage.getItem('user') || '{}')
-  const isEdit = !!enderecoId
+  const isEdit = !!enderecoEdit
 
   async function submitEndereco() {
     if (isEdit) {
@@ -50,19 +49,6 @@ function EnderecoRegister({ isOpen, setOpen }: IModal) {
       enqueueSnackbar('Erro ao adicionar endereço', { variant: 'error' })
     }
   }
-
-  useEffect(() => {
-    if (!enderecoId || !user) return
-    async function getEndereco() {
-      try {
-        const res = await api.endereco.getEndereco(user.id)
-        setEndereco(res.data.data[0])
-      } catch (err) {
-        enqueueSnackbar('Erro ao buscar endereço', { variant: 'error' })
-      }
-    }
-    getEndereco()
-  }, [enderecoId])
 
   const handleKeyPress = useHandleKeyPress({
     verification: Object.values(endereco).every((value) => value.length > 0),
@@ -96,7 +82,7 @@ function EnderecoRegister({ isOpen, setOpen }: IModal) {
         </Box>
       </DialogTitle>
       <DialogContent>
-        <Box sx={{ width: '340px', display: 'flex', gap: '8px', flexDirection: 'column' }}>
+        <Box sx={{ width: '340px', display: 'flex', gap: '8px', flexDirection: 'column', paddingTop: '8px' }}>
           <TextField
             variant="outlined"
             placeholder="Digite seu CEP"

@@ -1,7 +1,21 @@
 import React, { useState } from 'react';
-import { Box, Button, Typography, Input, Modal } from '@mui/material';
+import { Box, Button, Input, Typography } from '@mui/material';
 import { enqueueSnackbar } from 'notistack';
+import styled from 'styled-components';
 import api from '../../services/api';
+import Card from '../../components/Card';
+import { Usuario } from '../../services/endpoints/auth';
+import CustomDialog from '../../components/CustomDialog';
+
+const Photo = styled.img`
+  box-shadow: none;
+  width: 130px;
+  height: 130px;
+  object-fit: cover;
+  border: 2px solid white;
+  border-radius: 50%;
+  cursor: pointer;
+`
 
 function UploadImagemPerfil() {
   const [file, setFile] = useState<File | null>(null);
@@ -27,39 +41,16 @@ function UploadImagemPerfil() {
   };
 
   return (
-    <Box
-      sx={{
-        display: 'flex',
-        flexDirection: 'column',
-        alignItems: 'center',
-        justifyContent: 'center',
-        padding: '40px',
-        maxWidth: '500px',
-        margin: 'auto',
-        backgroundColor: '#f8f9fa',
-        borderRadius: '8px',
-        boxShadow: '0 4px 8px rgba(0, 0, 0, 0.1)',
-      }}
-    >
-      <Typography variant="h4" sx={{ fontWeight: 'bold', color: '#0a66c2', marginBottom: '16px' }}>
-        Upload de Imagem de Perfil
-      </Typography>
+    <Box sx={{ display: 'flex', gap: '16px', alignItems: 'center', justifyContent: 'center', flexDirection: 'column' }}>
       <Input
         type="file"
         onChange={handleFileChange}
-        sx={{ marginBottom: '20px' }}
         inputProps={{ accept: 'image/*' }}
       />
       <Button
         variant="contained"
-        sx={{
-          backgroundColor: '#0a66c2',
-          color: 'white',
-          padding: '10px 20px',
-          borderRadius: '25px',
-          textTransform: 'none',
-          '&:hover': { backgroundColor: '#004182' },
-        }}
+        color="primary"
+        disabled={!file}
         onClick={handleUpload}
       >
         Enviar Imagem
@@ -68,7 +59,7 @@ function UploadImagemPerfil() {
   );
 }
 
-function App() {
+function Perfil({ user }: { user: Usuario }) {
   const [isModalOpen, setIsModalOpen] = useState(false);
 
   const handleOpenModal = () => {
@@ -80,39 +71,27 @@ function App() {
   };
 
   return (
-    <Box sx={{ textAlign: 'center', marginTop: '100px' }}>
-      <Button
-        variant="contained"
-        onClick={handleOpenModal}
-        sx={{
-          backgroundColor: '#0a66c2',
-          color: 'white',
-          padding: '10px 20px',
-          borderRadius: '25px',
-          textTransform: 'none',
-          '&:hover': { backgroundColor: '#004182' },
-        }}
-      >
-        Abrir Upload de Imagem de Perfil
-      </Button>
-
-      <Modal open={isModalOpen} onClose={handleCloseModal}>
-        <Box sx={{
-          position: 'absolute',
-          top: '50%',
-          left: '50%',
-          transform: 'translate(-50%, -50%)',
-          bgcolor: 'background.paper',
-          borderRadius: '8px',
-          boxShadow: 24,
-          p: 4,
-        }}
-        >
-          <UploadImagemPerfil />
+    <Card sx={{ width: '100%' }}>
+      <CustomDialog isOpen={isModalOpen} onClose={handleCloseModal} title="Upload de Imagem de Perfil">
+        <UploadImagemPerfil />
+      </CustomDialog>
+      <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-around', flexDirection: 'column', gap: '8px' }}>
+        <Photo src={user.fotoPerfil || 'https://via.placeholder.com/72x72.png?text=No+Image'} onClick={handleOpenModal} />
+        <Typography sx={{ fontWeight: 700 }}>
+            &nbsp;
+          {user.nome}
+        </Typography>
+        <Box sx={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
+          <Typography sx={{ fontWeight: 500, display: 'flex', flexDirection: 'row' }}>
+            <Typography sx={{ fontWeight: 700 }}>
+              E-mail:&nbsp;
+            </Typography>
+            {user.email}
+          </Typography>
         </Box>
-      </Modal>
-    </Box>
+      </Box>
+    </Card>
   );
 }
 
-export default App;
+export default Perfil;

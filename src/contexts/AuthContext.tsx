@@ -8,6 +8,7 @@ import api from '../services/api'
 
 type AuthData = {
   user: Usuario | null
+  setUser: (user: Usuario | null) => void
   handleLogin: (email: string, password: string) => Promise<boolean>
   isLogged: boolean
   checkLogged: () => boolean
@@ -85,6 +86,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   const value = useMemo(
     () => ({
       user,
+      setUser,
       handleLogin,
       isLogged,
       checkLogged,
