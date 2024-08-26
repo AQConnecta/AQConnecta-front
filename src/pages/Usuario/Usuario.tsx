@@ -17,22 +17,22 @@ function UsuarioProfile() {
   const [user, setUser] = useState<Usuario>();
   const { enqueueSnackbar } = useSnackbar()
   const { user: usuarioLogado, setUser: setUserAuth } = useAuth()
-  const isMe = userId === usuarioLogado.id || !userId
+  const isMe = userId === usuarioLogado?.id || !userId
 
   useEffect(() => {
     async function getUsuario() {
       try {
-        const usuarioRaw = await api.usuario.getUsuario(userId);
+        const usuarioRaw = await api.usuario.getUsuario(userId!);
         const usuario = usuarioRaw.data.data;
         setUser(usuario);
-        if (usuario.id === usuarioLogado.id) {
+        if (usuario.id === usuarioLogado?.id) {
           setUserAuth(usuario);
         }
       } catch (err) {
         enqueueSnackbar('Erro ao buscar o usuário', { variant: 'error' });
       }
     }
-    if (!userId) return setUser(usuarioLogado)
+    if (!userId) return setUser(usuarioLogado!)
     getUsuario();
   }, [userId]);
 

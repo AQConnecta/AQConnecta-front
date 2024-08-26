@@ -156,7 +156,7 @@ function MeuEndereco(props: EnderecoProps) {
         <Button variant="contained" sx={{ marginBottom: '20px' }} onClick={() => setOpen(!open)}>
           Adicionar endereço
         </Button>
-        <EnderecoRegister isOpen={open} setOpen={setOpen} enderecoEdit={enderecoEdit} />
+        <EnderecoRegister isOpen={open} setOpen={setOpen} enderecoEdit={enderecoEdit!} />
       </Box>
     </Card>
   )

@@ -1,10 +1,10 @@
-import React, { useEffect, useState } from 'react';
-import { Box, Button, Chip, Typography } from '@mui/material';
+import { useEffect, useState } from 'react';
+import { Box, Chip, Typography } from '@mui/material';
+import { enqueueSnackbar } from 'notistack';
 import Card from '../../components/Card';
 import { Vaga } from '../../services/endpoints/vaga';
 import api from '../../services/api';
 import { useAuth } from '../../contexts/AuthContext';
-import { enqueueSnackbar } from 'notistack';
 
 function MinhasCandidaturas() {
   const [vagas, setVagas] = useState<Array<Vaga>>([]);
@@ -36,7 +36,9 @@ function MinhasCandidaturas() {
             </Box>
             <Box>
               <Typography sx={{ fontSize: '14px', fontWeight: 400, fontStyle: 'italic' }}>
-                Criado por {vaga.publicador.nome}
+                Criado por
+                {' '}
+                {vaga.publicador.nome}
               </Typography>
             </Box>
             <Box sx={{ display: 'flex', flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between' }}>
@@ -54,7 +56,7 @@ function MinhasCandidaturas() {
             <Box>
               <Typography sx={{ fontSize: '16px', fontWeight: 600 }}>Competências:</Typography>
               <Box sx={{ display: 'flex', flexDirection: 'row', gap: '8px' }}>
-                {vaga.competencias.map((competencia) => (
+                {vaga.competencias?.map((competencia) => (
                   <Chip label={competencia.descricao} sx={{ backgroundColor: '#dad5fc', height: '24px' }} key={competencia.id} />
                 ))}
               </Box>

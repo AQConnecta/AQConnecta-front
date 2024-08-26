@@ -1,7 +1,6 @@
 /* eslint-disable no-unused-vars */
 import { Box, Button, TextField, Typography, IconButton, Dialog, DialogTitle, DialogActions, DialogContent } from '@mui/material'
 import { useEffect, useState } from 'react'
-import { useParams } from 'react-router-dom'
 import { useSnackbar } from 'notistack'
 import CloseIcon from '@mui/icons-material/Close'
 import { Endereco } from '../../services/endpoints/endereco'

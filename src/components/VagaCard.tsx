@@ -27,9 +27,9 @@ function VagaCard(props: VagaProps) {
   const [vagaToApply, setVagaToApply] = useState<Vaga | null>(null);
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
   const [selectedVaga, setSelectedVaga] = useState<Vaga | null>(null);
-  const enqueueSnackbar = useSnackbar()
+  const { enqueueSnackbar } = useSnackbar()
   const { user } = useAuth();
-  const createdByMe = vaga.publicador.id === user.id;
+  const createdByMe = vaga.publicador.id === user?.id;
   const open = Boolean(anchorEl);
   const isExpired = new Date(vaga.dataLimiteCandidatura) < new Date();
 
@@ -60,7 +60,7 @@ function VagaCard(props: VagaProps) {
   async function handleSelectCurriculo(curriculoId: string) {
     if (vagaToApply) {
       try {
-        await api.vaga.candidatarVaga(vagaToApply.id, curriculoId);
+        await api.vaga.candidatarVaga(vagaToApply.id!, curriculoId);
         enqueueSnackbar('Candidatura realizada com sucesso', { variant: 'success' });
         setIsCurriculoModalOpen(false);
       } catch (err) {
@@ -70,7 +70,7 @@ function VagaCard(props: VagaProps) {
   }
   async function handleDelete(vagaSelected: Vaga) {
     try {
-      await api.vaga.deletarVaga(vagaSelected.id);
+      await api.vaga.deletarVaga(vagaSelected.id!);
       reloadVagas()
       enqueueSnackbar('Vaga excluída com sucesso', { variant: 'success' });
     } catch (err) {
@@ -89,7 +89,7 @@ function VagaCard(props: VagaProps) {
         <VagaModal isOpen={isOpenEditVaga} handleClose={() => handleCloseEditModal()} vagaToEdit={vagaToEdit} />
       )}
       { isOpenCandidatos && (
-        <CandidatosModal isOpen={isOpenCandidatos} onClose={() => setIsOpenCandidatos(false)} selectedVaga={selectedVaga} />
+        <CandidatosModal onClose={() => setIsOpenCandidatos(false)} selectedVaga={selectedVaga} />
       )}
       { isCurriculoModalOpen && (
         <SelecionarCurriculo
@@ -158,7 +158,7 @@ function VagaCard(props: VagaProps) {
           <Box>
             <Typography sx={{ fontSize: '16px', fontWeight: 600 }}>Competências:</Typography>
             <Box sx={{ display: 'flex', flexDirection: 'row', gap: '8px' }}>
-              {vaga.competencias.map((competencia) => (
+              {vaga.competencias?.map((competencia) => (
                 <Chip label={competencia.descricao} sx={{ backgroundColor: '#dad5fc', height: '24px' }} key={competencia.id} />
               ))}
             </Box>

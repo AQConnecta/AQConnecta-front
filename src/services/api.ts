@@ -5,6 +5,7 @@ import { EnderecoEndpoint } from './endpoints/endereco'
 import {ExperienciaEndpoint} from "./endpoints/experiencia.ts";
 import { FormacaoAcademicaEndpoint, UniversidadeEndpoint } from './endpoints/formacaoAcademica.ts';
 import { PerfilEndpoint } from './endpoints/perfil.ts';
+import { UsuarioEndpoint } from './endpoints/usuario.ts';
 import { VagaEndpoint } from './endpoints/vaga.ts';
 
 const api = {
@@ -15,6 +16,7 @@ const api = {
   formacaoAcademica: new FormacaoAcademicaEndpoint(),
   universidade: new UniversidadeEndpoint(),
   vaga: new VagaEndpoint(),
+  usuario: new UsuarioEndpoint(),
   perfil: new PerfilEndpoint(),
   setBearerToken,
   removeBearerToken,

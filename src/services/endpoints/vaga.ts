@@ -11,12 +11,16 @@ export type Vaga = {
     descricao: string
     localDaVaga: string
     aceitaRemoto: boolean
-    dataLimiteCandidatura: Date
-    criadoEm: Date
-    atualizadoEm: Date
-    deletadoEm: Date
+    dataLimiteCandidatura: Date | string
+    criadoEm: Date | string
+    curriculoUrl: string
+    atualizadoEm: Date | string
+    deletadoEm: Date | string
+    usuario?: Usuario
     competencias?: Array<Competencia>
 }
+
+export type PartialVaga = Partial<Vaga>
 
 export class VagaEndpoint {
     async listAll() {
@@ -51,7 +55,7 @@ export class VagaEndpoint {
         });
     }
 
-    async listarCandidatos(idVaga) {
+    async listarCandidatos(idVaga:string) {
         return await axios.get(`${PREFIX}/candidaturas/${idVaga}`)
     }
 }

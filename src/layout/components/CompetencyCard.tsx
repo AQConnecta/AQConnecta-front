@@ -27,7 +27,7 @@ function CompetencyCard({ competencies }: CompetencyCardProps) {
   return (
     <Box className="container" sx={{ height: '300px', borderRadius: '8px', padding: '0px 16px', overflowY: 'auto', overflowX: 'hidden', display: 'flex', justifyContent: 'flex-start', alignItems: 'center', flexDirection: 'column', scrollbarGutter: 'stable' }}>
       <Box sx={{ padding: '16px', position: 'sticky', top: 0, backgroundColor: 'white', zIndex: 1 }}>
-        <Typography variant="span" sx={{ fontSize: '16px', fontWeight: 600, whiteSpace: 'nowrap' }}>Competências quentes</Typography>
+        <Typography sx={{ fontSize: '16px', fontWeight: 600, whiteSpace: 'nowrap' }}>Competências quentes</Typography>
       </Box>
       <Box sx={{ display: 'flex', justifyContent: 'flex-start', alignItems: 'flex-start', flexDirection: 'column', width: '100%' }}>
         {competencies.map((comp, index) => (

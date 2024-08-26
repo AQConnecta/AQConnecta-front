@@ -1,5 +1,5 @@
 import { Box, Button, Typography } from '@mui/material';
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { enqueueSnackbar } from 'notistack';
 import { FaTrash, FaPencil } from 'react-icons/fa6';
 import api from '../../services/api';
@@ -147,7 +147,7 @@ function MinhaExperiencia(props:ExperienciaProps) {
         </Button>
 
         <CustomDialog isOpen={open} onClose={() => setOpen(false)} title={`${experienciaToEdit ? 'Editar' : 'Adicionar'} experiência`}>
-          <ExperienciaRegister experienciaEdit={experienciaToEdit} />
+          <ExperienciaRegister experienciaEdit={experienciaToEdit!} />
         </CustomDialog>
       </Box>
     </Card>

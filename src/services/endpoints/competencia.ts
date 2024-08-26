@@ -33,7 +33,7 @@ export class CompetenciaEndpoint {
         return await axios.get(`${PREFIX}/competencias_quentes`)
     }
 
-    async linkCompetenciaVaga(data: {competencias: Array<string>, idVaga: string}): Promise<any> {
+    async linkCompetenciaVaga(data: {competencias: Array<Competencia>, idVaga: string}): Promise<any> {
         return await axios.post(`${PREFIX}/relacionar_competencia_vaga`, data)
     }
 }

@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Box } from '@mui/material';
 import { enqueueSnackbar } from 'notistack';
 import Card from '../../components/Card';
@@ -19,7 +19,7 @@ function MinhasVagas() {
   useEffect(() => {
     async function getMinhasVagas() {
       try {
-        const res = await api.vaga.listByUser(user.id);
+        const res = await api.vaga.listByUser(user?.id!);
         if (res.data.data.length === 0) {
           return;
         }

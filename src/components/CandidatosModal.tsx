@@ -1,4 +1,4 @@
-import { Avatar, Box, Button, Dialog, DialogActions, DialogContent, DialogTitle, IconButton, Link, Tooltip, Typography } from '@mui/material';
+import { Avatar, Box, Button, Dialog, DialogActions, DialogContent, DialogTitle, IconButton, Tooltip, Typography } from '@mui/material';
 import { useEffect, useState } from 'react';
 import { useSnackbar } from 'notistack';
 import CloudDownloadOutlinedIcon from '@mui/icons-material/CloudDownloadOutlined';
@@ -13,19 +13,19 @@ type CandidatoModalProps = {
 function CandidatosModal(props: CandidatoModalProps) {
   const { onClose, selectedVaga } = props;
   const [candidatos, setCandidatos] = useState<Vaga[]>([]);
-  const enqueueSnackbar = useSnackbar()
+  const { enqueueSnackbar } = useSnackbar()
 
   useEffect(() => {
     async function getCandidatos(vaga: Vaga) {
       try {
-        const res = await api.vaga.listarCandidatos(vaga.id);
+        const res = await api.vaga.listarCandidatos(vaga.id!);
         setCandidatos(res.data.data);
       } catch (err) {
         enqueueSnackbar('Erro ao buscar candidatos', { variant: 'error' });
       }
     }
 
-    getCandidatos(selectedVaga);
+    getCandidatos(selectedVaga as Vaga);
   }, [selectedVaga]);
 
   return (
@@ -33,16 +33,16 @@ function CandidatosModal(props: CandidatoModalProps) {
       <DialogTitle>
         Candidatos para
         {' '}
-        {selectedVaga.titulo}
+        {selectedVaga?.titulo}
       </DialogTitle>
       <DialogContent>
         {candidatos.length ? (
           candidatos.map((candidato, index) => (
             <Box key={index} sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: '16px', marginBottom: '16px', width: '100%' }}>
               <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '16px' }}>
-                <Avatar src={candidato.usuario.fotoPerfil} alt={candidato.usuario.nome} />
+                <Avatar src={candidato.usuario?.fotoPerfil} alt={candidato.usuario?.nome} />
                 <Box sx={{ display: 'flex', flexDirection: 'column' }}>
-                  <Typography>{candidato.usuario.nome}</Typography>
+                  <Typography>{candidato.usuario?.nome}</Typography>
                   {/* {candidato.curriculoUrl && (
                     <Link href={`/usuario/${candidato.usuario.id}`} target="_blank" rel="noopener noreferrer">
                       Ver perfil

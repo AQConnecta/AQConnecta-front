@@ -77,7 +77,7 @@ function ListCompetencia() {
 
     async function getMyCompetencias() {
       try {
-        const res = await api.competencia.listByUserId(user.id)
+        const res = await api.competencia.listByUserId(user?.id!)
         setMinhasCompetencias(res.data.data || [])
       } catch (error) {
         enqueueSnackbar('Erro ao buscar minhas competências', {

@@ -139,7 +139,7 @@ function Curriculo() {
         </Button>
 
         <CustomDialog isOpen={isModalOpen} onClose={handleCloseModal} title="Enviar Currículo">
-          <UploadCurriculo />
+          <UploadCurriculo setCurriculos={setCurriculos} />
         </CustomDialog>
       </Box>
     </Card>

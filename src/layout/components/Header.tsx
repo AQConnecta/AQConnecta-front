@@ -1,5 +1,5 @@
+/* eslint-disable jsx-a11y/control-has-associated-label */
 /* eslint-disable jsx-a11y/anchor-is-valid */
-import React from 'react'
 import styled from 'styled-components'
 import { Box, IconButton, Typography } from '@mui/material'
 import LogoutIcon from '@mui/icons-material/Logout';
@@ -35,50 +35,6 @@ const Logo = styled.span`
   font-size: 0;
 `
 
-const Search = styled.div`
-  opacity: 1;
-  flex-grow: 1;
-  position: relative;
-  @media (max-width: 768px) {
-    flex-grow: unset;
-  }
-  & > div {
-    max-width: 280px;
-    input {
-      border: none;
-      box-shadow: none;
-      background-color: #eef3f8;
-      border-radius: 2px;
-      color: rgba(0, 0, 0, 0.9);
-      width: 218px;
-      padding: 0 8px 0 40px;
-      line-height: 1.75;
-      font-weight: 400;
-      font-size: 14px;
-      height: 34px;
-      vertical-align: text-top;
-      border-color: #dce6f1;
-      @media (max-width: 768px) {
-        width: 140px;
-      }
-    }
-  }
-`
-
-const SearchIcon = styled.div`
-  width: 40px;
-  z-index: 1;
-  position: absolute;
-  top: 10px;
-  left: 5px;
-  border-radius: 0 2px 2px 0;
-  margin: 0;
-  pointer-events: none;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-`
-
 function Header() {
   const { logout } = useAuth()
   function logoutUser() {
@@ -89,7 +45,7 @@ function Header() {
     <Container>
       <Content>
         <Logo>
-          <a href="/home" alt="link">
+          <a href="/home">
             <img src={LogoSvg} alt="" width="24px" height="24px" />
           </a>
         </Logo>
@@ -119,7 +75,7 @@ function Header() {
           </Link>
         </Box>
         <Box>
-          <IconButton variant="contained" color="primary" onClick={() => logoutUser()}>
+          <IconButton color="primary" onClick={() => logoutUser()}>
             <LogoutIcon />
           </IconButton>
         </Box>

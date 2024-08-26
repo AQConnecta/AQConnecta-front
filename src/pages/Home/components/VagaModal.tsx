@@ -21,8 +21,9 @@ import {
 import CloseIcon from '@mui/icons-material/Close'
 import { useEffect, useState } from 'react'
 import { useSnackbar } from 'notistack'
-import { Vaga } from '../../../services/endpoints/vaga'
+import { PartialVaga, Vaga } from '../../../services/endpoints/vaga'
 import api from '../../../services/api'
+import { Competencia } from '../../../services/endpoints/competencia'
 
 type VagaModalProps = {
   isOpen: boolean
@@ -39,7 +40,7 @@ const MenuProps = {
   },
 }
 
-const vagaDefaultValues: Vaga = {
+const vagaDefaultValues: PartialVaga = {
   titulo: '',
   descricao: '',
   localDaVaga: '',
@@ -49,19 +50,19 @@ const vagaDefaultValues: Vaga = {
 
 function VagaModal(props: VagaModalProps) {
   const { isOpen, handleClose, vagaToEdit } = props
-  const [vaga, setVaga] = useState<Vaga>(vagaToEdit || vagaDefaultValues)
-  const [competenciasList, setCompetenciasList] = useState<string[]>([])
+  const [vaga, setVaga] = useState<Vaga>(vagaToEdit || vagaDefaultValues as Vaga)
+  const [competenciasList, setCompetenciasList] = useState<Competencia[]>([])
   const [competencias, setCompetencias] = useState(vagaToEdit?.competencias || [])
   const [reload, setReload] = useState(0)
   const { enqueueSnackbar } = useSnackbar()
   const isEdit = !!vagaToEdit
 
-  function setVagaValue(value: string, field: string) {
+  function setVagaValue(value: string | boolean, field: string) {
     setVaga({ ...vaga, [field]: value })
   }
 
   function clearFields() {
-    setVaga(vagaDefaultValues)
+    setVaga(vagaDefaultValues as Vaga)
     setCompetencias([])
   }
 
@@ -73,7 +74,7 @@ function VagaModal(props: VagaModalProps) {
   async function handleSubmit() {
     try {
       if (isEdit) {
-        const vagaResponse = await api.vaga.alterarVaga(vagaToEdit?.id, { ...vaga, atualizadoEm: new Date().toISOString(), dataLimiteCandidatura: `${vaga.dataLimiteCandidatura}T00:00:00`, competencias })
+        const vagaResponse = await api.vaga.alterarVaga(vagaToEdit?.id!, { ...vaga, atualizadoEm: new Date().toISOString(), dataLimiteCandidatura: `${vaga.dataLimiteCandidatura}T00:00:00`, competencias })
         await api.competencia.linkCompetenciaVaga({ competencias, idVaga: vagaResponse.data.data.id })
         enqueueSnackbar('Vaga editada com sucesso', { variant: 'success' })
         onClose()
@@ -106,7 +107,7 @@ function VagaModal(props: VagaModalProps) {
     const {
       target: { value },
     } = event
-    setCompetencias(typeof value === 'string' ? value.split(',') : value)
+    setCompetencias(typeof value === 'string' ? value.split(',') as unknown as Competencia[] : value)
   }
 
   return (
@@ -200,14 +201,14 @@ function VagaModal(props: VagaModalProps) {
               renderValue={(selected) => (
                 <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 0.5 }}>
                   {selected.map((value) => (
-                    <Chip key={value} label={value.descricao} />
+                    <Chip label={value.descricao} />
                   ))}
                 </Box>
               )}
               MenuProps={MenuProps}
             >
               {competenciasList.map((competencia) => (
-                <MenuItem key={competencia.id} value={competencia}>
+                <MenuItem value={competencia as unknown as string}>
                   {competencia.descricao}
                 </MenuItem>
               ))}

@@ -1,4 +1,3 @@
-import React from 'react'
 import ReactDOM from 'react-dom/client'
 import { SnackbarProvider } from 'notistack'
 import { ThemeProvider } from '@mui/material'

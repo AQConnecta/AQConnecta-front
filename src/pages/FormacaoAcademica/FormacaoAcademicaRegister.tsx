@@ -148,7 +148,7 @@ function FormacaoAcademicaRegister({ isOpen, setOpen }: IModal) {
             options={universidades}
             getOptionLabel={(option) => option.nomeInstituicao}
             value={formacaoAcademica.universidade}
-            onChange={(event, newValue) => setFormacaoValue(newValue, 'universidade')}
+            onChange={(_, newValue) => setFormacaoValue(newValue, 'universidade')}
             renderInput={(params) => <TextField {...params} label="Universidade" placeholder="Selecione a universidade" />}
             sx={{ width: '100%' }}
           />
