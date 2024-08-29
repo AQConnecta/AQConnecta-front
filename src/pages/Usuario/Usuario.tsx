@@ -6,6 +6,7 @@ import { useSnackbar } from 'notistack';
 import MeuEndereco from '../Endereco/Endereco';
 import MinhaExperiencia from '../Experiencia/Experiencia';
 import MinhaFormacaoAcademica from '../FormacaoAcademica/FormacaoAcademica';
+import MinhasCompetencias from '../MinhasCompetencias/MinhasCompetencias';
 import UploadImagemPerfil from '../perfil/UploadImagemPerfil';
 import UploadCurriculo from '../perfil/UploadCurriculo';
 import api from '../../services/api';
@@ -49,6 +50,7 @@ function UsuarioProfile() {
           <MinhaFormacaoAcademica user={user} />
           <MinhaExperiencia user={user} />
           <MeuEndereco user={user} />
+          <MinhasCompetencias user={user}/>
         </>
       ) }
     </Box>

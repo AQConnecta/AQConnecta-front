@@ -53,6 +53,7 @@ function VagaModal(props: VagaModalProps) {
   const [vaga, setVaga] = useState<Vaga>(vagaToEdit || vagaDefaultValues as Vaga)
   const [competenciasList, setCompetenciasList] = useState<Competencia[]>([])
   const [competencias, setCompetencias] = useState(vagaToEdit?.competencias || [])
+  const [search, setSearch] = useState('');
   const [reload, setReload] = useState(0)
   const { enqueueSnackbar } = useSnackbar()
   const isEdit = !!vagaToEdit
@@ -93,7 +94,7 @@ function VagaModal(props: VagaModalProps) {
   useEffect(() => {
     async function loadCompetencias() {
       try {
-        const competenciasListRaw = await api.competencia.listAll()
+        const competenciasListRaw = await api.competencia.listAll(search, 0, 100)
         setCompetenciasList(competenciasListRaw.data.data)
       } catch (error) {
         enqueueSnackbar('Erro ao carregar competências', { variant: 'error' })
@@ -101,7 +102,7 @@ function VagaModal(props: VagaModalProps) {
       }
     }
     loadCompetencias()
-  }, [reload])
+  }, [search, reload])
 
   const handleChange = (event: SelectChangeEvent<typeof competencias>) => {
     const {
@@ -109,6 +110,11 @@ function VagaModal(props: VagaModalProps) {
     } = event
     setCompetencias(typeof value === 'string' ? value.split(',') as unknown as Competencia[] : value)
   }
+
+  const handleSearchChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setSearch(event.target.value);
+  };
+
 
   return (
     <Dialog open={isOpen} onClose={() => onClose()}>
@@ -187,17 +193,24 @@ function VagaModal(props: VagaModalProps) {
             </Box>
           </Box>
 
+
+            {/* Peço Perdão Davi, pela monstruosidade que criei aqui. */}
           <FormControl fullWidth>
-            <InputLabel htmlFor="demo-multiple-chip" id="demo-multiple-chip-label">Competências relacionadas</InputLabel>
+            {/* <Label htmlFor="demo-multiple-chip" id="demo-multiple-chip-label">Competências relacionadas</Label> */}
+            <TextField
+              label="Digite para filtrar as competências"
+              variant="outlined"
+              value={search}
+              onChange={handleSearchChange}
+              sx={{ marginBottom: '8px' }}
+            />
             <Select
-              labelId="demo-multiple-chip-label"
               id="demo-multiple-chip"
+              label="Competências relacionadas"
               value={competencias}
               multiple
               onChange={handleChange}
               sx={{ width: '100%' }}
-              label="Competências relacionadas"
-              input={<OutlinedInput id="select-multiple-chip" label="Chip" />}
               renderValue={(selected) => (
                 <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 0.5 }}>
                   {selected.map((value) => (
@@ -208,7 +221,7 @@ function VagaModal(props: VagaModalProps) {
               MenuProps={MenuProps}
             >
               {competenciasList.map((competencia) => (
-                <MenuItem value={competencia as unknown as string}>
+                <MenuItem key={competencia.id} value={competencia as unknown as string}>
                   {competencia.descricao}
                 </MenuItem>
               ))}

@@ -73,6 +73,12 @@ function Header() {
               <Typography sx={{ fontSize: '14px' }}>Minhas vagas</Typography>
             </Box>
           </Link>
+          <Link to="/minhas-candidaturas">
+            <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center', flexDirection: 'column', gap: '0px' }}>
+              <BusinessCenterOutlinedIcon />
+              <Typography sx={{ fontSize: '14px' }}>Minhas Candidaturas</Typography>
+            </Box>
+          </Link>
         </Box>
         <Box>
           <IconButton color="primary" onClick={() => logoutUser()}>
