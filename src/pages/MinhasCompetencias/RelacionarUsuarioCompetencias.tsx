@@ -8,19 +8,14 @@ import {
   DialogTitle,
   FormControl,
   IconButton,
-  InputLabel,
   MenuItem,
-  OutlinedInput,
   Select,
   SelectChangeEvent,
-  Switch,
   TextField,
-  Typography,
 } from '@mui/material'
 import { useEffect, useState } from 'react';
 import CloseIcon from '@mui/icons-material/Close'
 import { useSnackbar } from 'notistack';
-import useHandleKeyPress from '../../hooks/useHandleKeyPress';
 import api from '../../services/api';
 import { Competencia } from '../../services/endpoints/competencia';
 import { Usuario } from '../../services/endpoints/auth';
@@ -59,7 +54,7 @@ function RelacionarUsuarioCompetencias(props: CompetenciaProps) {
       const competenciasEnviar = { 
         competencias: minhasCompetencias.map(competencia => ({ id: competencia.id }))
       }
-      const competenciaResponse = await api.competencia.linkCompetenciaToMe(competenciasEnviar)
+      await api.competencia.linkCompetenciaToMe(competenciasEnviar)
       enqueueSnackbar('Competências vinculadas com sucesso', {
         variant: 'success',
       })
