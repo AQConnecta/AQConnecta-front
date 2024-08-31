@@ -1,4 +1,5 @@
 import axios from './_axios'
+import { Competencia } from './competencia';
 
 const PREFIX = '/auth'
 
@@ -7,6 +8,7 @@ export type Usuario = {
     nome: string;
     email: string;
     fotoPerfil: string;
+    competencias: Competencia[]
 }
 
 export type AuthLogin = {

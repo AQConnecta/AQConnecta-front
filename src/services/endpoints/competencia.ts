@@ -13,12 +13,18 @@ export type CompetenciaLevel = {
 }
 
 export class CompetenciaEndpoint {
-    async listAll(): Promise<AxiosResponse<Array<Competencia>>> {
-        return await axios.get(`${PREFIX}/listar`)
+    async listAll(
+        search: string = '',
+        page: number = 0,
+        size: number = 100
+    ): Promise<AxiosResponse<Array<Competencia>>> {
+        const url = `${PREFIX}/listar?search=${encodeURIComponent(search)}&page=${page}&size=${size}`;
+        console.log(await axios.get(url))
+        return await axios.get(url);
     }
 
     async listByUserId(userId: string): Promise<AxiosResponse<Array<Competencia>>> {
-        return await axios.get(`${PREFIX}/listar/${userId}`)
+        return await axios.get(`${PREFIX}/listar_por_usuario/${userId}`)
     }
 
     async linkCompetenciaToMe(data: {competencias: Array<{id: string}>}): Promise<any> {

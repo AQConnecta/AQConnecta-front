@@ -63,12 +63,17 @@ const AppRoutes = () => {
         </Route>
         <Route
           path="minhas-candidaturas"
-          element={(
-            <ProtectedRoute>
-              <MinhasCandidaturas />
-            </ProtectedRoute>
-          )}
-        />
+          element={<OnlyHeaderLayout/>}
+        >
+            <Route 
+              index
+              element={(
+                <ProtectedRoute>
+                  <MinhasCandidaturas />
+                </ProtectedRoute>
+              )}>
+            </Route>
+        </Route>
         <Route element={<HomeLayout />}>
           <Route
             path="home"
