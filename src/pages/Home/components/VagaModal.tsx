@@ -8,9 +8,7 @@ import {
   DialogTitle,
   FormControl,
   IconButton,
-  InputLabel,
   MenuItem,
-  OutlinedInput,
   Select,
   SelectChangeEvent,
   Switch,
@@ -75,13 +73,13 @@ function VagaModal(props: VagaModalProps) {
   async function handleSubmit() {
     try {
       if (isEdit) {
-        const vagaResponse = await api.vaga.alterarVaga(vagaToEdit?.id!, { ...vaga, atualizadoEm: new Date().toISOString(), dataLimiteCandidatura: `${vaga.dataLimiteCandidatura}T00:00:00`, competencias })
+        const vagaResponse = await api.vaga.alterarVaga(vagaToEdit?.id!, { ...vaga, atualizadoEm: new Date().toISOString(), dataLimiteCandidatura: `${vaga.dataLimiteCandidatura}T00:00:00` })
         await api.competencia.linkCompetenciaVaga({ competencias, idVaga: vagaResponse.data.data.id })
         enqueueSnackbar('Vaga editada com sucesso', { variant: 'success' })
         onClose()
         return
       }
-      const vagaResponse = await api.vaga.cadastrarVaga({ ...vaga, atualizadoEm: new Date().toISOString(), criadoEm: new Date().toISOString(), dataLimiteCandidatura: `${vaga.dataLimiteCandidatura}T00:00:00`, competencias })
+      const vagaResponse = await api.vaga.cadastrarVaga({ ...vaga, atualizadoEm: new Date().toISOString(), criadoEm: new Date().toISOString(), dataLimiteCandidatura: `${vaga.dataLimiteCandidatura}T00:00:00` })
       const vagaId = vagaResponse.data.data.id
       await api.competencia.linkCompetenciaVaga({ competencias, idVaga: vagaId })
       enqueueSnackbar('Vaga criada com sucesso', { variant: 'success' })

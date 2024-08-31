@@ -1,7 +1,6 @@
-import { Box, Button, Typography, IconButton, Checkbox } from '@mui/material';
+import { Box, Button, Typography, Checkbox } from '@mui/material';
 import { useEffect, useState } from 'react';
 import { enqueueSnackbar } from 'notistack';
-import { FaTrash, FaPencil } from 'react-icons/fa6';
 import api from '../../services/api';
 import { Competencia } from '../../services/endpoints/competencia.ts';
 import RelacionarUsuarioCompetencias from './RelacionarUsuarioCompetencias.tsx';
