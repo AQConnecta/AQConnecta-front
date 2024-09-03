@@ -1,13 +1,15 @@
 /* eslint-disable jsx-a11y/control-has-associated-label */
 /* eslint-disable jsx-a11y/anchor-is-valid */
 import styled from 'styled-components'
-import { Box, IconButton, Typography } from '@mui/material'
+import { Box, IconButton, Typography, TextField, MenuItem } from '@mui/material'
 import LogoutIcon from '@mui/icons-material/Logout';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import PermIdentityOutlinedIcon from '@mui/icons-material/PermIdentityOutlined';
 import BusinessCenterOutlinedIcon from '@mui/icons-material/BusinessCenterOutlined';
+import SearchIcon from '@mui/icons-material/Search';
 import LogoSvg from '../../../public/AqConnectaIcon.svg'
 import { useAuth } from '../../contexts/AuthContext';
+import { useState } from 'react';
 
 const Container = styled.div`
   background-color: #fff;
@@ -35,10 +37,38 @@ const Logo = styled.span`
   font-size: 0;
 `
 
+const SearchContainer = styled.div`
+  position: relative;
+  width: 300px;
+`
+
+const SearchResults = styled(Box)`
+  position: absolute;
+  background-color: white;
+  border: 1px solid #ccc;
+  width: 100%;
+  z-index: 100;
+`
+
 function Header() {
   const { logout } = useAuth()
+  const navigate = useNavigate()
+  const [searchQuery, setSearchQuery] = useState("")
+  const [showResults, setShowResults] = useState(false)
+
   function logoutUser() {
     logout()
+  }
+
+  function handleSearchChange(event) {
+    setSearchQuery(event.target.value)
+    setShowResults(event.target.value.length > 0)
+  }
+
+  function handleOptionClick(path) {
+    navigate(path)
+    setShowResults(false)
+    setSearchQuery("")
   }
 
   return (
@@ -49,17 +79,32 @@ function Header() {
             <img src={LogoSvg} alt="" width="24px" height="24px" />
           </a>
         </Logo>
-        {/* <Search> */}
-        {/* <div> */}
-        {/* <input type="text" placeholder="Search" /> */}
-        {/* </div> */}
-        {/* <SearchIcon> */}
-        {/* <img src="/images/search-icon.svg" alt="" /> */}
-        {/* </SearchIcon> */}
-        {/* </Search> */}
-        <Box />
-        <Box />
-        <Box />
+
+        <SearchContainer>
+          <TextField
+            variant="outlined"
+            size="small"
+            placeholder="Pesquisar..."
+            value={searchQuery}
+            onChange={handleSearchChange}
+            InputProps={{
+              startAdornment: (
+                <SearchIcon />
+              ),
+            }}
+          />
+          {showResults && (
+            <SearchResults>
+              <MenuItem sx={{ 'text-decoration': 'underline' }} onClick={() => handleOptionClick(`/buscar?tipo=vagas&filtro=${searchQuery}`)}>
+                Filtrar por Título de Vaga
+              </MenuItem>
+              <MenuItem sx={{ 'text-decoration': 'underline' }} onClick={() => handleOptionClick(`/buscar?tipo=usuarios&filtro=${searchQuery}`)}>
+                Filtrar por Usuário
+              </MenuItem>
+            </SearchResults>
+          )}
+        </SearchContainer>
+
         <Box sx={{ display: 'flex', flexDirection: 'row', gap: '16px' }}>
           <Link to="/usuario">
             <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center', flexDirection: 'column', gap: '0px' }}>

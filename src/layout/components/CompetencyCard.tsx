@@ -1,6 +1,7 @@
 import styled from 'styled-components';
 import { Box, Typography } from '@mui/material';
 import { CompetenciaLevel } from '../../services/endpoints/competencia';
+import { Link } from 'react-router-dom';
 
 const CompetencyContainer = styled.div`
   display: flex;
@@ -20,7 +21,7 @@ const LevelIcon = styled.img`
 `;
 
 interface CompetencyCardProps {
-  competencies: CompetenciaLevel[];
+  competencies: CompetenciaLevel[] | undefined;
 }
 
 function CompetencyCard({ competencies }: CompetencyCardProps) {
@@ -30,11 +31,13 @@ function CompetencyCard({ competencies }: CompetencyCardProps) {
         <Typography sx={{ fontSize: '16px', fontWeight: 600, whiteSpace: 'nowrap' }}>Competências quentes</Typography>
       </Box>
       <Box sx={{ display: 'flex', justifyContent: 'flex-start', alignItems: 'flex-start', flexDirection: 'column', width: '100%' }}>
-        {competencies.map((comp, index) => (
-          <CompetencyContainer key={index}>
-            <LevelIcon src={`/images/level-${comp.level}.svg`} alt={`Nível ${comp.level}`} />
-            <CompetencyName variant="body1">{comp.competencia.descricao}</CompetencyName>
-          </CompetencyContainer>
+        {competencies?.map((comp, index) => (
+          <Link to={`/buscar?tipo=vagas&idCompetencia=${comp.competencia.id}`}>
+              <CompetencyContainer key={index}>
+                <LevelIcon src={`/images/level-${comp.level}.svg`} alt={`Nível ${comp.level}`} />
+                <CompetencyName variant="body1">{comp.competencia.descricao}</CompetencyName>
+              </CompetencyContainer>
+          </Link>
         ))}
       </Box>
     </Box>

@@ -23,47 +23,8 @@ const ArtCard = styled.div`
     0 0 0 rgb(0 0 0 / 20%);
 `
 
-const competencies = [
-  {
-    competencia: { id: '1', descricao: 'PHP' },
-    level: 2,
-  },
-  {
-    competencia: { id: '2', descricao: 'Java' },
-    level: 4,
-  },
-  {
-    competencia: { id: '3', descricao: 'JavaScript' },
-    level: 1,
-  },
-  {
-    competencia: { id: '1', descricao: 'PHP' },
-    level: 2,
-  },
-  {
-    competencia: { id: '2', descricao: 'Java' },
-    level: 4,
-  },
-  {
-    competencia: { id: '3', descricao: 'JavaScript' },
-    level: 1,
-  },
-  {
-    competencia: { id: '1', descricao: 'PHP' },
-    level: 2,
-  },
-  {
-    competencia: { id: '2', descricao: 'Java' },
-    level: 4,
-  },
-  {
-    competencia: { id: '3', descricao: 'JavaScript' },
-    level: 1,
-  },
-];
-
 function HotCompentencias() {
-  const [competenciasLevel, setCompetenciasLevel] = useState<CompetenciaLevel[]>(competencies);
+  const [competenciasLevel, setCompetenciasLevel] = useState<CompetenciaLevel[]>();
 
   useEffect(() => {
     async function getFormacaoAcademica() {
