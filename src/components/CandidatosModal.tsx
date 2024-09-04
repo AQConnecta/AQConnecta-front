@@ -4,6 +4,7 @@ import { useSnackbar } from 'notistack';
 import CloudDownloadOutlinedIcon from '@mui/icons-material/CloudDownloadOutlined';
 import { Vaga } from '../services/endpoints/vaga';
 import api from '../services/api';
+import { Link } from 'react-router-dom';
 
 type CandidatoModalProps = {
     selectedVaga: { titulo: string } | null;
@@ -20,8 +21,10 @@ function CandidatosModal(props: CandidatoModalProps) {
       try {
         const res = await api.vaga.listarCandidatos(vaga.id!);
         setCandidatos(res.data.data);
+        
       } catch (err) {
         enqueueSnackbar('Erro ao buscar candidatos', { variant: 'error' });
+        
       }
     }
 
@@ -43,11 +46,11 @@ function CandidatosModal(props: CandidatoModalProps) {
                 <Avatar src={candidato.usuario?.fotoPerfil} alt={candidato.usuario?.nome} />
                 <Box sx={{ display: 'flex', flexDirection: 'column' }}>
                   <Typography>{candidato.usuario?.nome}</Typography>
-                  {/* {candidato.curriculoUrl && (
-                    <Link href={`/usuario/${candidato.usuario.id}`} target="_blank" rel="noopener noreferrer">
+                  {candidato.curriculoUrl && candidato.usuario && (
+                    <Link to={`/usuario/${candidato.usuario.userUrl}`} target="_blank" rel="noopener noreferrer">
                       Ver perfil
                     </Link>
-                  )} */}
+                  )}
                 </Box>
               </Box>
               <Tooltip title="Baixar currículo">

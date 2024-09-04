@@ -11,10 +11,11 @@ import CustomDialog from '../../components/CustomDialog.tsx';
 
 type ExperienciaProps = {
   user: Usuario;
+  isMe: boolean;
 };
 
 function MinhaExperiencia(props:ExperienciaProps) {
-  const { user } = props;
+  const { user, isMe } = props;
   const [experiencias, setExperiencias] = useState<Experiencia[]>([]);
   const [experienciaToEdit, setExperienciaToEdit] = useState<Experiencia | null>(null);
   const [shouldReload, setShouldReload] = useState(0);
@@ -66,7 +67,7 @@ function MinhaExperiencia(props:ExperienciaProps) {
           justifyContent: 'center',
           flexDirection: 'column',
           gap: '20px',
-          backgroundColor: '#f8f9fa',
+          padding: '10px',
           borderRadius: '8px',
         }}
       >
@@ -106,30 +107,39 @@ function MinhaExperiencia(props:ExperienciaProps) {
                 <Typography variant="body2" sx={{ marginBottom: '16px' }}>
                   {experiencia.descricao}
                 </Typography>
-                <Box sx={{ display: 'flex', gap: '8px', alignItems: 'center', justifyContent: 'center' }}>
-                  <Button
-                    variant="contained"
-                    onClick={() => handleEdit(experiencia)}
-                    sx={{ width: '150px', height: '50px' }}
-                  >
-                    <FaPencil style={{ marginRight: '8px' }} />
-                    Editar
-                  </Button>
-                  <Button
-                    variant="contained"
-                    sx={{
-                      backgroundColor: 'tomato',
-                      width: '150px',
-                      height: '50px',
-                      color: 'white',
-                      '&:hover': { backgroundColor: 'red' },
-                    }}
-                    onClick={() => handleDelete(experiencia.id!)}
-                  >
-                    <FaTrash style={{ marginRight: '8px' }} />
-                    Excluir
-                  </Button>
-                </Box>
+                {isMe &&
+                  <Box sx={{ display: 'flex', gap: '8px', alignItems: 'center', justifyContent: 'center' }}>
+                    <Button
+                      variant="contained"
+                      onClick={() => handleEdit(experiencia)}
+                      sx={{
+                        display: 'flex',
+                        justifyContent: 'space-between',
+                        width: '150px',
+                        height: '50px' 
+                        }}
+                    >
+                      <FaPencil style={{ marginRight: '8px' }} />
+                      Editar
+                    </Button>
+                    <Button
+                      variant="contained"
+                      sx={{
+                        display: 'flex',
+                        justifyContent: 'space-between',
+                        backgroundColor: 'tomato',
+                        width: '150px',
+                        height: '50px',
+                        color: 'white',
+                        '&:hover': { backgroundColor: 'red' },
+                      }}
+                      onClick={() => handleDelete(experiencia.id!)}
+                    >
+                      <FaTrash style={{ marginRight: '8px' }} />
+                      Excluir
+                    </Button>
+                  </Box>
+                }
               </Box>
             ))
           ) : (
@@ -138,17 +148,21 @@ function MinhaExperiencia(props:ExperienciaProps) {
             </Typography>
           )}
         </Box>
-        <Button
-          color="primary"
-          variant="contained"
-          onClick={() => setOpen(!open)}
-        >
-          Adicionar experiência
-        </Button>
+        {isMe &&
+          <>
+            <Button
+              color="primary"
+              variant="contained"
+              onClick={() => setOpen(!open)}
+            >
+              Adicionar experiência
+            </Button>
 
-        <CustomDialog isOpen={open} onClose={() => setOpen(false)} title={`${experienciaToEdit ? 'Editar' : 'Adicionar'} experiência`}>
-          <ExperienciaRegister experienciaEdit={experienciaToEdit!} />
-        </CustomDialog>
+            <CustomDialog isOpen={open} onClose={() => setOpen(false)} title={`${experienciaToEdit ? 'Editar' : 'Adicionar'} experiência`}>
+              <ExperienciaRegister experienciaEdit={experienciaToEdit!} />
+            </CustomDialog>
+          </>
+        }
       </Box>
     </Card>
   );

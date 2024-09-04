@@ -10,10 +10,11 @@ import CustomDialog from '../../components/CustomDialog.tsx';
 
 type CompetenciaProps = {
   user: Usuario;
+  isMe: boolean;
 };
 
 function MinhaCompetencia(props: CompetenciaProps) {
-  const { user } = props;
+  const { user, isMe } = props;
   const [competencias, setCompetencias] = useState<Competencia[]>([]);
   const [selectedCompetencias, setSelectedCompetencias] = useState<string[]>([]);
   const [shouldReload, setShouldReload] = useState(0);
@@ -68,7 +69,6 @@ function MinhaCompetencia(props: CompetenciaProps) {
           display: 'flex',
           flexDirection: 'column',
           gap: '20px',
-          backgroundColor: '#f8f9fa',
           borderRadius: '8px',
           padding: '16px',
         }}
@@ -105,10 +105,12 @@ function MinhaCompetencia(props: CompetenciaProps) {
                 <Typography variant="body1" sx={{ fontWeight: 'bold' }}>
                   {competencia.descricao}
                 </Typography>
-                <Checkbox
-                  checked={selectedCompetencias.includes(competencia.id)}
-                  onChange={() => handleSelect(competencia.id)}
-                />
+                {isMe &&
+                  <Checkbox
+                    checked={selectedCompetencias.includes(competencia.id)}
+                    onChange={() => handleSelect(competencia.id)}
+                  />
+                }
               </Box>
             ))
           ) : (
@@ -117,26 +119,28 @@ function MinhaCompetencia(props: CompetenciaProps) {
             </Typography>
           )}
         </Box>
-        <Box sx={{ display: 'flex', gap: '8px', marginTop: '16px', width: '100%' }}>
-          <Button
-            color="primary"
-            variant="contained"
-            onClick={() => setOpen(!open)}
-            sx={{ flexGrow: 1 }}
-          >
-            Adicionar competência
-          </Button>
-          {selectedCompetencias.length > 0 && (
+        {isMe &&
+          <Box sx={{ display: 'flex', gap: '8px', marginTop: '16px', width: '100%' }}>
             <Button
+              color="primary"
               variant="contained"
-              color="secondary"
-              onClick={handleUnlink}
+              onClick={() => setOpen(!open)}
               sx={{ flexGrow: 1 }}
             >
-              Remover Selecionadas
+              Adicionar competência
             </Button>
-          )}
-        </Box>
+            {selectedCompetencias.length > 0 && (
+              <Button
+                variant="contained"
+                color="secondary"
+                onClick={handleUnlink}
+                sx={{ flexGrow: 1 }}
+              >
+                Remover Selecionadas
+              </Button>
+            )}
+          </Box>
+        }
         <CustomDialog
       isOpen={open}
       onClose={() => setOpen(false)}

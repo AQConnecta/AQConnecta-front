@@ -9,6 +9,7 @@ export type Usuario = {
     email: string;
     fotoPerfil: string;
     competencias: Competencia[]
+    userUrl: string;
 }
 
 export type AuthLogin = {

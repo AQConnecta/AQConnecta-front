@@ -7,14 +7,14 @@ import Card from '../../components/Card';
 import { Usuario } from '../../services/endpoints/auth';
 import CustomDialog from '../../components/CustomDialog';
 
-const Photo = styled.img`
+const Photo = styled.img<{isMe: boolean}>`
   box-shadow: none;
   width: 130px;
   height: 130px;
   object-fit: cover;
   border: 2px solid white;
   border-radius: 50%;
-  cursor: pointer;
+  cursor: ${({ isMe }) => (isMe ? 'pointer' : 'default')};
 `
 
 function UploadImagemPerfil() {
@@ -59,7 +59,7 @@ function UploadImagemPerfil() {
   );
 }
 
-function Perfil({ user }: { user: Usuario }) {
+function Perfil({ user, isMe }: { user: Usuario, isMe: boolean }) {
   const [isModalOpen, setIsModalOpen] = useState(false);
 
   const handleOpenModal = () => {
@@ -72,11 +72,13 @@ function Perfil({ user }: { user: Usuario }) {
 
   return (
     <Card sx={{ width: '100%' }}>
+      {isMe &&
       <CustomDialog isOpen={isModalOpen} onClose={handleCloseModal} title="Upload de Imagem de Perfil">
         <UploadImagemPerfil />
       </CustomDialog>
+      }
       <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-around', flexDirection: 'column', gap: '8px' }}>
-        <Photo src={user.fotoPerfil || 'https://via.placeholder.com/72x72.png?text=No+Image'} onClick={handleOpenModal} />
+        <Photo src={user.fotoPerfil || 'https://via.placeholder.com/72x72.png?text=No+Image'} onClick={handleOpenModal} isMe={isMe}/>
         <Typography sx={{ fontWeight: 700 }}>
             &nbsp;
           {user.nome}

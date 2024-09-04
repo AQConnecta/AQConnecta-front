@@ -10,10 +10,11 @@ import { Usuario } from '../../services/endpoints/auth.ts';
 
 type FormacaoAcademicaProps = {
   user: Usuario;
+  isMe: boolean;
 };
 
 function MinhaFormacaoAcademica(props: FormacaoAcademicaProps) {
-  const { user } = props;
+  const { user, isMe } = props;
   const [formacoesAcademicas, setFormacoesAcademicas] = useState<FormacaoAcademica[]>([]);
   const [shouldReload, setShouldReload] = useState(0);
 
@@ -110,19 +111,21 @@ function MinhaFormacaoAcademica(props: FormacaoAcademicaProps) {
                     backgroundColor: 'red',
                   }}
                 />
-                <Box sx={{
-                  display: 'flex', direction: 'column', alignItems: 'center', justifyContent: 'center', gap: '8px',
-                }}
-                >
-                  <Button variant="contained" sx={{ width: '150px', height: '50px', display: 'flex', alignItems: 'center', justifyContent: 'space-between' }} onClick={() => setOpen(!open)}>
-                    <FaPencil />
-                    Editar
-                  </Button>
-                  <Button variant="contained" sx={{ width: '150px', height: '50px', backgroundColor: 'tomato', display: 'flex', alignItems: 'center', justifyContent: 'space-between', '&:hover': { backgroundColor: 'red' } }} onClick={() => handleDelete(formacaoAcademica.id!)}>
-                    <FaTrash />
-                    Excluir
-                  </Button>
-                </Box>
+                {isMe &&
+                  <Box sx={{
+                    display: 'flex', direction: 'column', alignItems: 'center', justifyContent: 'center', gap: '8px',
+                  }}
+                  >
+                    <Button variant="contained" sx={{ width: '150px', height: '50px', display: 'flex', alignItems: 'center', justifyContent: 'space-between' }} onClick={() => setOpen(!open)}>
+                      <FaPencil />
+                      Editar
+                    </Button>
+                    <Button variant="contained" sx={{ width: '150px', height: '50px', backgroundColor: 'tomato', display: 'flex', alignItems: 'center', justifyContent: 'space-between', '&:hover': { backgroundColor: 'red' } }} onClick={() => handleDelete(formacaoAcademica.id!)}>
+                      <FaTrash />
+                      Excluir
+                    </Button>
+                  </Box>
+                }
               </Box>
             ))
           ) : (
@@ -136,9 +139,12 @@ function MinhaFormacaoAcademica(props: FormacaoAcademicaProps) {
             </Box>
           )}
         </Box>
-        <Button variant="contained" onClick={() => setOpen(!open)}>Cadastrar formação academica</Button>
-
-        <FormacaoAcademicaRegister isOpen={open} setOpen={setOpen} />
+        {isMe &&
+          <>
+            <Button variant="contained" onClick={() => setOpen(!open)}>Cadastrar formação academica</Button>
+            <FormacaoAcademicaRegister isOpen={open} setOpen={setOpen} />
+          </>
+        }
       </Box>
     </Card>
 

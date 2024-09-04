@@ -1,5 +1,6 @@
 import { Avatar, Box, Button, Card, Chip, IconButton, Menu, MenuItem, Typography } from '@mui/material';
 import React, { useState } from 'react';
+import { Link } from 'react-router-dom';
 import FmdGoodOutlined from '@mui/icons-material/FmdGoodOutlined';
 import MoreVertOutlinedIcon from '@mui/icons-material/MoreVertOutlined';
 import EditOutlinedIcon from '@mui/icons-material/EditOutlined';
@@ -131,7 +132,9 @@ function VagaCard(props: VagaProps) {
           </Box>
           <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
             <Box sx={{ display: 'flex', flexDirection: 'row', alignItems: 'center', justifyContent: 'center', gap: '8px' }}>
-              <Avatar src={vaga.publicador.fotoPerfil} alt="Imagem de perfil" sx={{ height: '24px', width: '24px', borderRadius: '50%' }} />
+              <Link to={`/usuario/${vaga.publicador.userUrl}`} target="_blank" rel="noopener noreferrer">
+                <Avatar src={vaga.publicador.fotoPerfil} alt="Imagem de perfil" sx={{ height: '24px', width: '24px', borderRadius: '50%' }} />
+              </Link>
               <Typography sx={{ fontSize: '14px', fontWeight: 400, fontStyle: 'italic' }}>
                 Criado por
                 {' '}
@@ -152,7 +155,12 @@ function VagaCard(props: VagaProps) {
             <Chip label={vaga.aceitaRemoto ? 'Vaga remota' : 'Vaga presencial'} sx={{ backgroundColor: '#dad5fc', height: '24px', width: '118px' }} />
           </Box>
           <Box>
-            <Typography sx={{ fontSize: '16px', fontWeight: 600 }}>Sobre a vaga:</Typography>
+            <Box sx={{ display: 'flex', justifyContent: 'space-between' }}>
+              <Typography sx={{ fontSize: '16px', fontWeight: 600 }}>Sobre a vaga:</Typography>
+              { vaga.iniciante &&
+                <Chip label="Iniciante" sx={{ backgroundColor: '#bbf7d0' , height: '24px', width: '118px'}} />
+              }
+            </Box>
             <Typography sx={{ fontSize: '14px', fontWeight: 500 }}>{vaga.descricao}</Typography>
           </Box>
           <Box>
