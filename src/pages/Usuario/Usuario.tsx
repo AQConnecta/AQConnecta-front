@@ -13,46 +13,44 @@ import api from '../../services/api';
 import { Usuario } from '../../services/endpoints/auth';
 import { useAuth } from '../../contexts/AuthContext';
 
+
 function UsuarioProfile() {
-  const { id: userId } = useParams();
+
+  const { id: userUrl } = useParams();
   const [user, setUser] = useState<Usuario>();
-  const { enqueueSnackbar } = useSnackbar()
-  const { user: usuarioLogado, setUser: setUserAuth } = useAuth()
-  const isMe = userId === usuarioLogado?.id || !userId
+  const { enqueueSnackbar } = useSnackbar();
+  const { user: usuarioLogado, setUser: setUserAuth } = useAuth();
+  const isMe = userUrl === usuarioLogado?.userUrl || !userUrl;
 
   useEffect(() => {
     async function getUsuario() {
       try {
-        const usuarioRaw = await api.usuario.getUsuario(userId!);
+        const usuarioRaw = await api.usuario.getUsuario(userUrl!);
         const usuario = usuarioRaw.data.data;
         setUser(usuario);
-        if (usuario.id === usuarioLogado?.id) {
+        if (usuario.userUrl === usuarioLogado?.userUrl) {
           setUserAuth(usuario);
         }
       } catch (err) {
         enqueueSnackbar('Erro ao buscar o usuário', { variant: 'error' });
       }
     }
-    if (!userId) return setUser(usuarioLogado!)
+    if (!userUrl) return setUser(usuarioLogado!);
     getUsuario();
-  }, [userId]);
+  }, [userUrl]);
 
   return (
     <Box sx={{ width: '592px', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', gap: '16px' }}>
-      { user && (
+      {user && (
         <>
-          { isMe && (
-            <UploadImagemPerfil user={user} />
-          )}
-          { isMe && (
-            <UploadCurriculo />
-          )}
-          <MinhaFormacaoAcademica user={user} />
-          <MinhaExperiencia user={user} />
-          <MeuEndereco user={user} />
-          <MinhasCompetencias user={user}/>
+          <UploadImagemPerfil user={user} isMe={isMe}/>
+          <UploadCurriculo isMe={isMe}/>
+          <MinhaFormacaoAcademica user={user} isMe={isMe}/>
+          <MinhaExperiencia user={user} isMe={isMe}/>
+          <MeuEndereco user={user} isMe={isMe} />
+          <MinhasCompetencias user={user} isMe={isMe}/>
         </>
-      ) }
+      )}
     </Box>
   );
 }

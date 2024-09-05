@@ -60,7 +60,7 @@ function UploadCurriculo({ setCurriculos }: { setCurriculos: React.Dispatch<Reac
   );
 }
 
-function Curriculo() {
+function Curriculo({ isMe }: { isMe: boolean }) {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [curriculos, setCurriculos] = useState<Array<{ id: string, nome: string, url: string }>>([]);
 
@@ -123,20 +123,24 @@ function Curriculo() {
                 </Typography>
               </a>
               <Box>
-                <IconButton onClick={() => handleDelete(curriculo.id)} color="error">
-                  <DeleteOutlineOutlinedIcon />
-                </IconButton>
+                {isMe &&
+                  <IconButton onClick={() => handleDelete(curriculo.id)} color="error">
+                    <DeleteOutlineOutlinedIcon />
+                  </IconButton>
+                }
               </Box>
             </Box>
           ))}
         </Box>
-        <Button
-          variant="contained"
-          onClick={handleOpenModal}
-          color="primary"
-        >
-          Enviar novo currículo
-        </Button>
+        {isMe &&
+          <Button
+            variant="contained"
+            onClick={handleOpenModal}
+            color="primary"
+          >
+            Enviar novo currículo
+          </Button>
+        }
 
         <CustomDialog isOpen={isModalOpen} onClose={handleCloseModal} title="Enviar Currículo">
           <UploadCurriculo setCurriculos={setCurriculos} />

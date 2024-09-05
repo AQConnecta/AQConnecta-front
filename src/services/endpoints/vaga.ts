@@ -18,6 +18,7 @@ export type Vaga = {
     deletadoEm: Date | string
     usuario?: Usuario
     competencias?: Array<Competencia>
+    iniciante: boolean
 }
 
 export type PartialVaga = Partial<Vaga>

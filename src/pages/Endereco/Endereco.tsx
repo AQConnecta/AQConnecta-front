@@ -10,10 +10,11 @@ import Card from '../../components/Card';
 
 type EnderecoProps ={
   user: Usuario
+  isMe: boolean;
 }
 
 function MeuEndereco(props: EnderecoProps) {
-  const { user } = props
+  const { user, isMe } = props
   const [enderecos, setEnderecos] = useState<Endereco[]>([])
   const [enderecoEdit, setEnderecoEdit] = useState<Endereco | null>(null)
   const [shouldReload, setShouldReload] = useState(0)
@@ -111,40 +112,41 @@ function MeuEndereco(props: EnderecoProps) {
                   {endereco.cep}
                   <br />
                 </Box>
-                <Box
-                  sx={{
-                    display: 'flex',
-                    direction: 'column',
-                    alignItems: 'center',
-                    justifyContent: 'center',
-                    gap: '16px',
-                  }}
-                >
-                  {/* <Button variant="contained" sx={{ width: '100%', height: '50px',  display: 'flex', alignItems: 'center', justifyContent: 'space-between' }} onClick={() => navigate(`register/${endereco.id}`)}> */}
-                  <Button
-                    variant="contained"
-                    sx={{ width: '100%', height: '50px', display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}
-                    onClick={() => {
-                      setEnderecoEdit(endereco)
-                      setOpen(!open)
+                {isMe &&
+                  <Box
+                    sx={{
+                      display: 'flex',
+                      direction: 'column',
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                      gap: '16px',
                     }}
                   >
-                    <FaPencil />
-                    <Typography>
-                      Editar
-                    </Typography>
-                  </Button>
-                  <Button
-                    variant="contained"
-                    sx={{ width: '100%', height: '50px', backgroundColor: 'tomato', display: 'flex', alignItems: 'center', justifyContent: 'space-between', '&:hover': { backgroundColor: 'red' } }}
-                    onClick={() => handleDelete(endereco.id!)}
-                  >
-                    <FaTrash />
-                    <Typography>
-                      Excluir
-                    </Typography>
-                  </Button>
-                </Box>
+                    <Button
+                      variant="contained"
+                      sx={{ width: '100%', height: '50px', display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}
+                      onClick={() => {
+                        setEnderecoEdit(endereco)
+                        setOpen(!open)
+                      }}
+                    >
+                      <FaPencil />
+                      <Typography>
+                        Editar
+                      </Typography>
+                    </Button>
+                    <Button
+                      variant="contained"
+                      sx={{ width: '100%', height: '50px', backgroundColor: 'tomato', display: 'flex', alignItems: 'center', justifyContent: 'space-between', '&:hover': { backgroundColor: 'red' } }}
+                      onClick={() => handleDelete(endereco.id!)}
+                    >
+                      <FaTrash />
+                      <Typography>
+                        Excluir
+                      </Typography>
+                    </Button>
+                  </Box>
+                }
               </Box>
             ))
           ) : (
@@ -153,10 +155,14 @@ function MeuEndereco(props: EnderecoProps) {
             </Box>
           )}
         </Box>
-        <Button variant="contained" sx={{ marginBottom: '20px' }} onClick={() => setOpen(!open)}>
-          Adicionar endereço
-        </Button>
-        <EnderecoRegister isOpen={open} setOpen={setOpen} enderecoEdit={enderecoEdit!} />
+        {isMe &&
+          <>
+            <Button variant="contained" sx={{ marginBottom: '20px' }} onClick={() => setOpen(!open)}>
+              Adicionar endereço
+            </Button>
+            <EnderecoRegister isOpen={open} setOpen={setOpen} enderecoEdit={enderecoEdit!} />
+          </>
+        }
       </Box>
     </Card>
   )
