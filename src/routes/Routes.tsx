@@ -10,6 +10,7 @@ import Home from '../pages/Home/Home.tsx'
 import Usuario from '../pages/Usuario/Usuario.tsx'
 import MinhasVagas from '../pages/MinhasVagas/MinhasVagas.tsx'
 import MinhasCandidaturas from '../pages/MinhasCandidaturas/MinhasCandidaturas.tsx'
+import Buscar from '../pages/Buscar/Buscar.tsx'
 import OnlyHeaderLayout from '../layout/OnlyHeaderLayout.tsx'
 
 const AppRoutes = () => {
@@ -40,7 +41,7 @@ const AppRoutes = () => {
             )}
           />
           <Route
-            path=":id"
+            path=":user-url"
             element={(
               <ProtectedRoute>
                 <Usuario />
@@ -70,6 +71,19 @@ const AppRoutes = () => {
               element={(
                 <ProtectedRoute>
                   <MinhasCandidaturas />
+                </ProtectedRoute>
+              )}>
+            </Route>
+        </Route>
+        <Route
+          path="buscar"
+          element={<OnlyHeaderLayout/>}
+        >
+            <Route 
+              index
+              element={(
+                <ProtectedRoute>
+                  <Buscar />
                 </ProtectedRoute>
               )}>
             </Route>

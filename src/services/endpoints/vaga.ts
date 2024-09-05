@@ -28,6 +28,12 @@ export class VagaEndpoint {
         return await axios.get(`${PREFIX}/listar`)
     }
 
+    async listAllWithFilters(titulo: string | null, idCompetencia: string | null) {
+        return await axios.get(`${PREFIX}/listar`, {
+            params: { titulo: titulo, idCompetencia: idCompetencia }
+        })
+    }
+
     async listByUser(idUsuario: string) {
         return await axios.get(`${PREFIX}/listar/${idUsuario}`)
     }
