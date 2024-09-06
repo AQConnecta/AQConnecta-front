@@ -7,25 +7,25 @@ type DeleteHandlerProps = {
     id: string | number;
 }
 
-async function deleteGeneric(callbackDelete, callbackReload, id) {
+async function deleteGeneric(callbackDelete, callbackReload, id, type) {
   try {
     await callbackDelete(id);
     callbackReload()
-    enqueueSnackbar('Vaga excluída com sucesso', { variant: 'success' });
+    enqueueSnackbar(`${type} excluída com sucesso`, { variant: 'success' });
   } catch (err) {
-    enqueueSnackbar('Erro ao excluir a vaga', { variant: 'error' });
+    enqueueSnackbar(`Erro ao excluir a ${type}`, { variant: 'error' });
   }
 }
 
 function DeleteHandler({ reload, type, id }: DeleteHandlerProps) {
   if (type === 'vaga') {
-    deleteGeneric(api.vaga.deletarVaga, reload, id)
+    deleteGeneric(api.vaga.deletarVaga, reload, id, type)
   }
   if (type === 'universidade') {
-    deleteGeneric(api.universidade.deletarUniversidade, reload, id)
+    deleteGeneric(api.universidade.deletarUniversidade, reload, id, type)
   }
   if (type === 'competencia') {
-    deleteGeneric(api.competencia.deletarCompetencia, reload, id)
+    deleteGeneric(api.competencia.deletarCompetencia, reload, id, type)
   }
 }
 

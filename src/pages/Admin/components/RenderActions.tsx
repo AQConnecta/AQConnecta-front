@@ -11,10 +11,11 @@ type RenderActionsProps = {
     EditModal: React.FC;
     handleDeleteRow: (id) => void;
     noEdit?: boolean;
+    update?: () => void;
 };
 
 function RenderActions(props: RenderActionsProps) {
-  const { params, EditModal, handleDeleteRow, noEdit } = props;
+  const { params, EditModal, handleDeleteRow, noEdit, update} = props;
   const { id } = params.row;
   const [isEditOpen, setIsEditOpen] = useState(false);
 
@@ -26,7 +27,10 @@ function RenderActions(props: RenderActionsProps) {
     <Box sx={{ display: 'flex', justifyContent: 'space-around', marginTop: '10px' }}>
       {!noEdit && (
         <>
-          <EditModal isOpen={isEditOpen} handleClose={() => setIsEditOpen(false)} editObj={params.row} />
+          <EditModal isOpen={isEditOpen} handleClose={() => {
+            if(update) update()
+            setIsEditOpen(false)
+          }} editObj={params.row} />
           <GridActionsCellItem
             icon={<EditIcon />}
             label="Edit"
