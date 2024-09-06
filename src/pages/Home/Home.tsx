@@ -16,7 +16,7 @@ function Home() {
     async function getVagas() {
       try {
         const res = await api.vaga.listAll();
-        if (res.data.data.length === 0) {
+        if (!res.data || !res.data.data || res.data.data.length === 0) {
           return;
         }
         setVagas(res.data.data);

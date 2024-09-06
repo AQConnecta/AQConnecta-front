@@ -20,7 +20,7 @@ function MinhasVagas() {
     async function getMinhasVagas() {
       try {
         const res = await api.vaga.listByUser(user?.id!);
-        if (res.data.data.length === 0) {
+        if (!res.data || !res.data.data || res.data.data.length === 0) {
           return;
         }
         setVagas(res.data.data);

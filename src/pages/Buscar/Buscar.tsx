@@ -44,7 +44,6 @@ function Buscar() {
   async function getUsuarios() {
     try {
       const res = await api.usuario.filtrarUsuarios(filtro);
-      console.log(res)
       if (res.data.data.length === 0) {
         return;
       }

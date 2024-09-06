@@ -59,7 +59,6 @@ function Right() {
 
   const photoUrl = user?.fotoPerfil || 'https://via.placeholder.com/72x72.png?text=No+Image'
 
-  console.log(user)
 
   return (
     <Container>
