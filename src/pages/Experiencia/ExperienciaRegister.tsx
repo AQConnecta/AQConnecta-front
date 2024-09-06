@@ -9,9 +9,10 @@ import { Experiencia } from '../../services/endpoints/experiencia';
 
 interface IModal{
   experienciaEdit?: Experiencia;
+  handleClose: () => void;
 }
 
-function ExperienciaRegister({ experienciaEdit }: IModal) {
+function ExperienciaRegister({ experienciaEdit, handleClose }: IModal) {
   const [experiencia, setExperiencia] = useState<Experiencia>(experienciaEdit || {
     titulo: '',
     instituicao: '',
@@ -32,6 +33,7 @@ function ExperienciaRegister({ experienciaEdit }: IModal) {
         enqueueSnackbar('Experiência editada com sucesso', {
           variant: 'success',
         });
+        handleClose();
       } catch (error) {
         enqueueSnackbar('Erro ao editar experiência', { variant: 'error' });
       }
@@ -42,6 +44,7 @@ function ExperienciaRegister({ experienciaEdit }: IModal) {
       enqueueSnackbar('Experiência adicionada com sucesso', {
         variant: 'success',
       });
+      handleClose();
     } catch (error) {
       enqueueSnackbar('Erro ao adicionar experiência', { variant: 'error' });
     }

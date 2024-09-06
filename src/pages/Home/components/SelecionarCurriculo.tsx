@@ -4,10 +4,10 @@ import { Box, Button, Typography, Modal, RadioGroup, FormControlLabel, Radio, Ic
 import PictureAsPdfOutlinedIcon from '@mui/icons-material/PictureAsPdfOutlined';
 import { useSnackbar } from 'notistack';
 import { useAuth } from '../../../contexts/AuthContext';
-import { PerfilEndpoint } from '../../../services/endpoints/perfil';
+import { Curriculo, PerfilEndpoint } from '../../../services/endpoints/perfil';
 
 function SelecionarCurriculo({ isOpen, handleClose, onSelect }: { isOpen: boolean, handleClose: () => void, onSelect: (curriculoId: string) => void }) {
-  const [curriculos, setCurriculos] = useState<Array<{ id: string, nome: string, url: string }>>([]);
+  const [curriculos, setCurriculos] = useState<Array<Curriculo>>([]);
   const [selectedCurriculo, setSelectedCurriculo] = useState<string | null>(null);
   const { user } = useAuth();
   const { enqueueSnackbar } = useSnackbar();
@@ -21,7 +21,7 @@ function SelecionarCurriculo({ isOpen, handleClose, onSelect }: { isOpen: boolea
 
         const formattedCurriculos = curriculosRaw.map((curriculo) => ({
           id: curriculo.id.toString(),
-          nome: curriculo.nomeCuriculo,
+          nome: curriculo.nomeCurriculo,
           url: curriculo.curriculo,
         }));
 
@@ -63,21 +63,23 @@ function SelecionarCurriculo({ isOpen, handleClose, onSelect }: { isOpen: boolea
           value={selectedCurriculo}
           onChange={(e) => setSelectedCurriculo(e.target.value)}
         >
-          {curriculos.map((curriculo) => (
-            <FormControlLabel
-              key={curriculo.id}
-              value={curriculo.id}
-              control={<Radio />}
-              label={(
-                <Box sx={{ display: 'flex', alignItems: 'center' }}>
-                  <IconButton component={Link} href={curriculo.url} target="_blank" rel="noopener" sx={{ marginRight: '8px' }}>
-                    <PictureAsPdfOutlinedIcon color="error" />
-                  </IconButton>
-                  {curriculo.nome}
-                </Box>
-              )}
-            />
-          ))}
+          {curriculos.map((curriculo) => {
+            return (
+              <FormControlLabel
+                key={curriculo.id}
+                value={curriculo.id}
+                control={<Radio />}
+                label={(
+                  <Box sx={{ display: 'flex', alignItems: 'center' }}>
+                    <IconButton component={Link} href={curriculo.url} target="_blank" rel="noopener" sx={{ marginRight: '8px' }}>
+                      <PictureAsPdfOutlinedIcon color="error" />
+                    </IconButton>
+                    {curriculo.nome}
+                  </Box>
+                )}
+              />
+            )
+          })}
         </RadioGroup>
         <Box sx={{ display: 'flex', justifyContent: 'space-between', marginTop: '16px' }}>
           <Button variant="outlined" onClick={handleClose}>

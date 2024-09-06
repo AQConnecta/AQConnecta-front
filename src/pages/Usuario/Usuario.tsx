@@ -13,10 +13,11 @@ import { Usuario } from '../../services/endpoints/auth';
 import { useAuth } from '../../contexts/AuthContext';
 
 function UsuarioProfile() {
-  const userUrl = window.location.pathname.split('/').pop();
+  const { user: usuarioLogado, setUser: setUserAuth } = useAuth();
+  let userUrl = window.location.pathname.split('/').pop();
+  if (userUrl === 'usuario') userUrl = usuarioLogado.userUrl;
   const [user, setUser] = useState<Usuario>();
   const { enqueueSnackbar } = useSnackbar();
-  const { user: usuarioLogado, setUser: setUserAuth } = useAuth();
   const isMe = userUrl === usuarioLogado?.userUrl;
 
   useEffect(() => {
@@ -41,7 +42,9 @@ function UsuarioProfile() {
       {user && (
         <>
           <UploadImagemPerfil user={user} isMe={isMe} />
-          <UploadCurriculo isMe={isMe} />
+          {isMe && (
+            <UploadCurriculo isMe={isMe} />
+          )}
           <MinhaFormacaoAcademica user={user} isMe={isMe} />
           <MinhaExperiencia user={user} isMe={isMe} />
           <MeuEndereco user={user} isMe={isMe} />

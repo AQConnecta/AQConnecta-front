@@ -18,6 +18,7 @@ function MeuEndereco(props: EnderecoProps) {
   const [enderecos, setEnderecos] = useState<Endereco[]>([])
   const [enderecoEdit, setEnderecoEdit] = useState<Endereco | null>(null)
   const [shouldReload, setShouldReload] = useState(0)
+  const [open, setOpen] = useState<boolean>(false);
 
   useEffect(() => {
     async function getEndereco() {
@@ -36,6 +37,11 @@ function MeuEndereco(props: EnderecoProps) {
     setShouldReload((prev) => prev + 1)
   }
 
+  function handleClose() {
+    setOpen(false)
+    reload()
+  }
+
   async function handleDelete(idEndereco: string) {
     try {
       await api.endereco.deletarEndereco(idEndereco)
@@ -45,8 +51,6 @@ function MeuEndereco(props: EnderecoProps) {
       enqueueSnackbar('Erro ao deletar endereço', { variant: 'error' })
     }
   }
-
-  const [open, setOpen] = useState<boolean>(false);
 
   return (
     <Card sx={{ width: '100%' }}>
@@ -112,41 +116,42 @@ function MeuEndereco(props: EnderecoProps) {
                   {endereco.cep}
                   <br />
                 </Box>
-                {isMe &&
-                  <Box
-                    sx={{
-                      display: 'flex',
-                      direction: 'column',
-                      alignItems: 'center',
-                      justifyContent: 'center',
-                      gap: '16px',
-                    }}
-                  >
-                    <Button
-                      variant="contained"
-                      sx={{ width: '100%', height: '50px', display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}
-                      onClick={() => {
-                        setEnderecoEdit(endereco)
-                        setOpen(!open)
+                {isMe
+                  && (
+                    <Box
+                      sx={{
+                        display: 'flex',
+                        direction: 'column',
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                        gap: '16px',
                       }}
                     >
-                      <FaPencil />
-                      <Typography>
-                        Editar
-                      </Typography>
-                    </Button>
-                    <Button
-                      variant="contained"
-                      sx={{ width: '100%', height: '50px', backgroundColor: 'tomato', display: 'flex', alignItems: 'center', justifyContent: 'space-between', '&:hover': { backgroundColor: 'red' } }}
-                      onClick={() => handleDelete(endereco.id!)}
-                    >
-                      <FaTrash />
-                      <Typography>
-                        Excluir
-                      </Typography>
-                    </Button>
-                  </Box>
-                }
+                      <Button
+                        variant="contained"
+                        sx={{ width: '100%', height: '50px', display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}
+                        onClick={() => {
+                          setEnderecoEdit(endereco)
+                          setOpen(!open)
+                        }}
+                      >
+                        <FaPencil />
+                        <Typography>
+                          Editar
+                        </Typography>
+                      </Button>
+                      <Button
+                        variant="contained"
+                        sx={{ width: '100%', height: '50px', backgroundColor: 'tomato', display: 'flex', alignItems: 'center', justifyContent: 'space-between', '&:hover': { backgroundColor: 'red' } }}
+                        onClick={() => handleDelete(endereco.id!)}
+                      >
+                        <FaTrash />
+                        <Typography>
+                          Excluir
+                        </Typography>
+                      </Button>
+                    </Box>
+                  )}
               </Box>
             ))
           ) : (
@@ -155,14 +160,15 @@ function MeuEndereco(props: EnderecoProps) {
             </Box>
           )}
         </Box>
-        {isMe &&
-          <>
-            <Button variant="contained" sx={{ marginBottom: '20px' }} onClick={() => setOpen(!open)}>
-              Adicionar endereço
-            </Button>
-            <EnderecoRegister isOpen={open} setOpen={setOpen} enderecoEdit={enderecoEdit!} />
-          </>
-        }
+        {isMe
+          && (
+            <>
+              <Button variant="contained" sx={{ marginBottom: '20px' }} onClick={() => setOpen(!open)}>
+                Adicionar endereço
+              </Button>
+              <EnderecoRegister isOpen={open} setOpen={setOpen} enderecoEdit={enderecoEdit!} handleClose={handleClose} />
+            </>
+          )}
       </Box>
     </Card>
   )

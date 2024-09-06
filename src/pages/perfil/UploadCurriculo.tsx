@@ -7,7 +7,7 @@ import api from '../../services/api';
 import Card from '../../components/Card';
 import CustomDialog from '../../components/CustomDialog';
 
-function UploadCurriculo({ setCurriculos }: { setCurriculos: React.Dispatch<React.SetStateAction<{ id: string; nome: string; url: string; }[]>> }) {
+function UploadCurriculo({ setCurriculos, handleClose }: { setCurriculos: React.Dispatch<React.SetStateAction<{ id: string; nome: string; url: string; }[]>>, handleClose: () => void }) {
   const [file, setFile] = useState<File | null>(null);
   const [nome, setNome] = useState('');
   const perfilEndpoint = new PerfilEndpoint();
@@ -25,9 +25,10 @@ function UploadCurriculo({ setCurriculos }: { setCurriculos: React.Dispatch<Reac
     }
 
     try {
-      const response = await perfilEndpoint.uploadCurriculo(file);
+      const response = await perfilEndpoint.uploadCurriculo(file, nome);
       enqueueSnackbar('Currículo enviado com sucesso!', { variant: 'success' });
       setCurriculos((prev) => [...prev, { id: response.data.id, nome: file.name, url: response.data.url }]);
+      handleClose();
     } catch (error) {
       enqueueSnackbar('Erro ao fazer upload do currículo. Tente novamente.', { variant: 'error' });
     }
@@ -41,6 +42,7 @@ function UploadCurriculo({ setCurriculos }: { setCurriculos: React.Dispatch<Reac
         alignItems: 'center',
         justifyContent: 'center',
         maxWidth: '500px',
+        paddingTop: '8px',
       }}
     >
 
@@ -71,6 +73,7 @@ function UploadCurriculo({ setCurriculos }: { setCurriculos: React.Dispatch<Reac
 function Curriculo({ isMe }: { isMe: boolean }) {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [curriculos, setCurriculos] = useState<Array<{ id: string, nome: string, url: string }>>([]);
+  const [shouldUpdate, setShouldUpdate] = useState(0);
 
   const handleOpenModal = () => {
     setIsModalOpen(true);
@@ -78,6 +81,7 @@ function Curriculo({ isMe }: { isMe: boolean }) {
 
   const handleCloseModal = () => {
     setIsModalOpen(false);
+    setShouldUpdate((prev) => prev + 1);
   };
 
   const handleDelete = async (id: string) => {
@@ -95,7 +99,7 @@ function Curriculo({ isMe }: { isMe: boolean }) {
         const res = await api.perfil.getCurriculos();
         const fetchedCurriculos = res.data.data.map((curriculo) => ({
           id: curriculo.id,
-          nome: curriculo.nomeCuriculo,
+          nome: curriculo.nomeCurriculo,
           url: curriculo.curriculo,
         }));
         setCurriculos(fetchedCurriculos);
@@ -105,7 +109,7 @@ function Curriculo({ isMe }: { isMe: boolean }) {
     }
 
     fetchCurriculos();
-  }, []);
+  }, [shouldUpdate]);
 
   return (
     <Card sx={{ width: '100%' }}>
@@ -153,7 +157,7 @@ function Curriculo({ isMe }: { isMe: boolean }) {
           )}
 
         <CustomDialog isOpen={isModalOpen} onClose={handleCloseModal} title="Enviar Currículo">
-          <UploadCurriculo setCurriculos={setCurriculos} />
+          <UploadCurriculo setCurriculos={setCurriculos} handleClose={() => handleCloseModal()} />
         </CustomDialog>
       </Box>
     </Card>

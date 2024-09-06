@@ -2,10 +2,10 @@ import axios from './_axios';
 
 const PREFIX = '/usuario';
 
-type Curriculo = {
+export type Curriculo = {
   id: number,
   curriculo: string
-  nomeCuriculo: string
+  nomeCurriculo: string
 }
 
 export class PerfilEndpoint {
@@ -20,9 +20,10 @@ export class PerfilEndpoint {
     });
   }
 
-  async uploadCurriculo(file: File) {
+  async uploadCurriculo(file: File, nome: string) {
     const formData = new FormData();
     formData.append('file', file);
+    formData.append('nome', nome);
 
     return await axios.post(`${PREFIX}/anexar-curriculo`, formData, {
       headers: {

@@ -72,13 +72,14 @@ function Perfil({ user, isMe }: { user: Usuario, isMe: boolean }) {
 
   return (
     <Card sx={{ width: '100%' }}>
-      {isMe &&
-      <CustomDialog isOpen={isModalOpen} onClose={handleCloseModal} title="Upload de Imagem de Perfil">
-        <UploadImagemPerfil />
-      </CustomDialog>
-      }
+      {isMe
+      && (
+        <CustomDialog isOpen={isModalOpen} onClose={handleCloseModal} title="Upload de Imagem de Perfil">
+          <UploadImagemPerfil />
+        </CustomDialog>
+      )}
       <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-around', flexDirection: 'column', gap: '8px' }}>
-        <Photo src={user.fotoPerfil || 'https://via.placeholder.com/72x72.png?text=No+Image'} onClick={handleOpenModal} isMe={isMe}/>
+        <Photo src={user.fotoPerfil || 'https://via.placeholder.com/72x72.png?text=No+Image'} onClick={handleOpenModal} isMe={isMe} />
         <Typography sx={{ fontWeight: 700 }}>
             &nbsp;
           {user.nome}

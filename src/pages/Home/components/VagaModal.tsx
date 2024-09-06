@@ -44,10 +44,12 @@ const vagaDefaultValues: PartialVaga = {
   localDaVaga: '',
   aceitaRemoto: false,
   dataLimiteCandidatura: '',
+  iniciante: false,
 }
 
 function VagaModal(props: VagaModalProps) {
   const { isOpen, handleClose, editObj } = props
+  if (editObj) editObj.dataLimiteCandidatura = editObj.dataLimiteCandidatura.split('T')[0]
   const [vaga, setVaga] = useState<Vaga>(editObj || vagaDefaultValues as Vaga)
   const [competenciasList, setCompetenciasList] = useState<Competencia[]>([])
   const [competencias, setCompetencias] = useState(editObj?.competencias || [])
@@ -131,7 +133,7 @@ function VagaModal(props: VagaModalProps) {
             justifyContent: 'center',
             alignItems: 'flex-start',
             gap: '32px',
-            maxWidth: '500px',
+            maxWidth: '600px',
             padding: '8px',
           }}
         >
@@ -170,14 +172,14 @@ function VagaModal(props: VagaModalProps) {
               placeholder="Data limite para candidatura"
               label="Data limite"
               InputLabelProps={{ shrink: true }}
-              value={vaga.dataLimiteCandidatura || ''}
+              value={vaga.dataLimiteCandidatura.toLocaleString() || ''}
               onChange={(e) => setVagaValue(e.target.value, 'dataLimiteCandidatura')}
               sx={{ width: '100%' }}
             />
             <Box
               sx={{
                 display: 'flex',
-                direction: 'column',
+                direction: 'row',
                 alignItems: 'center',
                 justifyContent: 'flex-end',
                 width: '100%',
@@ -185,8 +187,26 @@ function VagaModal(props: VagaModalProps) {
                 paddingBottom: '8px',
               }}
             >
-              <Switch checked={vaga.aceitaRemoto} onChange={() => setVagaValue(!vaga.aceitaRemoto, 'aceitaRemoto')} />
-              <Typography>Aceita remoto</Typography>
+              <Box sx={{
+                display: 'flex',
+                direction: 'column',
+                alignItems: 'center',
+                justifyContent: 'flex-end',
+              }}
+              >
+                <Switch checked={vaga.aceitaRemoto} onChange={() => setVagaValue(!vaga.aceitaRemoto, 'aceitaRemoto')} />
+                <Typography>Aceita remoto</Typography>
+              </Box>
+              <Box sx={{
+                display: 'flex',
+                direction: 'column',
+                alignItems: 'center',
+                justifyContent: 'flex-end',
+              }}
+              >
+                <Switch checked={vaga.iniciante} onChange={() => setVagaValue(!vaga.iniciante, 'iniciante')} />
+                <Typography>Vaga para iniciantes</Typography>
+              </Box>
             </Box>
           </Box>
 

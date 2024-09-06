@@ -1,3 +1,4 @@
+/* eslint-disable react/jsx-props-no-spreading */
 /* eslint-disable no-unused-vars */
 import {
   Box, Button, Switch, TextField, Typography, Autocomplete,
@@ -18,9 +19,10 @@ import { FormacaoAcademica, Universidade } from '../../services/endpoints/formac
 interface IModal{
   isOpen: boolean;
   setOpen: (isOpen: boolean) => void;
+  handleClose: () => void;
 }
 
-function FormacaoAcademicaRegister({ isOpen, setOpen }: IModal) {
+function FormacaoAcademicaRegister({ isOpen, setOpen, handleClose }: IModal) {
   const [formacaoAcademica, setFormacaoAcademica] = useState<FormacaoAcademica>({
     universidade: {
       id: '',
@@ -59,6 +61,7 @@ function FormacaoAcademicaRegister({ isOpen, setOpen }: IModal) {
         enqueueSnackbar('Formação acadêmica editada com sucesso', {
           variant: 'success',
         });
+        handleClose();
       } catch (error) {
         enqueueSnackbar('Erro ao editar formação acadêmica', { variant: 'error' });
       }
@@ -69,6 +72,7 @@ function FormacaoAcademicaRegister({ isOpen, setOpen }: IModal) {
       enqueueSnackbar('Formação acadêmica cadastrada com sucesso', {
         variant: 'success',
       });
+      handleClose();
     } catch (error) {
       enqueueSnackbar('Erro ao cadastrar formação acadêmica', { variant: 'error' });
     }
@@ -152,15 +156,6 @@ function FormacaoAcademicaRegister({ isOpen, setOpen }: IModal) {
             renderInput={(params) => <TextField {...params} label="Universidade" placeholder="Selecione a universidade" />}
             sx={{ width: '100%' }}
           />
-          {/* TODO: Change to uploaded file */}
-          {/* <TextField
-            variant="outlined"
-            placeholder="Diploma"
-            label="Diploma"
-            value={formacaoAcademica.diploma}
-            onChange={(e) => setFormacaoValue(e.target.value, 'diploma')}
-            sx={{ width: '100%' }}
-          /> */}
           <TextField
             variant="outlined"
             placeholder="Descrição"

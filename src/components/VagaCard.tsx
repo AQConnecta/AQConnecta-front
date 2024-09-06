@@ -157,9 +157,8 @@ function VagaCard(props: VagaProps) {
           <Box>
             <Box sx={{ display: 'flex', justifyContent: 'space-between' }}>
               <Typography sx={{ fontSize: '16px', fontWeight: 600 }}>Sobre a vaga:</Typography>
-              { vaga.iniciante &&
-                <Chip label="Iniciante" sx={{ backgroundColor: '#bbf7d0' , height: '24px', width: '118px'}} />
-              }
+              { vaga.iniciante
+                && <Chip label="Iniciante" sx={{ backgroundColor: '#bbf7d0', height: '24px', width: '118px' }} />}
             </Box>
             <Typography sx={{ fontSize: '14px', fontWeight: 500 }}>{vaga.descricao}</Typography>
           </Box>

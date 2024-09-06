@@ -87,7 +87,12 @@ function EnderecoRegister({ isOpen, setOpen, enderecoEdit }: IModal) {
             placeholder="Digite seu CEP"
             label="CEP"
             value={endereco.cep}
-            onChange={(e) => setEnderecoValue(e.target.value, 'cep')}
+            onChange={(e) => {
+              const cep = e.target.value.replace(/\D/g, '')
+              if (cep.length <= 8) {
+                setEnderecoValue(cep, 'cep')
+              }
+            }}
             sx={{ width: '100%' }}
           />
           <TextField
@@ -127,7 +132,10 @@ function EnderecoRegister({ isOpen, setOpen, enderecoEdit }: IModal) {
             placeholder="Digite o número"
             label="Número"
             value={endereco.numeroCasa}
-            onChange={(e) => setEnderecoValue(e.target.value, 'numeroCasa')}
+            onChange={(e) => {
+              const numero = e.target.value.replace(/\D/g, '')
+              setEnderecoValue(numero, 'numeroCasa')
+            }}
             sx={{ width: '100%' }}
           />
           <TextField

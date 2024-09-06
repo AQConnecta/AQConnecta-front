@@ -38,6 +38,11 @@ function MinhaExperiencia(props:ExperienciaProps) {
     setShouldReload((prev) => prev + 1);
   }
 
+  function handleClose() {
+    setOpen(false);
+    reload();
+  }
+
   const formatDate = (dateString: string) => {
     const options:Intl.DateTimeFormatOptions = { year: 'numeric', month: 'numeric', day: 'numeric' };
     return new Date(dateString).toLocaleDateString('pt-BR', options);
@@ -107,39 +112,40 @@ function MinhaExperiencia(props:ExperienciaProps) {
                 <Typography variant="body2" sx={{ marginBottom: '16px' }}>
                   {experiencia.descricao}
                 </Typography>
-                {isMe &&
-                  <Box sx={{ display: 'flex', gap: '8px', alignItems: 'center', justifyContent: 'center' }}>
-                    <Button
-                      variant="contained"
-                      onClick={() => handleEdit(experiencia)}
-                      sx={{
-                        display: 'flex',
-                        justifyContent: 'space-between',
-                        width: '150px',
-                        height: '50px' 
+                {isMe
+                  && (
+                    <Box sx={{ display: 'flex', gap: '8px', alignItems: 'center', justifyContent: 'center' }}>
+                      <Button
+                        variant="contained"
+                        onClick={() => handleEdit(experiencia)}
+                        sx={{
+                          display: 'flex',
+                          justifyContent: 'space-between',
+                          width: '150px',
+                          height: '50px',
                         }}
-                    >
-                      <FaPencil style={{ marginRight: '8px' }} />
-                      Editar
-                    </Button>
-                    <Button
-                      variant="contained"
-                      sx={{
-                        display: 'flex',
-                        justifyContent: 'space-between',
-                        backgroundColor: 'tomato',
-                        width: '150px',
-                        height: '50px',
-                        color: 'white',
-                        '&:hover': { backgroundColor: 'red' },
-                      }}
-                      onClick={() => handleDelete(experiencia.id!)}
-                    >
-                      <FaTrash style={{ marginRight: '8px' }} />
-                      Excluir
-                    </Button>
-                  </Box>
-                }
+                      >
+                        <FaPencil style={{ marginRight: '8px' }} />
+                        Editar
+                      </Button>
+                      <Button
+                        variant="contained"
+                        sx={{
+                          display: 'flex',
+                          justifyContent: 'space-between',
+                          backgroundColor: 'tomato',
+                          width: '150px',
+                          height: '50px',
+                          color: 'white',
+                          '&:hover': { backgroundColor: 'red' },
+                        }}
+                        onClick={() => handleDelete(experiencia.id!)}
+                      >
+                        <FaTrash style={{ marginRight: '8px' }} />
+                        Excluir
+                      </Button>
+                    </Box>
+                  )}
               </Box>
             ))
           ) : (
@@ -148,21 +154,22 @@ function MinhaExperiencia(props:ExperienciaProps) {
             </Typography>
           )}
         </Box>
-        {isMe &&
-          <>
-            <Button
-              color="primary"
-              variant="contained"
-              onClick={() => setOpen(!open)}
-            >
-              Adicionar experiência
-            </Button>
+        {isMe
+          && (
+            <>
+              <Button
+                color="primary"
+                variant="contained"
+                onClick={() => setOpen(!open)}
+              >
+                Adicionar experiência
+              </Button>
 
-            <CustomDialog isOpen={open} onClose={() => setOpen(false)} title={`${experienciaToEdit ? 'Editar' : 'Adicionar'} experiência`}>
-              <ExperienciaRegister experienciaEdit={experienciaToEdit!} />
-            </CustomDialog>
-          </>
-        }
+              <CustomDialog isOpen={open} onClose={() => setOpen(false)} title={`${experienciaToEdit ? 'Editar' : 'Adicionar'} experiência`}>
+                <ExperienciaRegister experienciaEdit={experienciaToEdit!} handleClose={handleClose} />
+              </CustomDialog>
+            </>
+          )}
       </Box>
     </Card>
   );

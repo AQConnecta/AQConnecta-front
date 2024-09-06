@@ -17,6 +17,7 @@ function MinhaFormacaoAcademica(props: FormacaoAcademicaProps) {
   const { user, isMe } = props;
   const [formacoesAcademicas, setFormacoesAcademicas] = useState<FormacaoAcademica[]>([]);
   const [shouldReload, setShouldReload] = useState(0);
+  const [open, setOpen] = useState<boolean>(false);
 
   useEffect(() => {
     async function getFormacaoAcademica() {
@@ -35,6 +36,11 @@ function MinhaFormacaoAcademica(props: FormacaoAcademicaProps) {
     setShouldReload((prev) => prev + 1);
   }
 
+  function handleClose() {
+    setOpen(false);
+    reload();
+  }
+
   const formatDate = (dateString: string) => {
     const options:Intl.DateTimeFormatOptions = { year: 'numeric', month: 'numeric', day: 'numeric' };
     return new Date(dateString).toLocaleDateString('pt-BR', options);
@@ -49,8 +55,6 @@ function MinhaFormacaoAcademica(props: FormacaoAcademicaProps) {
       enqueueSnackbar('Erro ao deletar formação', { variant: 'error' });
     }
   }
-
-  const [open, setOpen] = useState<boolean>(false);
 
   return (
     <Card sx={{ width: '100%' }}>
@@ -111,21 +115,22 @@ function MinhaFormacaoAcademica(props: FormacaoAcademicaProps) {
                     backgroundColor: 'red',
                   }}
                 />
-                {isMe &&
-                  <Box sx={{
-                    display: 'flex', direction: 'column', alignItems: 'center', justifyContent: 'center', gap: '8px',
-                  }}
-                  >
-                    <Button variant="contained" sx={{ width: '150px', height: '50px', display: 'flex', alignItems: 'center', justifyContent: 'space-between' }} onClick={() => setOpen(!open)}>
-                      <FaPencil />
-                      Editar
-                    </Button>
-                    <Button variant="contained" sx={{ width: '150px', height: '50px', backgroundColor: 'tomato', display: 'flex', alignItems: 'center', justifyContent: 'space-between', '&:hover': { backgroundColor: 'red' } }} onClick={() => handleDelete(formacaoAcademica.id!)}>
-                      <FaTrash />
-                      Excluir
-                    </Button>
-                  </Box>
-                }
+                {isMe
+                  && (
+                    <Box sx={{
+                      display: 'flex', direction: 'column', alignItems: 'center', justifyContent: 'center', gap: '8px',
+                    }}
+                    >
+                      <Button variant="contained" sx={{ width: '150px', height: '50px', display: 'flex', alignItems: 'center', justifyContent: 'space-between' }} onClick={() => setOpen(!open)}>
+                        <FaPencil />
+                        Editar
+                      </Button>
+                      <Button variant="contained" sx={{ width: '150px', height: '50px', backgroundColor: 'tomato', display: 'flex', alignItems: 'center', justifyContent: 'space-between', '&:hover': { backgroundColor: 'red' } }} onClick={() => handleDelete(formacaoAcademica.id!)}>
+                        <FaTrash />
+                        Excluir
+                      </Button>
+                    </Box>
+                  )}
               </Box>
             ))
           ) : (
@@ -139,12 +144,13 @@ function MinhaFormacaoAcademica(props: FormacaoAcademicaProps) {
             </Box>
           )}
         </Box>
-        {isMe &&
-          <>
-            <Button variant="contained" onClick={() => setOpen(!open)}>Cadastrar formação academica</Button>
-            <FormacaoAcademicaRegister isOpen={open} setOpen={setOpen} />
-          </>
-        }
+        {isMe
+          && (
+            <>
+              <Button variant="contained" onClick={() => setOpen(!open)}>Cadastrar formação academica</Button>
+              <FormacaoAcademicaRegister isOpen={open} setOpen={setOpen} handleClose={handleClose} />
+            </>
+          )}
       </Box>
     </Card>
 
