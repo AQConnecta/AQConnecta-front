@@ -4,12 +4,12 @@ import { Vaga } from '../services/endpoints/vaga';
 import api from '../services/api';
 
 type UseVagaReturn = {
-    vagas: Vaga | null;
+    vagas: Vaga[];
     reloadVagas: () => void;
 };
 
 function useVaga(): UseVagaReturn {
-  const [vagas, setVagas] = useState<Vaga | null>(null);
+  const [vagas, setVagas] = useState<Vaga[]>([]);
   const [shouldReload, setShouldReload] = useState(0);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState(null);

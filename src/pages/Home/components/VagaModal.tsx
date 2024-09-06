@@ -48,7 +48,6 @@ const vagaDefaultValues: PartialVaga = {
 
 function VagaModal(props: VagaModalProps) {
   const { isOpen, handleClose, editObj } = props
-  console.log(editObj)
   const [vaga, setVaga] = useState<Vaga>(editObj || vagaDefaultValues as Vaga)
   const [competenciasList, setCompetenciasList] = useState<Competencia[]>([])
   const [competencias, setCompetencias] = useState(editObj?.competencias || [])

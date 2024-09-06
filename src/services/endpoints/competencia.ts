@@ -42,4 +42,12 @@ export class CompetenciaEndpoint {
     async linkCompetenciaVaga(data: {competencias: Array<Competencia>, idVaga: string}): Promise<any> {
         return await axios.post(`${PREFIX}/relacionar_competencia_vaga`, data)
     }
+
+    async cadastrarCompetencia(data: {descricao: string}): Promise<void> {
+        return await axios.post(`${PREFIX}/cadastrar`, data)
+    }
+
+    async deletarCompetencia(id: string): Promise<void> {
+        return await axios.delete(`${PREFIX}/deletar/${id}`)
+    }
 }

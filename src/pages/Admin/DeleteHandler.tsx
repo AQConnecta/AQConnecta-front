@@ -21,6 +21,12 @@ function DeleteHandler({ reload, type, id }: DeleteHandlerProps) {
   if (type === 'vaga') {
     deleteGeneric(api.vaga.deletarVaga, reload, id)
   }
+  if (type === 'universidade') {
+    deleteGeneric(api.universidade.deletarUniversidade, reload, id)
+  }
+  if (type === 'competencia') {
+    deleteGeneric(api.competencia.deletarCompetencia, reload, id)
+  }
 }
 
 export default DeleteHandler;

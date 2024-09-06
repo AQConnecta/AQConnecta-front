@@ -16,6 +16,8 @@ export type Universidade = {
     situacaoIes: string;
 }
 
+export type PartialUniversidade = Partial<Universidade>
+
 export type FormacaoAcademica = {
     id?: string
     universidade: Universidade;
