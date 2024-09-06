@@ -17,7 +17,7 @@ function UsuarioProfile() {
   const [user, setUser] = useState<Usuario>();
   const { enqueueSnackbar } = useSnackbar();
   const { user: usuarioLogado, setUser: setUserAuth } = useAuth();
-  const isMe = userUrl === usuarioLogado?.userUrl || !userUrl;
+  const isMe = userUrl === usuarioLogado?.userUrl;
 
   useEffect(() => {
     async function getUsuario() {

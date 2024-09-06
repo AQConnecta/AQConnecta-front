@@ -16,6 +16,7 @@ function Buscar() {
   const tipo = searchParams.get('tipo');
   const filtro = searchParams.get('filtro');
   const idCompetencia = searchParams.get('idCompetencia');
+  const iniciante = searchParams.get('iniciante');
   const [vagas, setVagas] = useState<Array<Vaga>>([]);
   const [usuarios, setUsuarios] = useState<Array<UsuarioFilter>>([]);
   const [shouldReload, setShouldReload] = useState(0);
@@ -30,7 +31,7 @@ function Buscar() {
 
   async function getVagas() {
     try {
-      const res = await api.vaga.listAllWithFilters(filtro, idCompetencia);
+      const res = await api.vaga.listAllWithFilters(filtro, idCompetencia, iniciante);
       if (res.data.data.length === 0) {
         return;
       }
