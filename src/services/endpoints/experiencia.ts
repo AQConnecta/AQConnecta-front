@@ -7,8 +7,8 @@ export type Experiencia = {
     titulo: string
     instituicao: string
     descricao: string
-    dataInicio: string
-    dataFim: string
+    dataInicio: Date
+    dataFim: Date
     atualExperiencia: boolean
 }
 

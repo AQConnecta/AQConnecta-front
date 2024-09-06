@@ -112,7 +112,7 @@ function AdminDatagrid({ type }: AdminDatagridProps) {
   }
 
   useEffect(() => {
-    vagaColumns.push({ field: 'action', headerName: '', sortable: false, minWidth: 150, flex: 1, renderCell: (params) => <RenderActions params={params} handleDeleteRow={handleVagaDeleteRow} EditModal={VagaModal} /> })
+    vagaColumns.push({ field: 'action', headerName: '', sortable: false, minWidth: 150, flex: 1, renderCell: (params) => <RenderActions params={params} handleDeleteRow={handleVagaDeleteRow} EditModal={VagaModal} noEdit /> })
     universidadeColumns.push({ field: 'action', headerName: '', sortable: false, minWidth: 150, flex: 1, renderCell: (params) => <RenderActions params={params} handleDeleteRow={handleUniversidadeDeleteRow} EditModal={UniversidadeModal} /> })
     competenciaColumns.push({ field: 'action', headerName: '', sortable: false, minWidth: 150, flex: 1, renderCell: (params) => <RenderActions params={params} handleDeleteRow={handleCompetenciaDeleteRow} noEdit /> })
   }, [])

@@ -18,6 +18,7 @@ function MinhaFormacaoAcademica(props: FormacaoAcademicaProps) {
   const [formacoesAcademicas, setFormacoesAcademicas] = useState<FormacaoAcademica[]>([]);
   const [shouldReload, setShouldReload] = useState(0);
   const [open, setOpen] = useState<boolean>(false);
+  const [editObj, setEditObj] = useState<FormacaoAcademica | null>(null);
 
   useEffect(() => {
     async function getFormacaoAcademica() {
@@ -121,7 +122,14 @@ function MinhaFormacaoAcademica(props: FormacaoAcademicaProps) {
                       display: 'flex', direction: 'column', alignItems: 'center', justifyContent: 'center', gap: '8px',
                     }}
                     >
-                      <Button variant="contained" sx={{ width: '150px', height: '50px', display: 'flex', alignItems: 'center', justifyContent: 'space-between' }} onClick={() => setOpen(!open)}>
+                      <Button
+                        variant="contained"
+                        sx={{ width: '150px', height: '50px', display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}
+                        onClick={() => {
+                          setEditObj(formacaoAcademica);
+                          setOpen(!open)
+                        }}
+                      >
                         <FaPencil />
                         Editar
                       </Button>
@@ -148,7 +156,7 @@ function MinhaFormacaoAcademica(props: FormacaoAcademicaProps) {
           && (
             <>
               <Button variant="contained" onClick={() => setOpen(!open)}>Cadastrar formação academica</Button>
-              <FormacaoAcademicaRegister isOpen={open} setOpen={setOpen} handleClose={handleClose} />
+              <FormacaoAcademicaRegister isOpen={open} setOpen={setOpen} handleClose={handleClose} editObj={editObj} />
             </>
           )}
       </Box>

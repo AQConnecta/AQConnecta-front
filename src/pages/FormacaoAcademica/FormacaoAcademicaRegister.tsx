@@ -20,33 +20,41 @@ interface IModal{
   isOpen: boolean;
   setOpen: (isOpen: boolean) => void;
   handleClose: () => void;
+  editObj?: FormacaoAcademica | null;
 }
 
-function FormacaoAcademicaRegister({ isOpen, setOpen, handleClose }: IModal) {
-  const [formacaoAcademica, setFormacaoAcademica] = useState<FormacaoAcademica>({
-    universidade: {
-      id: '',
-      codigoIes: 0,
-      nomeInstituicao: '',
-      sigla: '',
-      categoriaIes: '',
-      organizacaoAcademica: '',
-      codigoMunicipioIbge: '',
-      municipio: '',
-      uf: '',
-      situacaoIes: '',
-    },
-    descricao: '',
-    diploma: '',
-    dataInicio: '',
-    dataFim: '',
-    atualFormacao: false,
-  });
+const defaultValues: FormacaoAcademica = {
+  universidade: {
+    id: '',
+    codigoIes: 0,
+    nomeInstituicao: '',
+    sigla: '',
+    categoriaIes: '',
+    organizacaoAcademica: '',
+    codigoMunicipioIbge: '',
+    municipio: '',
+    uf: '',
+    situacaoIes: '',
+  },
+  descricao: '',
+  diploma: '',
+  dataInicio: '',
+  dataFim: '',
+  atualFormacao: false,
+}
+
+function FormacaoAcademicaRegister({ isOpen, setOpen, handleClose: closeModal, editObj }: IModal) {
+  const [formacaoAcademica, setFormacaoAcademica] = useState<FormacaoAcademica>(editObj || defaultValues);
   const [universidades, setUniversidades] = useState<Universidade[]>([]);
   const { enqueueSnackbar } = useSnackbar();
   const { id: formacaoId } = useParams();
   const user = JSON.parse(localStorage.getItem('user') || '{}');
   const isEdit = !!formacaoId;
+
+  function handleClose() {
+    setFormacaoAcademica(defaultValues);
+    closeModal();
+  }
 
   async function submitFormacao() {
     const newFormacao = {
@@ -191,7 +199,7 @@ function FormacaoAcademicaRegister({ isOpen, setOpen, handleClose }: IModal) {
               placeholder="Data de início"
               label="Data de início"
               InputLabelProps={{ shrink: true }}
-              value={formacaoAcademica.dataInicio || ''}
+              value={formacaoAcademica.dataInicio.toLocaleString() || ''}
               onChange={(e) => setFormacaoValue(e.target.value, 'dataInicio')}
               sx={{ width: '100%' }}
             />
@@ -202,7 +210,7 @@ function FormacaoAcademicaRegister({ isOpen, setOpen, handleClose }: IModal) {
               label="Data de fim"
               InputLabelProps={{ shrink: true }}
               disabled={formacaoAcademica.atualFormacao}
-              value={formacaoAcademica.dataFim || ''}
+              value={formacaoAcademica.dataFim.toLocaleString() || ''}
               onChange={(e) => setFormacaoValue(e.target.value, 'dataFim')}
               sx={{ width: '100%' }}
             />

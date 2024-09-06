@@ -23,8 +23,8 @@ export type FormacaoAcademica = {
     universidade: Universidade;
     descricao: string;
     diploma: string;
-    dataInicio: string;
-    dataFim: string;
+    dataInicio: Date;
+    dataFim: Date;
     atualFormacao: boolean;
 
 }
