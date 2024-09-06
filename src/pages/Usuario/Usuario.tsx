@@ -1,6 +1,5 @@
 /* eslint-disable consistent-return */
 import { Box } from '@mui/material';
-import { useParams } from 'react-router-dom';
 import { useEffect, useState } from 'react';
 import { useSnackbar } from 'notistack';
 import MeuEndereco from '../Endereco/Endereco';
@@ -13,10 +12,8 @@ import api from '../../services/api';
 import { Usuario } from '../../services/endpoints/auth';
 import { useAuth } from '../../contexts/AuthContext';
 
-
 function UsuarioProfile() {
-
-  const { id: userUrl } = useParams();
+  const userUrl = window.location.pathname.split('/').pop();
   const [user, setUser] = useState<Usuario>();
   const { enqueueSnackbar } = useSnackbar();
   const { user: usuarioLogado, setUser: setUserAuth } = useAuth();
@@ -43,12 +40,12 @@ function UsuarioProfile() {
     <Box sx={{ width: '592px', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', gap: '16px' }}>
       {user && (
         <>
-          <UploadImagemPerfil user={user} isMe={isMe}/>
-          <UploadCurriculo isMe={isMe}/>
-          <MinhaFormacaoAcademica user={user} isMe={isMe}/>
-          <MinhaExperiencia user={user} isMe={isMe}/>
+          <UploadImagemPerfil user={user} isMe={isMe} />
+          <UploadCurriculo isMe={isMe} />
+          <MinhaFormacaoAcademica user={user} isMe={isMe} />
+          <MinhaExperiencia user={user} isMe={isMe} />
           <MeuEndereco user={user} isMe={isMe} />
-          <MinhasCompetencias user={user} isMe={isMe}/>
+          <MinhasCompetencias user={user} isMe={isMe} />
         </>
       )}
     </Box>

@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Box, Button, Typography, Input, IconButton } from '@mui/material';
+import { Box, Button, Typography, Input, IconButton, TextField } from '@mui/material';
 import { enqueueSnackbar } from 'notistack';
 import DeleteOutlineOutlinedIcon from '@mui/icons-material/DeleteOutlineOutlined';
 import { PerfilEndpoint } from '../../services/endpoints/perfil';
@@ -9,6 +9,7 @@ import CustomDialog from '../../components/CustomDialog';
 
 function UploadCurriculo({ setCurriculos }: { setCurriculos: React.Dispatch<React.SetStateAction<{ id: string; nome: string; url: string; }[]>> }) {
   const [file, setFile] = useState<File | null>(null);
+  const [nome, setNome] = useState('');
   const perfilEndpoint = new PerfilEndpoint();
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -43,6 +44,13 @@ function UploadCurriculo({ setCurriculos }: { setCurriculos: React.Dispatch<Reac
       }}
     >
 
+      <TextField
+        label="Nome do currículo"
+        fullWidth
+        value={nome}
+        onChange={(e) => setNome(e.target.value)}
+        sx={{ marginBottom: '20px' }}
+      />
       <Input
         type="file"
         onChange={handleFileChange}
@@ -85,10 +93,10 @@ function Curriculo({ isMe }: { isMe: boolean }) {
     async function fetchCurriculos() {
       try {
         const res = await api.perfil.getCurriculos();
-        const fetchedCurriculos = Object.keys(res.data.data).map((key) => ({
-          id: key,
-          nome: res.data.data[key].split('/').pop(),
-          url: res.data.data[key],
+        const fetchedCurriculos = res.data.data.map((curriculo) => ({
+          id: curriculo.id,
+          nome: curriculo.nomeCuriculo,
+          url: curriculo.curriculo,
         }));
         setCurriculos(fetchedCurriculos);
       } catch (error) {
@@ -123,24 +131,26 @@ function Curriculo({ isMe }: { isMe: boolean }) {
                 </Typography>
               </a>
               <Box>
-                {isMe &&
-                  <IconButton onClick={() => handleDelete(curriculo.id)} color="error">
-                    <DeleteOutlineOutlinedIcon />
-                  </IconButton>
-                }
+                {isMe
+                  && (
+                    <IconButton onClick={() => handleDelete(curriculo.id)} color="error">
+                      <DeleteOutlineOutlinedIcon />
+                    </IconButton>
+                  )}
               </Box>
             </Box>
           ))}
         </Box>
-        {isMe &&
-          <Button
-            variant="contained"
-            onClick={handleOpenModal}
-            color="primary"
-          >
-            Enviar novo currículo
-          </Button>
-        }
+        {isMe
+          && (
+            <Button
+              variant="contained"
+              onClick={handleOpenModal}
+              color="primary"
+            >
+              Enviar novo currículo
+            </Button>
+          )}
 
         <CustomDialog isOpen={isModalOpen} onClose={handleCloseModal} title="Enviar Currículo">
           <UploadCurriculo setCurriculos={setCurriculos} />

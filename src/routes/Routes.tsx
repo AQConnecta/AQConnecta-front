@@ -12,6 +12,7 @@ import MinhasVagas from '../pages/MinhasVagas/MinhasVagas.tsx'
 import MinhasCandidaturas from '../pages/MinhasCandidaturas/MinhasCandidaturas.tsx'
 import Buscar from '../pages/Buscar/Buscar.tsx'
 import OnlyHeaderLayout from '../layout/OnlyHeaderLayout.tsx'
+import Admin from '../pages/Admin/Admin.tsx'
 
 const AppRoutes = () => {
   return (
@@ -64,29 +65,39 @@ const AppRoutes = () => {
         </Route>
         <Route
           path="minhas-candidaturas"
-          element={<OnlyHeaderLayout/>}
+          element={<OnlyHeaderLayout />}
         >
-            <Route 
-              index
-              element={(
-                <ProtectedRoute>
-                  <MinhasCandidaturas />
-                </ProtectedRoute>
-              )}>
-            </Route>
+          <Route
+            index
+            element={(
+              <ProtectedRoute>
+                <MinhasCandidaturas />
+              </ProtectedRoute>
+            )}
+          />
+        </Route>
+        <Route element={<OnlyHeaderLayout />}>
+          <Route
+            path="admin"
+            element={(
+              <ProtectedRoute adminRoute>
+                <Admin />
+              </ProtectedRoute>
+            )}
+          />
         </Route>
         <Route
           path="buscar"
-          element={<OnlyHeaderLayout/>}
+          element={<OnlyHeaderLayout />}
         >
-            <Route 
-              index
-              element={(
-                <ProtectedRoute>
-                  <Buscar />
-                </ProtectedRoute>
-              )}>
-            </Route>
+          <Route
+            index
+            element={(
+              <ProtectedRoute>
+                <Buscar />
+              </ProtectedRoute>
+            )}
+          />
         </Route>
         <Route element={<HomeLayout />}>
           <Route

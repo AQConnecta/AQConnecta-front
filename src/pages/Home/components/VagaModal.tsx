@@ -17,7 +17,7 @@ import {
 } from '@mui/material'
 // eslint-disable-next-line import/no-extraneous-dependencies
 import CloseIcon from '@mui/icons-material/Close'
-import { useEffect, useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { useSnackbar } from 'notistack'
 import { PartialVaga, Vaga } from '../../../services/endpoints/vaga'
 import api from '../../../services/api'
@@ -26,7 +26,7 @@ import { Competencia } from '../../../services/endpoints/competencia'
 type VagaModalProps = {
   isOpen: boolean
   handleClose: () => void
-  vagaToEdit?: Vaga | null
+  editObj?: Vaga | null
 }
 
 const MenuProps = {
@@ -47,14 +47,15 @@ const vagaDefaultValues: PartialVaga = {
 }
 
 function VagaModal(props: VagaModalProps) {
-  const { isOpen, handleClose, vagaToEdit } = props
-  const [vaga, setVaga] = useState<Vaga>(vagaToEdit || vagaDefaultValues as Vaga)
+  const { isOpen, handleClose, editObj } = props
+  console.log(editObj)
+  const [vaga, setVaga] = useState<Vaga>(editObj || vagaDefaultValues as Vaga)
   const [competenciasList, setCompetenciasList] = useState<Competencia[]>([])
-  const [competencias, setCompetencias] = useState(vagaToEdit?.competencias || [])
+  const [competencias, setCompetencias] = useState(editObj?.competencias || [])
   const [search, setSearch] = useState('');
   const [reload, setReload] = useState(0)
   const { enqueueSnackbar } = useSnackbar()
-  const isEdit = !!vagaToEdit
+  const isEdit = !!editObj
 
   function setVagaValue(value: string | boolean, field: string) {
     setVaga({ ...vaga, [field]: value })
@@ -73,7 +74,7 @@ function VagaModal(props: VagaModalProps) {
   async function handleSubmit() {
     try {
       if (isEdit) {
-        const vagaResponse = await api.vaga.alterarVaga(vagaToEdit?.id!, { ...vaga, atualizadoEm: new Date().toISOString(), dataLimiteCandidatura: `${vaga.dataLimiteCandidatura}T00:00:00` })
+        const vagaResponse = await api.vaga.alterarVaga(editObj?.id!, { ...vaga, atualizadoEm: new Date().toISOString(), dataLimiteCandidatura: `${vaga.dataLimiteCandidatura}T00:00:00` })
         await api.competencia.linkCompetenciaVaga({ competencias, idVaga: vagaResponse.data.data.id })
         enqueueSnackbar('Vaga editada com sucesso', { variant: 'success' })
         onClose()
@@ -112,7 +113,6 @@ function VagaModal(props: VagaModalProps) {
   const handleSearchChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setSearch(event.target.value);
   };
-
 
   return (
     <Dialog open={isOpen} onClose={() => onClose()}>
@@ -191,10 +191,7 @@ function VagaModal(props: VagaModalProps) {
             </Box>
           </Box>
 
-
-            {/* Peço Perdão Davi, pela monstruosidade que criei aqui. */}
           <FormControl fullWidth>
-            {/* <Label htmlFor="demo-multiple-chip" id="demo-multiple-chip-label">Competências relacionadas</Label> */}
             <TextField
               label="Digite para filtrar as competências"
               variant="outlined"

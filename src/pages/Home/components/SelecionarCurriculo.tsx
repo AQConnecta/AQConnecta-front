@@ -1,6 +1,8 @@
+/* eslint-disable no-unused-vars */
 import { useState, useEffect } from 'react';
 import { Box, Button, Typography, Modal, RadioGroup, FormControlLabel, Radio, IconButton, Link } from '@mui/material';
 import PictureAsPdfOutlinedIcon from '@mui/icons-material/PictureAsPdfOutlined';
+import { useSnackbar } from 'notistack';
 import { useAuth } from '../../../contexts/AuthContext';
 import { PerfilEndpoint } from '../../../services/endpoints/perfil';
 
@@ -8,29 +10,24 @@ function SelecionarCurriculo({ isOpen, handleClose, onSelect }: { isOpen: boolea
   const [curriculos, setCurriculos] = useState<Array<{ id: string, nome: string, url: string }>>([]);
   const [selectedCurriculo, setSelectedCurriculo] = useState<string | null>(null);
   const { user } = useAuth();
+  const { enqueueSnackbar } = useSnackbar();
 
   useEffect(() => {
     async function getCurriculos() {
       try {
         const perfilEndpoint = new PerfilEndpoint();
         const response = await perfilEndpoint.getCurriculos();
-        const curriculos = response.data.data;
+        const curriculosRaw = response.data.data;
 
-        // Convertendo a resposta em um array de objetos
-        const formattedCurriculos = Object.keys(curriculos).map((key) => {
-          const url = curriculos[key];
-          const nome = url.match(/[^/]+$/)?.[0] || 'Nome desconhecido'; // Extraindo o nome do arquivo
-
-          return {
-            id: key,
-            nome,
-            url,
-          };
-        });
+        const formattedCurriculos = curriculosRaw.map((curriculo) => ({
+          id: curriculo.id.toString(),
+          nome: curriculo.nomeCuriculo,
+          url: curriculo.curriculo,
+        }));
 
         setCurriculos(formattedCurriculos);
       } catch (err) {
-        console.error('Erro ao buscar currículos', err);
+        enqueueSnackbar('Erro ao buscar os currículos', { variant: 'error' });
       }
     }
 

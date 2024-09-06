@@ -38,18 +38,16 @@ function MinhaCompetencia(props: CompetenciaProps) {
   }
 
   const handleSelect = (id: string) => {
-    setSelectedCompetencias((prevSelected) =>
-      prevSelected.includes(id)
-        ? prevSelected.filter((competenciaId) => competenciaId !== id)
-        : [...prevSelected, id]
-    );
+    setSelectedCompetencias((prevSelected) => (prevSelected.includes(id)
+      ? prevSelected.filter((competenciaId) => competenciaId !== id)
+      : [...prevSelected, id]));
   };
 
   async function handleUnlink() {
     try {
       // I hate Typescript
-      const competenciasEnviar = { 
-        competencias: selectedCompetencias.map(competencia => ({ id: competencia }))
+      const competenciasEnviar = {
+        competencias: selectedCompetencias.map((competencia) => ({ id: competencia })),
       }
       await api.competencia.removeCompetenciaFromMe(competenciasEnviar)
       enqueueSnackbar('Competências desvinculadas com sucesso', {
@@ -84,7 +82,7 @@ function MinhaCompetencia(props: CompetenciaProps) {
             width: '100%',
             // Recomendo adicionar essas duas linhas em todos os componentes da tela de usuário
             maxHeight: '300px',
-            overflowY: 'auto'
+            overflowY: 'auto',
           }}
         >
           {competencias && competencias.length > 0 ? (
@@ -142,16 +140,16 @@ function MinhaCompetencia(props: CompetenciaProps) {
           </Box>
         }
         <CustomDialog
-      isOpen={open}
-      onClose={() => setOpen(false)}
-      title={`Adicionar competência`}
-    >
-        <RelacionarUsuarioCompetencias 
-                    isOpen={open} 
-                    handleClose={() => 
-                    setOpen(false)} 
-                    user={user} 
-                    onCompetenciasUpdated={reload}/>
+          isOpen={open}
+          onClose={() => setOpen(false)}
+          title="Adicionar competência"
+        >
+          <RelacionarUsuarioCompetencias
+            isOpen={open}
+            handleClose={() => setOpen(false)}
+            user={user}
+            onCompetenciasUpdated={reload}
+          />
         </CustomDialog>
       </Box>
     </Card>

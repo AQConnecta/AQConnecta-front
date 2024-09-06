@@ -2,6 +2,12 @@ import axios from './_axios';
 
 const PREFIX = '/usuario';
 
+type Curriculo = {
+  id: number,
+  curriculo: string
+  nomeCuriculo: string
+}
+
 export class PerfilEndpoint {
   async uploadImagemPerfil(file: File) {
     const formData = new FormData();
@@ -25,7 +31,7 @@ export class PerfilEndpoint {
     });
   }
 
-  async getCurriculos() {
+  async getCurriculos(): Promise<{ data: { data: Curriculo[] } }> {
     return await axios.get(`${PREFIX}/curriculos`)
   }
 

@@ -24,7 +24,7 @@ const ArtCard = styled.div`
 `
 
 function HotCompentencias() {
-  const [competenciasLevel, setCompetenciasLevel] = useState<CompetenciaLevel[]>();
+  const [competenciasLevel, setCompetenciasLevel] = useState<CompetenciaLevel[]>([]);
 
   useEffect(() => {
     async function getFormacaoAcademica() {

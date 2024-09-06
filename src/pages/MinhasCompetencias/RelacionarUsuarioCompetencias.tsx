@@ -51,8 +51,8 @@ function RelacionarUsuarioCompetencias(props: CompetenciaProps) {
   async function handleSubmit() {
     try {
       // I hate Typescript
-      const competenciasEnviar = { 
-        competencias: minhasCompetencias.map(competencia => ({ id: competencia.id }))
+      const competenciasEnviar = {
+        competencias: minhasCompetencias.map((competencia) => ({ id: competencia.id })),
       }
       await api.competencia.linkCompetenciaToMe(competenciasEnviar)
       enqueueSnackbar('Competências vinculadas com sucesso', {
@@ -78,7 +78,6 @@ function RelacionarUsuarioCompetencias(props: CompetenciaProps) {
     loadCompetencias()
   }, [search, reload])
 
-
   const handleChange = (event: SelectChangeEvent<typeof minhasCompetencias>) => {
     const {
       target: { value },
@@ -94,7 +93,7 @@ function RelacionarUsuarioCompetencias(props: CompetenciaProps) {
     <Dialog open={isOpen} onClose={() => onClose()}>
       <DialogTitle>
         <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', width: '100%', gap: '8px', padding: '8px' }}>
-          {'Relacionar competências'}
+          Relacionar competências
           <IconButton onClick={() => onClose()}>
             <CloseIcon />
           </IconButton>
@@ -158,7 +157,7 @@ function RelacionarUsuarioCompetencias(props: CompetenciaProps) {
               color="primary"
               variant="contained"
             >
-              {'Relacionar'}
+              Relacionar
             </Button>
           </Box>
         </Box>

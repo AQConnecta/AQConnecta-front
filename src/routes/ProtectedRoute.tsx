@@ -5,13 +5,18 @@ import { useAuth } from '../contexts/AuthContext';
 
 type ProtectedRouteProps = {
     children: React.ReactNode
+    adminRoute?: boolean
 }
 
-const ProtectedRoute = ({ children }: ProtectedRouteProps) => {
-  const { user, loading } = useAuth();
+const ProtectedRoute = ({ children, adminRoute }: ProtectedRouteProps) => {
+  const { user, loading, isAdmin } = useAuth();
 
   if (loading) {
     return <CircularProgress />;
+  }
+
+  if (adminRoute && !isAdmin) {
+    return <Navigate to="/login" />;
   }
 
   if (!user) {

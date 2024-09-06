@@ -10,6 +10,10 @@ export type Usuario = {
     fotoPerfil: string;
     competencias: Competencia[]
     userUrl: string;
+    permissao: {
+        id: string;
+        descricao: string;
+    }[]
 }
 
 export type AuthLogin = {

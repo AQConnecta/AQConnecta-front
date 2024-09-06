@@ -42,7 +42,7 @@ function Home() {
           );
         })
           : (
-            <Card sx={{ width: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+            <Card sx={{ maxWidth: '576px', width: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
               <h1>Nenhuma vaga encontrada</h1>
             </Card>
           )}

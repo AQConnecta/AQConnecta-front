@@ -2,7 +2,7 @@ import { Box, Button, TextField } from '@mui/material';
 import { useEffect, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom'
 import { useAuth } from '../../contexts/AuthContext';
-import {colors} from '../../styles/colors'
+import { colors } from '../../styles/colors'
 
 function Login() {
   const [email, setEmail] = useState('')
@@ -12,8 +12,11 @@ function Login() {
   const navigate = useNavigate()
 
   async function handleClickLogin() {
-    const logged = await handleLogin(email, password)
-    if (logged) navigate('/home')
+    const { logged, isAdmin } = await handleLogin(email, password)
+    if (logged) {
+      if (isAdmin) navigate('/admin')
+      else navigate('/home')
+    }
   }
 
   useEffect(() => {

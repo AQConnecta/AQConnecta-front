@@ -9,17 +9,19 @@ import api from '../services/api'
 type AuthData = {
   user: Usuario | null
   setUser: (user: Usuario | null) => void
-  handleLogin: (email: string, password: string) => Promise<boolean>
+  handleLogin: (email: string, password: string) => Promise<{ logged: boolean, isAdmin: boolean}>
   isLogged: boolean
   checkLogged: () => boolean
   logout: () => void
   loading: boolean
+  isAdmin: boolean
 }
 
 export const AuthContext = createContext<AuthData>({} as AuthData)
 
 export function AuthProvider({ children }: { children: React.ReactNode }) {
   const [user, setUser] = useState<Usuario | null>(null)
+  const [isAdmin, setIsAdmin] = useState(false)
   const [isLogged, setIsLogged] = useState(false)
   const [loading, setLoading] = useState(true)
 
@@ -35,6 +37,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         setUser(parsedUser)
         setIsLogged(true)
         setBearerToken(localStorage.getItem('token') || '')
+        setIsAdmin(!!user?.permissao.find((p) => p.descricao === 'ADMIN'));
         setLoading(false)
         return true
       }
@@ -63,7 +66,8 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         const decoded: any = jwtDecode(userRaw.token)
         const exp = decoded.exp
         localStorage.setItem('tokenExp', exp.toString())
-        return true
+        setIsAdmin(!!userRaw.usuario.permissao.find((p) => p.descricao === 'ADMIN'));
+        return { logged: true, isAdmin: !!user?.permissao.find((p) => p.descricao === 'ADMIN') }
       }
     } catch (err) {
       enqueueSnackbar('Usuário ou senha inválidos', { variant: 'error' })
@@ -71,7 +75,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     } finally {
       setLoading(false)
     }
-    return false
+    return { logged: false, isAdmin: false }
   }
 
   const logout = () => {
@@ -92,6 +96,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       checkLogged,
       logout,
       loading,
+      isAdmin,
     }),
     [user, isLogged, loading],
   )

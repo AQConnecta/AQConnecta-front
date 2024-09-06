@@ -23,7 +23,7 @@ function VagaCard(props: VagaProps) {
   const { vaga, reloadVagas, hideButton } = props;
   const [isOpenEditVaga, setIsOpenEditVaga] = useState(false);
   const [isOpenCandidatos, setIsOpenCandidatos] = useState(false);
-  const [vagaToEdit, setVagaToEdit] = useState<Vaga | null>(null);
+  const [editObj, seteditObj] = useState<Vaga | null>(null);
   const [isCurriculoModalOpen, setIsCurriculoModalOpen] = useState(false);
   const [vagaToApply, setVagaToApply] = useState<Vaga | null>(null);
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
@@ -54,7 +54,7 @@ function VagaCard(props: VagaProps) {
 
   async function handleEdit(vagaSelected: Vaga) {
     setIsOpenEditVaga(true);
-    setVagaToEdit(vagaSelected);
+    seteditObj(vagaSelected);
     handleClose();
   }
 
@@ -87,7 +87,7 @@ function VagaCard(props: VagaProps) {
   return (
     <>
       { isOpenEditVaga && (
-        <VagaModal isOpen={isOpenEditVaga} handleClose={() => handleCloseEditModal()} vagaToEdit={vagaToEdit} />
+        <VagaModal isOpen={isOpenEditVaga} handleClose={() => handleCloseEditModal()} editObj={editObj} />
       )}
       { isOpenCandidatos && (
         <CandidatosModal onClose={() => setIsOpenCandidatos(false)} selectedVaga={selectedVaga} />
@@ -165,7 +165,7 @@ function VagaCard(props: VagaProps) {
           </Box>
           <Box>
             <Typography sx={{ fontSize: '16px', fontWeight: 600 }}>Competências:</Typography>
-            <Box sx={{ display: 'flex', flexDirection: 'row', gap: '8px' }}>
+            <Box sx={{ display: 'flex', flexDirection: 'row', gap: '8px', flexWrap: 'wrap' }}>
               {vaga.competencias?.map((competencia) => (
                 <Chip label={competencia.descricao} sx={{ backgroundColor: '#dad5fc', height: '24px' }} key={competencia.id} />
               ))}

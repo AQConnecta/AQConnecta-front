@@ -13,7 +13,7 @@ const Layout = styled.div`
   column-gap: 16px;
   padding: 0px 32px;
   width: 100%;
-  max-width: 96.68%;
+  max-width: 95.68%;
   margin: 25px 0px;
 `
 
