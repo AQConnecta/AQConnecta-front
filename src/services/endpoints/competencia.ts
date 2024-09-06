@@ -19,7 +19,6 @@ export class CompetenciaEndpoint {
         size: number = 100
     ): Promise<AxiosResponse<Array<Competencia>>> {
         const url = `${PREFIX}/listar?search=${encodeURIComponent(search)}&page=${page}&size=${size}`;
-        console.log(await axios.get(url))
         return await axios.get(url);
     }
 
