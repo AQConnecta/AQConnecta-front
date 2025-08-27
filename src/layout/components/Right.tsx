@@ -57,7 +57,7 @@ function Right() {
   const navigate = useNavigate()
   const { user } = useAuth()
 
-  const photoUrl = user?.fotoPerfil || 'https://via.placeholder.com/72x72.png?text=No+Image'
+  const photoUrl = user?.fotoPerfil || 'https://ui-avatars.com/api/?name=Carlos+Silva&size=128&background=0A66C2&color=fff'
 
 
   return (

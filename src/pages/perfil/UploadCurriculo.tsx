@@ -112,10 +112,10 @@ function Curriculo({ isMe }: { isMe: boolean }) {
   }, [shouldUpdate]);
 
   return (
-    <Card sx={{ width: '100%' }}>
+    <Card sx={{ width: '90%' }}>
       <Typography sx={{ fontSize: '20px', alignSelf: 'flex-start', padding: '8px', gap: '16px', fontWeight: 600 }}>Currículos</Typography>
       <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center', flexDirection: 'column', gap: '8px' }}>
-        <Box sx={{ width: '70%' }}>
+        <Box sx={{ width: { xs: '100%', sm: '80%', md: '70%' } }}>
           {curriculos.map((curriculo) => (
             <Box
               key={curriculo.id}

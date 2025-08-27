@@ -5,6 +5,7 @@ import { jwtDecode } from 'jwt-decode'
 import { Usuario } from '../services/endpoints/auth'
 import { setBearerToken, removeBearerToken } from '../services/endpoints/_axios'
 import api from '../services/api'
+import { AxiosError } from 'axios'
 
 type AuthData = {
   user: Usuario | null
@@ -70,8 +71,13 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         return { logged: true, isAdmin: !!user?.permissao.find((p) => p.descricao === 'ADMIN') }
       }
     } catch (err) {
-      enqueueSnackbar('Usuário ou senha inválidos', { variant: 'error' })
-      return false
+      const axiosErr = err as AxiosError<ApiError>;
+      const msg =
+      axiosErr.response?.data?.message ??
+      axiosErr.message ??
+      'Erro ao registrar.';
+
+      enqueueSnackbar(`Erro ao registrar: ${msg}`, { variant: 'error' });
     } finally {
       setLoading(false)
     }

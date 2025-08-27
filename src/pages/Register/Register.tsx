@@ -4,6 +4,7 @@ import { Box, Button, TextField } from '@mui/material';
 import { useSnackbar } from 'notistack';
 import api from '../../services/api';
 import { RegisterBody } from '../../services/endpoints/auth';
+import { AxiosError } from 'axios';
 
 function Register() {
   const [name, setName] = useState('');
@@ -15,12 +16,19 @@ function Register() {
 
   async function handleRegister() {
     try {
-      const body: RegisterBody = { nome: name, email, senha: password }
-      await api.auth.register(body)
-      enqueueSnackbar('Registrado com sucesso', { variant: 'success' })
-      navigate('/login')
+      const body: RegisterBody = { nome: name.trim(), email: email.trim(), senha: password };
+      await api.auth.register(body);
+
+      enqueueSnackbar('Registrado com sucesso! Verifique seu e-mail para confirmação.', { variant: 'success' });
+      navigate('/login');
     } catch (err) {
-      enqueueSnackbar('Erro ao registrar', { variant: 'error' })
+      const axiosErr = err as AxiosError<ApiError>;
+      const msg =
+      axiosErr.response?.data?.message ??
+      axiosErr.message ??
+      'Erro ao registrar.';
+
+      enqueueSnackbar(`Erro ao registrar: ${msg}`, { variant: 'error' });
     }
   }
 

@@ -1,4 +1,3 @@
-/* eslint-disable no-unused-vars */
 import { useState, useEffect } from 'react';
 import { Box, Button, Typography, Modal, RadioGroup, FormControlLabel, Radio, IconButton, Link } from '@mui/material';
 import PictureAsPdfOutlinedIcon from '@mui/icons-material/PictureAsPdfOutlined';
@@ -20,72 +19,70 @@ function SelecionarCurriculo({ isOpen, handleClose, onSelect }: { isOpen: boolea
         const curriculosRaw = response.data.data;
 
         const formattedCurriculos = curriculosRaw.map((curriculo) => ({
-          id: curriculo.id.toString(),
+          id: String(curriculo.id),
           nome: curriculo.nomeCurriculo,
           url: curriculo.curriculo,
         }));
 
         setCurriculos(formattedCurriculos);
-      } catch (err) {
+      } catch {
         enqueueSnackbar('Erro ao buscar os currículos', { variant: 'error' });
       }
     }
 
-    if (user?.id) {
-      getCurriculos();
-    }
-  }, [user]);
+    if (user?.id) getCurriculos();
+  }, [user, enqueueSnackbar]);
 
   const handleSelect = () => {
-    if (selectedCurriculo) {
-      onSelect(selectedCurriculo);
-    }
+    if (selectedCurriculo) onSelect(selectedCurriculo);
   };
 
   return (
     <Modal open={isOpen} onClose={handleClose}>
-      <Box sx={{
-        position: 'absolute',
-        top: '50%',
-        left: '50%',
-        transform: 'translate(-50%, -50%)',
-        bgcolor: 'background.paper',
-        borderRadius: '8px',
-        boxShadow: 24,
-        p: 4,
-        width: '400px',
-      }}
+      <Box
+        sx={{
+          position: 'absolute',
+          top: '50%',
+          left: '50%',
+          transform: 'translate(-50%, -50%)',
+          bgcolor: 'background.paper',
+          borderRadius: 2,
+          boxShadow: 24,
+          p: { xs: 2, sm: 4 },
+          width: { xs: '90vw', sm: 480 },
+          maxHeight: '80vh',
+          overflowY: 'auto',
+        }}
       >
-        <Typography variant="h6" sx={{ marginBottom: '16px' }}>
+        <Typography variant="h6" sx={{ mb: 2 }}>
           Selecionar Currículo
         </Typography>
         <RadioGroup
           value={selectedCurriculo}
           onChange={(e) => setSelectedCurriculo(e.target.value)}
         >
-          {curriculos.map((curriculo) => {
-            return (
-              <FormControlLabel
-                key={curriculo.id}
-                value={curriculo.id}
-                control={<Radio />}
-                label={(
-                  <Box sx={{ display: 'flex', alignItems: 'center' }}>
-                    <IconButton component={Link} href={curriculo.url} target="_blank" rel="noopener" sx={{ marginRight: '8px' }}>
-                      <PictureAsPdfOutlinedIcon color="error" />
-                    </IconButton>
-                    {curriculo.nome}
-                  </Box>
-                )}
-              />
-            )
-          })}
+          {curriculos.map((curriculo) => (
+            <FormControlLabel
+              key={curriculo.id}
+              value={curriculo.id}
+              control={<Radio />}
+              label={(
+                <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+                  <IconButton component={Link} href={curriculo.url} target="_blank" rel="noopener">
+                    <PictureAsPdfOutlinedIcon color="error" />
+                  </IconButton>
+                  {curriculo.nome}
+                </Box>
+              )}
+            />
+          ))}
         </RadioGroup>
-        <Box sx={{ display: 'flex', justifyContent: 'space-between', marginTop: '16px' }}>
-          <Button variant="outlined" onClick={handleClose}>
+
+        <Box sx={{ display: 'flex', justifyContent: 'space-between', mt: 2, gap: 2 }}>
+          <Button variant="outlined" onClick={handleClose} fullWidth>
             Cancelar
           </Button>
-          <Button variant="contained" onClick={handleSelect} disabled={!selectedCurriculo}>
+          <Button variant="contained" onClick={handleSelect} disabled={!selectedCurriculo} fullWidth>
             Selecionar
           </Button>
         </Box>
