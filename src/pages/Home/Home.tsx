@@ -36,7 +36,7 @@ function Home() {
         mx: 'auto',
         px: { xs: 2, sm: 3 },
         py: { xs: 2, sm: 3 },
-        maxWidth: { xs: '100%', sm: 640, md: 720 }, // quebra suave
+        maxWidth: { xs: '100%', sm: 640, md: 720 },
       }}
     >
       <CreateVaga sx={{ width: '100%' }} reloadVagas={reloadVagas} />

@@ -18,7 +18,6 @@ import { useAuth } from '../../contexts/AuthContext';
 import api from '../../services/api';
 import type { Usuario } from '../../services/endpoints/auth';
 
-import UploadImagemPerfil from '../perfil/UploadImagemPerfil';
 import UploadCurriculo from '../perfil/UploadCurriculo';
 import MinhaFormacaoAcademica from '../FormacaoAcademica/FormacaoAcademica';
 import MinhaExperiencia from '../Experiencia/Experiencia';
@@ -45,9 +44,8 @@ export default function UsuarioProfileMobile() {
   const [loading, setLoading] = React.useState(false);
   const [tab, setTab] = React.useState(0);
 
-  const isMe = true; // na aba mobile de Perfil exibimos o próprio usuário
+  const isMe = true;
 
-  // Se quiser buscar do backend (atualizar dados do auth):
   React.useEffect(() => {
     async function refreshUser() {
       if (!usuarioLogado?.userUrl) return;
@@ -64,7 +62,7 @@ export default function UsuarioProfileMobile() {
       }
     }
     refreshUser();
-  }, []); // uma vez ao abrir
+  }, []);
 
   const avatarSrc = user?.fotoPerfil || 'https://ui-avatars.com/api/?name=Carlos+Silva&size=128&background=0A66C2&color=fff';
 
@@ -114,16 +112,13 @@ export default function UsuarioProfileMobile() {
           </Box>
         </Box>
 
-        {/* Ações rápidas (upload imagem / currículo) */}
         {isMe && (
           <Box sx={{ mt: 2, display: 'grid', gridTemplateColumns: '1fr', gap: 1.25 }}>
-            {/* <UploadImagemPerfil user={user as Usuario} isMe /> */}
             <UploadCurriculo isMe />
           </Box>
         )}
       </Paper>
 
-      {/* Abas (scrollable + swipe) */}
       <Paper
         elevation={0}
         sx={{
@@ -181,7 +176,7 @@ export default function UsuarioProfileMobile() {
         </Box>
       </Paper>
 
-      {/* Espaço inferior para não colidir com a bottom nav do app mobile */}
+
       <Box sx={{ height: isMobile ? 12 : 0 }} />
     </Box>
   );
