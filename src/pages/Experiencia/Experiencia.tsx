@@ -3,7 +3,7 @@ import { useEffect, useState } from 'react';
 import { enqueueSnackbar } from 'notistack';
 import { FaTrash, FaPencil } from 'react-icons/fa6';
 import api from '../../services/api';
-import { Experiencia } from '../../services/endpoints/experiencia.ts';
+import { ExperienciaApresentada } from '../../services/endpoints/experiencia.ts';
 import ExperienciaRegister from './ExperienciaRegister.tsx';
 import { Usuario } from '../../services/endpoints/auth.ts';
 import Card from '../../components/Card.tsx';
@@ -16,8 +16,8 @@ type ExperienciaProps = {
 
 function MinhaExperiencia(props:ExperienciaProps) {
   const { user, isMe } = props;
-  const [experiencias, setExperiencias] = useState<Experiencia[]>([]);
-  const [experienciaToEdit, setExperienciaToEdit] = useState<Experiencia | null>(null);
+  const [experiencias, setExperiencias] = useState<ExperienciaApresentada[]>([]);
+  const [experienciaToEdit, setExperienciaToEdit] = useState<ExperienciaApresentada | null>(null);
   const [shouldReload, setShouldReload] = useState(0);
   const [open, setOpen] = useState<boolean>(false);
 
@@ -43,9 +43,9 @@ function MinhaExperiencia(props:ExperienciaProps) {
     reload();
   }
 
-  const formatDate = (dateString: string) => {
+  const formatDate = (date: Date) => {
     const options:Intl.DateTimeFormatOptions = { year: 'numeric', month: 'numeric', day: 'numeric' };
-    return new Date(dateString).toLocaleDateString('pt-BR', options);
+    return date.toLocaleDateString('pt-BR', options);
   };
 
   async function handleDelete(idExperiencia: string) {
@@ -58,7 +58,7 @@ function MinhaExperiencia(props:ExperienciaProps) {
     }
   }
 
-  async function handleEdit(experiencia: Experiencia) {
+  async function handleEdit(experiencia: ExperienciaApresentada) {
     setExperienciaToEdit(experiencia);
     setOpen(true);
   }
@@ -104,10 +104,10 @@ function MinhaExperiencia(props:ExperienciaProps) {
                   {experiencia.instituicao}
                 </Typography>
                 <Typography variant="body2" sx={{ color: '#868e96', marginBottom: '8px' }}>
-                  {formatDate(experiencia.dataInicio)}
+                  {formatDate(new Date(experiencia.dataInicio))}
                   {' '}
                   -
-                  {experiencia.atualExperiencia ? 'até o momento' : formatDate(experiencia.dataFim)}
+                  {experiencia.corrente || !experiencia.dataFim ? 'até o momento' : formatDate(new Date(experiencia.dataFim))}
                 </Typography>
                 <Typography variant="body2" sx={{ marginBottom: '16px' }}>
                   {experiencia.descricao}
