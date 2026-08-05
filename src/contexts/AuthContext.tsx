@@ -56,8 +56,8 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
   const handleLogin = async (email: string, password: string) => {
     try {
-      const res = await api.auth.login({ email, senha: password })
-      const userRaw = res.data
+      const { data: response } = await api.auth.login({ email, senha: password })
+      const userRaw = response.data
       if (userRaw) {
         localStorage.setItem('token', userRaw.token)
         localStorage.setItem('user', JSON.stringify(userRaw.usuario))
@@ -77,7 +77,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       axiosErr.message ??
       'Erro ao registrar.';
 
-      enqueueSnackbar(`Erro ao registrar: ${msg}`, { variant: 'error' });
+      enqueueSnackbar(`Erro ao registrar: ${msg}`, { variant: 'warning' });
     } finally {
       setLoading(false)
     }
