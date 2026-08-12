@@ -5,6 +5,7 @@ import { jwtDecode } from 'jwt-decode'
 import { Usuario } from '../services/endpoints/auth'
 import { setBearerToken, removeBearerToken } from '../services/endpoints/_axios'
 import api from '../services/api'
+import { AxiosError } from 'axios'
 
 type AuthData = {
   user: Usuario | null
@@ -55,8 +56,8 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
   const handleLogin = async (email: string, password: string) => {
     try {
-      const res = await api.auth.login({ email, senha: password })
-      const userRaw = res.data
+      const { data: response } = await api.auth.login({ email, senha: password })
+      const userRaw = response.data
       if (userRaw) {
         localStorage.setItem('token', userRaw.token)
         localStorage.setItem('user', JSON.stringify(userRaw.usuario))
@@ -70,8 +71,13 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         return { logged: true, isAdmin: !!user?.permissao.find((p) => p.descricao === 'ADMIN') }
       }
     } catch (err) {
-      enqueueSnackbar('Usuário ou senha inválidos', { variant: 'error' })
-      return false
+      const axiosErr = err as AxiosError<ApiError>;
+      const msg =
+      axiosErr.response?.data?.message ??
+      axiosErr.message ??
+      'Erro ao registrar.';
+
+      enqueueSnackbar(`Erro ao registrar: ${msg}`, { variant: 'warning' });
     } finally {
       setLoading(false)
     }

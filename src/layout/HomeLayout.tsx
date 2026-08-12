@@ -1,9 +1,12 @@
+// src/layout/HomeLayout.tsx
 import styled from 'styled-components'
 import { Outlet } from 'react-router-dom'
-import { Box } from '@mui/material'
+import { Box, useMediaQuery } from '@mui/material'
+import { useTheme } from '@mui/material/styles'
 import Header from './components/Header'
 import Right from './components/Right'
 import Left from './components/Left'
+import MobileHomeLayout from './MobileLayout'
 
 const Layout = styled.div`
   display: flex;
@@ -18,8 +21,17 @@ const Layout = styled.div`
 `
 
 function HomeLayout() {
+  const theme = useTheme();
+  const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
+
+  if (isMobile) {
+    // layout mobile novo
+    return <MobileHomeLayout />;
+  }
+
+  // layout desktop original
   return (
-    <Box sx={{ backgroundColor: '#f4f2ee', height: '100vh' }}>
+    <Box sx={{ backgroundColor: '#f4f2ee', minHeight: '100vh' }}>
       <Header />
       <Layout>
         <Left />

@@ -5,15 +5,23 @@ import { useEffect, useState } from 'react';
 import { useSnackbar } from 'notistack';
 import useHandleKeyPress from '../../hooks/useHandleKeyPress';
 import api from '../../services/api';
-import { Experiencia } from '../../services/endpoints/experiencia';
+import { Experiencia, ExperienciaApresentada } from '../../services/endpoints/experiencia';
 
 interface IModal{
-  experienciaEdit?: Experiencia;
+  experienciaEdit?: ExperienciaApresentada;
   handleClose: () => void;
 }
 
 function ExperienciaRegister({ experienciaEdit, handleClose }: IModal) {
-  const [experiencia, setExperiencia] = useState<Experiencia>(experienciaEdit || {
+  const [experiencia, setExperiencia] = useState<Experiencia>(experienciaEdit ? {
+    id: experienciaEdit.id,
+    titulo: experienciaEdit.titulo,
+    instituicao: experienciaEdit.instituicao,
+    descricao: experienciaEdit.descricao,
+    dataInicio: new Date(experienciaEdit.dataInicio).toISOString() ?? '',
+    dataFim: experienciaEdit.dataFim?.toISOString() ?? '',
+    atualExperiencia: experienciaEdit.corrente,
+  } : {
     titulo: '',
     instituicao: '',
     descricao: '',
@@ -25,7 +33,7 @@ function ExperienciaRegister({ experienciaEdit, handleClose }: IModal) {
   const isEdit = !!experienciaEdit;
 
   async function submitExperiencia() {
-    const newExperiencia = { ...experiencia, dataInicio: `${experiencia.dataInicio}T00:00:00`, dataFim: experiencia.dataFim ? `${experiencia.dataFim}T00:00:00` : experiencia.dataFim };
+    const newExperiencia = { ...experiencia, dataInicio: new Date(experiencia.dataInicio), dataFim: experiencia.dataFim? new Date(experiencia.dataFim) : undefined };
     if (isEdit) {
       try {
         if (!experiencia.id) return
@@ -130,7 +138,7 @@ function ExperienciaRegister({ experienciaEdit, handleClose }: IModal) {
             placeholder="Data de início"
             label="Data de início"
             InputLabelProps={{ shrink: true }}
-            value={experiencia.dataInicio || ''}
+            value={(experiencia.dataInicio as unknown as string).split('T')[0] || ''}
             onChange={(e) => setExperienciaValue(e.target.value, 'dataInicio')}
             sx={{ width: '100%' }}
           />
@@ -141,7 +149,7 @@ function ExperienciaRegister({ experienciaEdit, handleClose }: IModal) {
             label="Data de fim"
             InputLabelProps={{ shrink: true }}
             disabled={experiencia.atualExperiencia}
-            value={experiencia.dataFim || ''}
+            value={(experiencia.dataFim as unknown as string | null | undefined)?.split("T")[0] || ''}
             onChange={(e) => setExperienciaValue(e.target.value, 'dataFim')}
             sx={{ width: '100%' }}
           />

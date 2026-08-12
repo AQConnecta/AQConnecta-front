@@ -2,13 +2,23 @@ import axios from './_axios'
 
 const PREFIX = '/experiencia'
 
+export type ExperienciaApresentada = {
+    id: string
+    titulo: string
+    instituicao: string
+    descricao: string
+    dataInicio: Date
+    dataFim?: Date | null
+    corrente: boolean
+}
+
 export type Experiencia = {
     id?: string
     titulo: string
     instituicao: string
     descricao: string
     dataInicio: Date
-    dataFim: Date
+    dataFim?: Date | null
     atualExperiencia: boolean
 }
 

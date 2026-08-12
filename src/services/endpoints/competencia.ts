@@ -7,6 +7,14 @@ export type Competencia = {
     descricao: string
 }
 
+export type CompetenciasPage = {
+  content: Competencia[];
+  totalElements: number;
+  totalPages: number;
+  number: number;
+  last: boolean;
+};
+
 export type CompetenciaLevel = {
     competencia: Competencia,
     level: number
@@ -17,7 +25,7 @@ export class CompetenciaEndpoint {
         search: string = '',
         page: number = 0,
         size: number = 100
-    ): Promise<AxiosResponse<Array<Competencia>>> {
+    ): Promise<AxiosResponse<CompetenciasPage>> {
         const url = `${PREFIX}/listar?search=${encodeURIComponent(search)}&page=${page}&size=${size}`;
         return await axios.get(url);
     }

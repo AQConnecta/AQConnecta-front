@@ -30,10 +30,10 @@ function useCompetencia(): UseCompetenciaReturn {
       try {
         setIsLoading(true);
         const res = await api.competencia.listAll();
-        if (res.data.data.length === 0) {
+        if (res.data.data.content.length === 0) {
           return;
         }
-        const competenciasRaw = res.data.data.map((competencia: Competencia) => ({
+        const competenciasRaw = res.data.data.content.map((competencia: Competencia) => ({
           id: competencia.id,
           descricao: competencia.descricao,
         }));

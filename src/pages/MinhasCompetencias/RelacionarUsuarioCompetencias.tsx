@@ -69,7 +69,7 @@ function RelacionarUsuarioCompetencias(props: CompetenciaProps) {
     async function loadCompetencias() {
       try {
         const competenciasListRaw = await api.competencia.listAll(search, 0, 100)
-        setCompetenciasList(competenciasListRaw.data.data)
+        setCompetenciasList(competenciasListRaw.data.data.content)
       } catch (error) {
         enqueueSnackbar('Erro ao carregar competências', { variant: 'error' })
         setReload((prev) => prev + 1)

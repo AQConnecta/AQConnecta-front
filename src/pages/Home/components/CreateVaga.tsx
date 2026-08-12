@@ -9,7 +9,7 @@ type CreateVagaProps = {
 }
 
 function CreateVaga(props: CreateVagaProps) {
-  const { sx, reloadVagas } = props
+  const { sx, reloadVagas } = props;
   const [isOpen, setIsOpen] = useState(false);
 
   function handleClose() {
@@ -19,10 +19,19 @@ function CreateVaga(props: CreateVagaProps) {
 
   return (
     <Card sx={[{ width: '100%' }, sx]}>
-      <VagaModal isOpen={isOpen} handleClose={() => handleClose()} />
-      <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center' }}>
-        <Typography variant="caption" sx={{ fontSize: '16px', fontWeight: 600 }}>Tem algum projeto e precisa se conectar com alguém?</Typography>
-        <Button variant="contained" color="primary" sx={{ width: '100%', height: '30px' }} onClick={() => setIsOpen(true)}> Publique uma nova vaga </Button>
+      <VagaModal isOpen={isOpen} handleClose={handleClose} />
+      <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 1.5 }}>
+        <Typography variant="caption" sx={{ fontSize: { xs: 14, sm: 16 }, fontWeight: 600, textAlign: 'center' }}>
+          Tem algum projeto e precisa se conectar com alguém?
+        </Typography>
+        <Button
+          variant="contained"
+          color="primary"
+          sx={{ width: '100%', height: { xs: 40, sm: 44 } }}
+          onClick={() => setIsOpen(true)}
+        >
+          Publique uma nova vaga
+        </Button>
       </Box>
     </Card>
   );

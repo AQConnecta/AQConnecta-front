@@ -79,17 +79,17 @@ function Perfil({ user, isMe }: { user: Usuario, isMe: boolean }) {
         </CustomDialog>
       )}
       <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-around', flexDirection: 'column', gap: '8px' }}>
-        <Photo src={user.fotoPerfil || 'https://via.placeholder.com/72x72.png?text=No+Image'} onClick={handleOpenModal} isMe={isMe} />
+        <Photo src={user?.fotoPerfil || 'https://ui-avatars.com/api/?name=Carlos+Silva&size=128&background=0A66C2&color=fff'} onClick={handleOpenModal} isMe={isMe} />
         <Typography sx={{ fontWeight: 700 }}>
             &nbsp;
-          {user.nome}
+          {user?.nome}
         </Typography>
         <Box sx={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
           <Typography sx={{ fontWeight: 500, display: 'flex', flexDirection: 'row' }}>
             <Typography sx={{ fontWeight: 700 }}>
               E-mail:&nbsp;
             </Typography>
-            {user.email}
+            {user?.email}
           </Typography>
         </Box>
       </Box>

@@ -19,7 +19,7 @@ function MinhasCandidaturas() {
   useEffect(() => {
     async function getCandidaturas() {
       try {
-        const res = await api.perfil.listarMinhasCandidaturas(); // Ajuste o endpoint conforme necessário
+        const res = await api.perfil.listarMinhasCandidaturas();
         if (res.data.data.length === 0) {
           return;
         }

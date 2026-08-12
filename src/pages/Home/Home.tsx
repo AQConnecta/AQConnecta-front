@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { Box } from '@mui/material';
+import { Box, Stack } from '@mui/material';
 import { enqueueSnackbar } from 'notistack';
 
 import Card from '../../components/Card';
@@ -16,15 +16,12 @@ function Home() {
     async function getVagas() {
       try {
         const res = await api.vaga.listAll();
-        if (!res.data || !res.data.data || res.data.data.length === 0) {
-          return;
-        }
+        if (!res.data || !res.data.data || res.data.data.length === 0) return;
         setVagas(res.data.data);
       } catch (err) {
         enqueueSnackbar('Erro ao buscar as vagas', { variant: 'error' });
       }
     }
-
     getVagas();
   }, [shouldReload]);
 
@@ -33,20 +30,37 @@ function Home() {
   }
 
   return (
-    <Box sx={{ maxWidth: '608px', width: '100%', padding: '0px 16px' }}>
-      <CreateVaga sx={{ width: '592px' }} reloadVagas={reloadVagas} />
-      <Box sx={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
-        {vagas.length ? vagas.map((vaga) => {
-          return (
-            <VagaCard vaga={vaga} reloadVagas={reloadVagas} hideButton={false} />
-          );
-        })
-          : (
-            <Card sx={{ maxWidth: '576px', width: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-              <h1>Nenhuma vaga encontrada</h1>
-            </Card>
-          )}
-      </Box>
+    <Box
+      sx={{
+        width: '100%',
+        mx: 'auto',
+        px: { xs: 2, sm: 3 },
+        py: { xs: 2, sm: 3 },
+        maxWidth: { xs: '100%', sm: 640, md: 720 },
+      }}
+    >
+      <CreateVaga sx={{ width: '100%' }} reloadVagas={reloadVagas} />
+
+      <Stack spacing={2} sx={{ mt: 2 }}>
+        {vagas.length ? (
+          vagas.map((vaga) => (
+            <VagaCard key={vaga.id} vaga={vaga} reloadVagas={reloadVagas} hideButton={false} />
+          ))
+        ) : (
+          <Card
+            sx={{
+              width: '100%',
+              minHeight: 120,
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              px: 2,
+            }}
+          >
+            <h1 style={{ fontSize: '1.1rem', margin: 0 }}>Nenhuma vaga encontrada</h1>
+          </Card>
+        )}
+      </Stack>
     </Box>
   );
 }

@@ -35,8 +35,8 @@ export type RegisterBody = {
 }
 
 export class AuthEndpoint {
-    async login(data: AuthLogin): Promise<LoginResponse> {
-        return await axios.post(`${PREFIX}/login`, data)
+    async login(data: AuthLogin) {
+        return await axios.post<LoginResponse>(`${PREFIX}/login`, data)
     }
 
     async register(data:RegisterBody): Promise<any> {
