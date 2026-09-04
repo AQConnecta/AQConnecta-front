@@ -1,43 +1,44 @@
-import {
-  Box,
-  Button,
-  Dialog,
-  DialogActions,
-  DialogContent,
-  DialogTitle,
-  IconButton,
-  TextField,
-} from '@mui/material';
-import CloseIcon from '@mui/icons-material/Close';
-import React, { useState } from 'react';
-import { useSnackbar } from 'notistack';
+import { useState } from 'react';
+import { X } from 'lucide-react';
+import { toast } from 'sonner';
 import api from '../../../services/api';
+import { handleApiError } from '../../../lib/errors';
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogFooter,
+} from '../../../components/ui/dialog';
+import { Input } from '../../../components/ui/input';
+import { Label } from '../../../components/ui/label';
+import { Button } from '../../../components/ui/button';
 
-  type CompetenciaModalProps = {
-    isOpen: boolean;
-    handleClose: () => void;
-  };
+type CompetenciaModalProps = {
+  isOpen: boolean;
+  handleClose: () => void;
+};
 
-  type Competencia = {
-    id: string
-    descricao: string
-}
+type Competencia = {
+  id: string;
+  descricao: string;
+};
 
 const competenciaDefaultValues: Competencia = {
+  id: '',
   descricao: '',
 };
 
 function CompetenciaModal(props: CompetenciaModalProps) {
   const { isOpen, handleClose } = props;
   const [competencia, setCompetencia] = useState<Competencia>(competenciaDefaultValues);
-  const { enqueueSnackbar } = useSnackbar();
 
   function setCompetenciaValue(value: string | number, field: string) {
     setCompetencia({ ...competencia, [field]: value });
   }
 
   function clearFields() {
-    setCompetencia(competenciaDefaultValues as Competencia);
+    setCompetencia(competenciaDefaultValues);
   }
 
   function onClose() {
@@ -48,52 +49,51 @@ function CompetenciaModal(props: CompetenciaModalProps) {
   async function handleSubmit() {
     try {
       await api.competencia.cadastrarCompetencia({ ...competencia });
-      enqueueSnackbar('Competencia criada com sucesso', { variant: 'success' });
+      toast.success('Competência criada com sucesso');
       onClose();
     } catch (error) {
-      enqueueSnackbar('Erro ao criar Competencia', { variant: 'error' });
+      handleApiError(error, 'Erro ao criar competência');
     }
   }
 
   return (
-    <Dialog open={isOpen} onClose={() => onClose()}>
-      <DialogTitle>
-        <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', width: '400px', gap: '8px', padding: '8px' }}>
-          Nova Competencia
-          <IconButton onClick={() => onClose()}>
-            <CloseIcon />
-          </IconButton>
-        </Box>
-      </DialogTitle>
-      <DialogContent>
-        <Box
-          sx={{
-            display: 'flex',
-            flexDirection: 'column',
-            gap: '32px',
-            maxWidth: '500px',
-            padding: '8px',
-          }}
-        >
-          <TextField
-            variant="outlined"
-            label="Descrição da competência"
-            value={competencia.descricao}
-            onChange={(e) => setCompetenciaValue(e.target.value, 'descricao')}
-            fullWidth
-          />
-        </Box>
-      </DialogContent>
-      <DialogActions>
-        <Box sx={{ display: 'flex', gap: '16px', padding: '0 24px 16px 24px' }}>
-          <Button onClick={() => onClose()} color="primary" variant="outlined">
+    <Dialog open={isOpen} onOpenChange={(open) => !open && onClose()}>
+      <DialogContent className="max-w-md">
+        <DialogHeader>
+          <DialogTitle className="flex items-center justify-between">
+            Nova Competência
+            <Button
+              variant="ghost"
+              size="icon"
+              className="h-6 w-6"
+              onClick={onClose}
+            >
+              <X className="h-4 w-4" />
+            </Button>
+          </DialogTitle>
+        </DialogHeader>
+
+        <div className="flex flex-col gap-4 py-2">
+          <div className="space-y-2">
+            <Label htmlFor="descricao">Descrição da competência</Label>
+            <Input
+              id="descricao"
+              value={competencia.descricao}
+              onChange={(e) => setCompetenciaValue(e.target.value, 'descricao')}
+              placeholder="Digite a descrição da competência"
+            />
+          </div>
+        </div>
+
+        <DialogFooter className="gap-2 sm:gap-0">
+          <Button variant="outline" onClick={onClose}>
             Cancelar
           </Button>
-          <Button onClick={() => handleSubmit()} color="primary" variant="contained">
+          <Button onClick={handleSubmit}>
             Criar
           </Button>
-        </Box>
-      </DialogActions>
+        </DialogFooter>
+      </DialogContent>
     </Dialog>
   );
 }

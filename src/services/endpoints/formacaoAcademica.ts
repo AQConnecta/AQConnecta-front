@@ -23,8 +23,8 @@ export type FormacaoAcademica = {
     universidade: Universidade;
     descricao: string;
     diploma: string;
-    dataInicio: Date;
-    dataFim: Date;
+    dataInicio: string;
+    dataFim: string;
     atualFormacao: boolean;
 
 }
@@ -49,11 +49,19 @@ export class FormacaoAcademicaEndpoint {
    async localizaFormacaoAcademica(idFormacaoAcademica: string) {
     return await axios.get(`${PREFIX}/localizar/${idFormacaoAcademica}`)
    }
+
+   async uploadDiploma(file: File) {
+    const formData = new FormData()
+    formData.append('file', file)
+    return await axios.post(`${PREFIX}/upload-diploma`, formData, {
+      headers: { 'Content-Type': 'multipart/form-data' },
+    })
+   }
 }
 
 export class UniversidadeEndpoint {
-    async getUniversidade() {
-     return await axios.get(`${PREFIX_UNIVERSIDADE}/listar`)
+    async getUniversidade(search: string = '', page: number = 0, size: number = 20) {
+     return await axios.get(`${PREFIX_UNIVERSIDADE}/listar`, { params: { search, page, size } })
     }
  
     async cadastrarUniversidade(data: Universidade) {

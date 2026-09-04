@@ -1,12 +1,14 @@
-import { Box, Button, Typography } from '@mui/material';
 import { useEffect, useState } from 'react';
-import { enqueueSnackbar } from 'notistack';
-import { FaTrash, FaPencil } from 'react-icons/fa6';
+import { toast } from 'sonner';
+import { Trash2, Pencil, Plus, GraduationCap, FileText } from 'lucide-react';
+import { Card, CardContent, CardHeader, CardTitle } from '../../components/ui/card';
+import { Button } from '../../components/ui/button';
+import { Separator } from '../../components/ui/separator';
 import api from '../../services/api';
-import { FormacaoAcademica } from '../../services/endpoints/formacaoAcademica.ts';
-import FormacaoAcademicaRegister from './FormacaoAcademicaRegister.tsx';
-import Card from '../../components/Card.tsx';
-import { Usuario } from '../../services/endpoints/auth.ts';
+import { FormacaoAcademica } from '../../services/endpoints/formacaoAcademica';
+import FormacaoAcademicaRegister from './FormacaoAcademicaRegister';
+import { Usuario } from '../../services/endpoints/auth';
+import { handleApiError } from '../../lib/errors';
 
 type FormacaoAcademicaProps = {
   user: Usuario;
@@ -26,12 +28,12 @@ function MinhaFormacaoAcademica(props: FormacaoAcademicaProps) {
         const res = await api.formacaoAcademica.getFormacaoAcademica(user.id);
         setFormacoesAcademicas(res.data.data);
       } catch (err) {
-        enqueueSnackbar('Erro ao buscar experiencia', { variant: 'error' });
+        handleApiError(err, 'Erro ao buscar formação');
       }
     }
 
     getFormacaoAcademica();
-  }, [shouldReload]);
+  }, [shouldReload, user.id]);
 
   function reload() {
     setShouldReload((prev) => prev + 1);
@@ -39,129 +41,113 @@ function MinhaFormacaoAcademica(props: FormacaoAcademicaProps) {
 
   function handleClose() {
     setOpen(false);
+    setEditObj(null);
     reload();
   }
 
   const formatDate = (dateString: string) => {
-    const options:Intl.DateTimeFormatOptions = { year: 'numeric', month: 'numeric', day: 'numeric' };
+    const options: Intl.DateTimeFormatOptions = { year: 'numeric', month: 'numeric', day: 'numeric' };
     return new Date(dateString).toLocaleDateString('pt-BR', options);
   };
 
   async function handleDelete(idFormacaoAcademica: string) {
     try {
       await api.formacaoAcademica.deletarFormacaoAcademica(idFormacaoAcademica);
-      enqueueSnackbar('Formação Academica deletada com sucesso', { variant: 'success' });
-      reload()
+      toast.success('Formação Acadêmica deletada com sucesso');
+      reload();
     } catch (err) {
-      enqueueSnackbar('Erro ao deletar formação', { variant: 'error' });
+      handleApiError(err, 'Erro ao deletar formação');
     }
   }
 
   return (
-    <Card sx={{ width: '100%' }}>
-      <Box
-        height="100%"
-        width="100%"
-        sx={{
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'center',
-          flexDirection: 'column',
-          gap: '15px',
-        }}
-      >
-
-        <Typography sx={{ fontSize: '20px', alignSelf: 'flex-start', padding: '8px', fontWeight: 600 }}>Formações acadêmicas</Typography>
-        <Box
-          width="100%"
-          sx={{
-            display: 'flex',
-            flexDirection: 'column',
-            gap: '8px',
-            backgroundColor: 'white',
-            maxWidth: '500px',
-            padding: '20px',
-            borderRadius: '5px',
-          }}
-        >
-          {formacoesAcademicas && formacoesAcademicas.length > 0 ? (
-            formacoesAcademicas.map((formacaoAcademica, index) => (
-              <Box key={index} sx={{ padding: '15px', border: '1px solid lightgrey', borderRadius: '5px', backgroundColor: 'white' }}>
-                <Typography variant="h6" color="grey">
-                  Formação
-                  {' '}
-                  {index + 1}
-                </Typography>
-                <Typography variant="body1" fontWeight="bold">
-                  {formacaoAcademica.descricao.toUpperCase()}
-                  {' '}
-                  -
-                  {' '}
-                  {formacaoAcademica.universidade.nomeInstituicao}
-                </Typography>
-                <Typography
-                  variant="body1"
-                  color="grey"
-                >
-                  {formatDate(formacaoAcademica.dataInicio)}
-                  {' '}
-                  -
-                  {' '}
-                  {formatDate(formacaoAcademica.dataFim)}
-                  {formacaoAcademica.atualFormacao ? ' - Cursando' : ''}
-                </Typography>
-                <hr
-                  style={{
-                    color: 'black',
-                    backgroundColor: 'red',
-                  }}
-                />
-                {isMe
-                  && (
-                    <Box sx={{
-                      display: 'flex', direction: 'column', alignItems: 'center', justifyContent: 'center', gap: '8px',
-                    }}
-                    >
-                      <Button
-                        variant="contained"
-                        sx={{ width: '150px', height: '50px', display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}
-                        onClick={() => {
-                          setEditObj(formacaoAcademica);
-                          setOpen(!open)
-                        }}
-                      >
-                        <FaPencil />
-                        Editar
-                      </Button>
-                      <Button variant="contained" sx={{ width: '150px', height: '50px', backgroundColor: 'tomato', display: 'flex', alignItems: 'center', justifyContent: 'space-between', '&:hover': { backgroundColor: 'red' } }} onClick={() => handleDelete(formacaoAcademica.id!)}>
-                        <FaTrash />
-                        Excluir
-                      </Button>
-                    </Box>
-                  )}
-              </Box>
-            ))
-          ) : (
-            <Box sx={{
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center',
-            }}
+    <Card className="w-full">
+      <CardHeader>
+        <CardTitle>Formações Acadêmicas</CardTitle>
+      </CardHeader>
+      <CardContent className="space-y-4">
+        {formacoesAcademicas && formacoesAcademicas.length > 0 ? (
+          formacoesAcademicas.map((formacaoAcademica, index) => (
+            <div
+              key={formacaoAcademica.id || index}
+              className="p-4 border rounded-lg bg-card space-y-3"
             >
-              <Typography variant="body1">Sem formações até o momento</Typography>
-            </Box>
-          )}
-        </Box>
-        {isMe
-          && (
-            <>
-              <Button variant="contained" onClick={() => setOpen(!open)}>Cadastrar formação academica</Button>
-              <FormacaoAcademicaRegister isOpen={open} setOpen={setOpen} handleClose={handleClose} editObj={editObj} />
-            </>
-          )}
-      </Box>
-    </Card>
+              <div className="flex items-center gap-2">
+                <GraduationCap className="w-4 h-4 text-primary" />
+                <span className="text-sm text-muted-foreground">Formação {index + 1}</span>
+              </div>
+              
+              <h4 className="font-semibold uppercase">
+                {formacaoAcademica.descricao} - {formacaoAcademica.universidade.nomeInstituicao}
+              </h4>
+              
+              <p className="text-sm text-muted-foreground">
+                {formatDate(formacaoAcademica.dataInicio)} - {formatDate(formacaoAcademica.dataFim)}
+                {formacaoAcademica.atualFormacao && ' - Cursando'}
+              </p>
 
+              {formacaoAcademica.diploma && (
+                <a
+                  href={formacaoAcademica.diploma}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="inline-flex items-center gap-1 text-sm text-primary hover:underline"
+                >
+                  <FileText className="w-4 h-4" />
+                  Ver diploma
+                </a>
+              )}
+
+              <Separator />
+
+              {isMe && (
+                <div className="flex gap-2">
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    className="flex-1"
+                    onClick={() => {
+                      setEditObj(formacaoAcademica);
+                      setOpen(true);
+                    }}
+                  >
+                    <Pencil className="w-4 h-4 mr-2" />
+                    Editar
+                  </Button>
+                  <Button
+                    variant="destructive"
+                    size="sm"
+                    className="flex-1"
+                    onClick={() => handleDelete(formacaoAcademica.id!)}
+                  >
+                    <Trash2 className="w-4 h-4 mr-2" />
+                    Excluir
+                  </Button>
+                </div>
+              )}
+            </div>
+          ))
+        ) : (
+          <p className="text-center text-muted-foreground py-4">
+            Sem formações até o momento
+          </p>
+        )}
+
+        {isMe && (
+          <Button onClick={() => setOpen(true)} className="w-full">
+            <Plus className="w-4 h-4 mr-2" />
+            Cadastrar formação acadêmica
+          </Button>
+        )}
+
+        <FormacaoAcademicaRegister
+          isOpen={open}
+          setOpen={setOpen}
+          handleClose={handleClose}
+          editObj={editObj}
+        />
+      </CardContent>
+    </Card>
   );
 }
 

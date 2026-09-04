@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
-import { useSnackbar } from 'notistack';
 import api from '../services/api';
+import { handleApiError } from '../lib/errors';
 
 type Competencia = {
   id: string;
@@ -19,7 +19,6 @@ function useCompetencia(): UseCompetenciaReturn {
   const [shouldReload, setShouldReload] = useState(0);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<any>(null);
-  const { enqueueSnackbar } = useSnackbar();
 
   function reloadCompetencias() {
     setShouldReload((prev) => prev + 1);
@@ -31,6 +30,7 @@ function useCompetencia(): UseCompetenciaReturn {
         setIsLoading(true);
         const res = await api.competencia.listAll();
         if (res.data.data.length === 0) {
+          setCompetencias([]);
           return;
         }
         const competenciasRaw = res.data.data.map((competencia: Competencia) => ({
@@ -39,7 +39,7 @@ function useCompetencia(): UseCompetenciaReturn {
         }));
         setCompetencias(competenciasRaw);
       } catch (err) {
-        enqueueSnackbar('Erro ao buscar as competências', { variant: 'error' });
+        handleApiError(err, 'Erro ao buscar as competências');
         setError(err);
       } finally {
         setIsLoading(false);

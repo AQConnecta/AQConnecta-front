@@ -1,13 +1,25 @@
 import React, { useState, useEffect } from 'react';
-import { Box, Button, Typography, Input, IconButton, TextField } from '@mui/material';
-import { enqueueSnackbar } from 'notistack';
-import DeleteOutlineOutlinedIcon from '@mui/icons-material/DeleteOutlineOutlined';
+import { toast } from 'sonner';
+import { Trash2, FileText, Plus } from 'lucide-react';
+import { Card, CardContent, CardHeader, CardTitle } from '../../components/ui/card';
+import { Button } from '../../components/ui/button';
+import { Input } from '../../components/ui/input';
+import { Label } from '../../components/ui/label';
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+} from '../../components/ui/dialog';
 import { PerfilEndpoint } from '../../services/endpoints/perfil';
 import api from '../../services/api';
-import Card from '../../components/Card';
-import CustomDialog from '../../components/CustomDialog';
+import { handleApiError } from '../../lib/errors';
 
-function UploadCurriculo({ setCurriculos, handleClose }: { setCurriculos: React.Dispatch<React.SetStateAction<{ id: string; nome: string; url: string; }[]>>, handleClose: () => void }) {
+type UploadFormProps = {
+  handleClose: () => void;
+}
+
+function UploadCurriculoForm({ handleClose }: UploadFormProps) {
   const [file, setFile] = useState<File | null>(null);
   const [nome, setNome] = useState('');
   const perfilEndpoint = new PerfilEndpoint();
@@ -20,53 +32,47 @@ function UploadCurriculo({ setCurriculos, handleClose }: { setCurriculos: React.
 
   const handleUpload = async () => {
     if (!file) {
-      enqueueSnackbar('Por favor, selecione um currículo para enviar.', { variant: 'warning' });
+      toast.warning('Por favor, selecione um currículo para enviar.');
+      return;
+    }
+    if (!nome.trim()) {
+      toast.warning('Informe um nome para o currículo.');
       return;
     }
 
     try {
-      const response = await perfilEndpoint.uploadCurriculo(file, nome);
-      enqueueSnackbar('Currículo enviado com sucesso!', { variant: 'success' });
-      setCurriculos((prev) => [...prev, { id: response.data.id, nome: file.name, url: response.data.url }]);
+      await perfilEndpoint.uploadCurriculo(file, nome.trim());
+      toast.success('Currículo enviado com sucesso!');
       handleClose();
     } catch (error) {
-      enqueueSnackbar('Erro ao fazer upload do currículo. Tente novamente.', { variant: 'error' });
+      handleApiError(error, 'Erro ao fazer upload do currículo. Tente novamente.');
     }
   };
 
   return (
-    <Box
-      sx={{
-        display: 'flex',
-        flexDirection: 'column',
-        alignItems: 'center',
-        justifyContent: 'center',
-        maxWidth: '500px',
-        paddingTop: '8px',
-      }}
-    >
-
-      <TextField
-        label="Nome do currículo"
-        fullWidth
-        value={nome}
-        onChange={(e) => setNome(e.target.value)}
-        sx={{ marginBottom: '20px' }}
-      />
-      <Input
-        type="file"
-        onChange={handleFileChange}
-        sx={{ marginBottom: '20px' }}
-        inputProps={{ accept: '.pdf,.doc,.docx' }}
-      />
-      <Button
-        variant="contained"
-        color="primary"
-        onClick={handleUpload}
-      >
+    <div className="space-y-4 pt-2">
+      <div className="space-y-2">
+        <Label htmlFor="nomeCurriculo">Nome do currículo</Label>
+        <Input
+          id="nomeCurriculo"
+          value={nome}
+          onChange={(e) => setNome(e.target.value)}
+          placeholder="Ex: Currículo 2024"
+        />
+      </div>
+      <div className="space-y-2">
+        <Label htmlFor="arquivoCurriculo">Arquivo</Label>
+        <Input
+          id="arquivoCurriculo"
+          type="file"
+          onChange={handleFileChange}
+          accept=".pdf,.doc,.docx"
+        />
+      </div>
+      <Button onClick={handleUpload} className="w-full">
         Adicionar Currículo
       </Button>
-    </Box>
+    </div>
   );
 }
 
@@ -75,10 +81,6 @@ function Curriculo({ isMe }: { isMe: boolean }) {
   const [curriculos, setCurriculos] = useState<Array<{ id: string, nome: string, url: string }>>([]);
   const [shouldUpdate, setShouldUpdate] = useState(0);
 
-  const handleOpenModal = () => {
-    setIsModalOpen(true);
-  };
-
   const handleCloseModal = () => {
     setIsModalOpen(false);
     setShouldUpdate((prev) => prev + 1);
@@ -86,10 +88,10 @@ function Curriculo({ isMe }: { isMe: boolean }) {
 
   const handleDelete = async (id: string) => {
     try {
-      enqueueSnackbar('Currículo excluído com sucesso!', { variant: 'success' });
+      toast.success('Currículo excluído com sucesso!');
       setCurriculos((prev) => prev.filter((curriculo) => curriculo.id !== id));
     } catch (error) {
-      enqueueSnackbar('Erro ao excluir currículo', { variant: 'error' });
+      handleApiError(error, 'Erro ao excluir currículo');
     }
   };
 
@@ -97,14 +99,9 @@ function Curriculo({ isMe }: { isMe: boolean }) {
     async function fetchCurriculos() {
       try {
         const res = await api.perfil.getCurriculos();
-        const fetchedCurriculos = res.data.data.map((curriculo) => ({
-          id: curriculo.id,
-          nome: curriculo.nomeCurriculo,
-          url: curriculo.curriculo,
-        }));
-        setCurriculos(fetchedCurriculos);
+        setCurriculos(res.data.data);
       } catch (error) {
-        enqueueSnackbar('Erro ao buscar currículos', { variant: 'error' });
+        handleApiError(error, 'Erro ao buscar currículos');
       }
     }
 
@@ -112,54 +109,56 @@ function Curriculo({ isMe }: { isMe: boolean }) {
   }, [shouldUpdate]);
 
   return (
-    <Card sx={{ width: '100%' }}>
-      <Typography sx={{ fontSize: '20px', alignSelf: 'flex-start', padding: '8px', gap: '16px', fontWeight: 600 }}>Currículos</Typography>
-      <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center', flexDirection: 'column', gap: '8px' }}>
-        <Box sx={{ width: '70%' }}>
+    <Card className="w-full">
+      <CardHeader>
+        <CardTitle>Currículos</CardTitle>
+      </CardHeader>
+      <CardContent className="space-y-4">
+        <div className="space-y-2">
           {curriculos.map((curriculo) => (
-            <Box
+            <div
               key={curriculo.id}
-              sx={{
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'space-between',
-                padding: '8px',
-                border: '1px solid #ddd',
-                borderRadius: '5px',
-                backgroundColor: '#fff',
-              }}
+              className="flex items-center justify-between p-3 border rounded-lg bg-card"
             >
-              <a href={curriculo.url} target="_blank" rel="noopener noreferrer">
-                <Typography variant="body1" sx={{ color: '#0a66c2', fontWeight: 'bold' }}>
-                  {curriculo.nome}
-                </Typography>
+              <a 
+                href={curriculo.url} 
+                target="_blank" 
+                rel="noopener noreferrer"
+                className="flex items-center gap-2 text-primary font-medium hover:underline"
+              >
+                <FileText className="w-4 h-4" />
+                {curriculo.nome}
               </a>
-              <Box>
-                {isMe
-                  && (
-                    <IconButton onClick={() => handleDelete(curriculo.id)} color="error">
-                      <DeleteOutlineOutlinedIcon />
-                    </IconButton>
-                  )}
-              </Box>
-            </Box>
+              {isMe && (
+                <Button
+                  variant="ghost"
+                  size="icon"
+                  onClick={() => handleDelete(curriculo.id)}
+                  className="text-destructive hover:text-destructive hover:bg-destructive/10"
+                >
+                  <Trash2 className="w-4 h-4" />
+                </Button>
+              )}
+            </div>
           ))}
-        </Box>
-        {isMe
-          && (
-            <Button
-              variant="contained"
-              onClick={handleOpenModal}
-              color="primary"
-            >
-              Enviar novo currículo
-            </Button>
-          )}
+        </div>
+        
+        {isMe && (
+          <Button onClick={() => setIsModalOpen(true)} className="w-full">
+            <Plus className="w-4 h-4 mr-2" />
+            Enviar novo currículo
+          </Button>
+        )}
 
-        <CustomDialog isOpen={isModalOpen} onClose={handleCloseModal} title="Enviar Currículo">
-          <UploadCurriculo setCurriculos={setCurriculos} handleClose={() => handleCloseModal()} />
-        </CustomDialog>
-      </Box>
+        <Dialog open={isModalOpen} onOpenChange={setIsModalOpen}>
+          <DialogContent>
+            <DialogHeader>
+              <DialogTitle>Enviar Currículo</DialogTitle>
+            </DialogHeader>
+            <UploadCurriculoForm handleClose={handleCloseModal} />
+          </DialogContent>
+        </Dialog>
+      </CardContent>
     </Card>
   );
 }

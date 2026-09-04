@@ -1,20 +1,21 @@
-import { Box, SxProps } from '@mui/material'
 import React from 'react'
+import { cn } from '../lib/utils'
 
 type CardProps = {
-    children: React.ReactNode
-    sx?: object
+  children: React.ReactNode
+  className?: string
 }
 
-function Card({ children, sx }: CardProps) {
-  const sxProp = sx || []
-  const css: SxProps = [{ boxShadow: '0 0 0 1px rgb(0 0 0 / 15%), 0 0 0 rgb(0 0 0 / 20%)', backgroundColor: '#fff', borderRadius: '8px', padding: '16px', marginBottom: '16px' }, sxProp]
+function Card({ children, className }: CardProps) {
   return (
-    <Box
-      sx={css}
+    <div 
+      className={cn(
+        "bg-card rounded-xl p-4 md:p-5 mb-4 shadow-sm transition-all hover:-translate-y-0.5 hover:shadow-md",
+        className
+      )}
     >
       {children}
-    </Box>
+    </div>
   )
 }
 

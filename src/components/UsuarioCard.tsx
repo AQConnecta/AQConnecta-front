@@ -1,64 +1,47 @@
-import { Avatar, Box, Button, Card, IconButton, Menu, Typography } from '@mui/material';
-import React, { useState } from 'react';
-import MoreVertOutlinedIcon from '@mui/icons-material/MoreVertOutlined';
-import { Link } from 'react-router-dom'
+import { Link } from 'react-router-dom';
+import { Card, CardContent } from './ui/card';
+import { Avatar, AvatarImage, AvatarFallback } from './ui/avatar';
+import { Button } from './ui/button';
 import { useAuth } from '../contexts/AuthContext';
 import { UsuarioFilter } from '../services/endpoints/usuario';
 
 type UsuarioProps = {
-    usuario: UsuarioFilter;
+  usuario: UsuarioFilter;
 }
 
-function UsuarioCard(props: UsuarioProps) {
-  const { usuario } = props;
-  const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
+function UsuarioCard({ usuario }: UsuarioProps) {
   const { user } = useAuth();
   const isMyProfile = usuario.id === user?.id;
-  const open = Boolean(anchorEl);
-
-  const handleClick = (event: React.MouseEvent<HTMLButtonElement>) => {
-    setAnchorEl(event.currentTarget);
-  };
-
-  const handleClose = () => {
-    setAnchorEl(null);
-  };
 
   return (
-    <Card sx={{ borderBottom: '1px solid #00000014', padding: '16px', width: '500px', backgroundColor: 'white' }} key={usuario.id}>
-      <Box sx={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
-        <Box sx={{ display: 'flex', flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between' }}>
-          <Box sx={{ display: 'flex', flexDirection: 'row', alignItems: 'center', gap: '16px' }}>
-            <Avatar src={usuario.fotoPerfil} alt="Imagem de perfil" sx={{ height: '40px', width: '40px', borderRadius: '50%' }} />
-            <Box>
-              <Typography sx={{ fontSize: '18px', fontWeight: 600 }}>{usuario.nome}</Typography>
-              <Typography sx={{ fontSize: '14px', fontWeight: 400 }}>{usuario.email}</Typography>
-            </Box>
-          </Box>
-          {isMyProfile && (
-            <>
-              <IconButton onClick={handleClick}>
-                <MoreVertOutlinedIcon sx={{ height: '24px', width: '24px' }} />
-              </IconButton>
-              <Menu
-                anchorEl={anchorEl}
-                open={open}
-                onClose={handleClose}
-              >
-              </Menu>
-            </>
-          )}
-        </Box>
-        <Box sx={{ display: 'flex', justifyContent: 'flex-end', alignItems: 'center' }}>
-          {!isMyProfile && (
-            <Link to={`/usuario/${usuario.userUrl}`}>
-                <Button variant="contained" color="primary" sx={{ height: '30px' }}>
+    <Card className="w-full max-w-[500px]">
+      <CardContent className="p-4">
+        <div className="flex flex-col gap-3">
+          <div className="flex items-center justify-between">
+            <div className="flex items-center gap-4">
+              <Avatar className="h-10 w-10">
+                <AvatarImage src={usuario.fotoPerfil} alt="Imagem de perfil" />
+                <AvatarFallback>
+                  {usuario.nome?.charAt(0)?.toUpperCase() || 'U'}
+                </AvatarFallback>
+              </Avatar>
+              <div>
+                <p className="text-lg font-semibold">{usuario.nome}</p>
+                <p className="text-sm text-muted-foreground">{usuario.email}</p>
+              </div>
+            </div>
+          </div>
+          <div className="flex justify-end">
+            {!isMyProfile && (
+              <Link to={`/usuario/${usuario.userUrl}`}>
+                <Button size="sm">
                   Ver Perfil
                 </Button>
-            </Link>
-          )}
-        </Box>
-      </Box>
+              </Link>
+            )}
+          </div>
+        </div>
+      </CardContent>
     </Card>
   );
 }

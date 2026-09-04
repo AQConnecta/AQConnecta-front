@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
-import { useSnackbar } from 'notistack';
 import api from '../services/api';
 import { Universidade } from '../services/endpoints/formacaoAcademica';
+import { handleApiError } from '../lib/errors';
 
 type UseUniversidadeReturn = {
   universidades: Universidade[];
@@ -11,11 +11,10 @@ type UseUniversidadeReturn = {
 };
 
 function useUniversidade(): UseUniversidadeReturn {
-  const [universidades, setUniversidades] = useState<Universidade[] | null>([]);
+  const [universidades, setUniversidades] = useState<Universidade[]>([]);
   const [shouldReload, setShouldReload] = useState(0);
   const [isLoading, setIsLoading] = useState(true);
-  const [error, setError] = useState(null);
-  const { enqueueSnackbar } = useSnackbar();
+  const [error, setError] = useState<any>(null);
 
   function reloadUniversidades() {
     setShouldReload((prev) => prev + 1);
@@ -27,26 +26,14 @@ function useUniversidade(): UseUniversidadeReturn {
         setIsLoading(true);
         const res = await api.universidade.getUniversidade();
         if (res.data.data.length === 0) {
+          setUniversidades([]);
+          setIsLoading(false);
           return;
         }
-        let universidadesRaw = res.data.data;
-        universidadesRaw = universidadesRaw.map((universidade) => {
-          return {
-            ...universidade,
-            codigoIes: universidade.codigoIes,
-            nomeInstituicao: universidade.nomeInstituicao,
-            sigla: universidade.sigla,
-            categoriaIes: universidade.categoriaIes,
-            organizacaoAcademica: universidade.organizacaoAcademica,
-            codigoMunicipioIbge: universidade.codigoMunicipioIbge,
-            municipio: universidade.municipio,
-            uf: universidade.uf,
-            situacaoIes: universidade.situacaoIes,
-          };
-        });
+        const universidadesRaw = res.data.data;
         setUniversidades(universidadesRaw);
       } catch (err) {
-        enqueueSnackbar('Erro ao buscar as universidades', { variant: 'error' });
+        handleApiError(err, 'Erro ao buscar as universidades');
         setError(err);
       } finally {
         setIsLoading(false);

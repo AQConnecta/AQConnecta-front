@@ -1,25 +1,7 @@
-import styled from 'styled-components';
-import { Box, Typography } from '@mui/material';
 import { Link } from 'react-router-dom';
+import { Card, CardContent, CardHeader, CardTitle } from '../../components/ui/card';
+import { ScrollArea } from '../../components/ui/scroll-area';
 import { CompetenciaLevel } from '../../services/endpoints/competencia';
-
-const CompetencyContainer = styled.div`
-  display: flex;
-  align-items: center;
-  justify-content: flex-start;
-  padding: 8px;
-`;
-
-const CompetencyName = styled(Typography)`
-  flex: 1;
-  text-overflow: ellipsis;
-`;
-
-const LevelIcon = styled.img`
-  width: 32px;
-  height: 32px;
-  padding: 0px 8px;
-`;
 
 interface CompetencyCardProps {
   competencies: CompetenciaLevel[] | undefined;
@@ -27,21 +9,33 @@ interface CompetencyCardProps {
 
 function CompetencyCard({ competencies }: CompetencyCardProps) {
   return (
-    <Box className="container" sx={{ height: '300px', borderRadius: '8px', padding: '0px 16px', overflowY: 'auto', overflowX: 'hidden', display: 'flex', justifyContent: 'flex-start', alignItems: 'center', flexDirection: 'column', scrollbarGutter: 'stable' }}>
-      <Box sx={{ padding: '16px', position: 'sticky', top: 0, backgroundColor: 'white', zIndex: 1 }}>
-        <Typography sx={{ fontSize: '16px', fontWeight: 600, whiteSpace: 'nowrap' }}>Competências quentes</Typography>
-      </Box>
-      <Box sx={{ display: 'flex', justifyContent: 'flex-start', alignItems: 'flex-start', flexDirection: 'column', width: '100%' }}>
-        {competencies?.map((comp, index) => (
-          <Link to={`/buscar?tipo=vagas&idCompetencia=${comp.competencia.id}`}>
-            <CompetencyContainer key={index}>
-              <LevelIcon src={`/images/level-${comp.level}.svg`} alt={`Nível ${comp.level}`} />
-              <CompetencyName variant="body1">{comp.competencia.descricao}</CompetencyName>
-            </CompetencyContainer>
-          </Link>
-        ))}
-      </Box>
-    </Box>
+    <Card className="h-[300px]">
+      <CardHeader className="pb-2 sticky top-0 bg-card z-10">
+        <CardTitle className="text-base">Competências quentes</CardTitle>
+      </CardHeader>
+      <CardContent className="p-0">
+        <ScrollArea className="h-[230px] px-4">
+          <div className="space-y-1 pb-4">
+            {competencies?.map((comp, index) => (
+              <Link 
+                key={index}
+                to={`/buscar?tipo=vagas&idCompetencia=${comp.competencia.id}`}
+                className="flex items-center gap-2 p-2 rounded-md hover:bg-accent transition-colors"
+              >
+                <img 
+                  src={`/images/level-${comp.level}.svg`} 
+                  alt={`Nível ${comp.level}`}
+                  className="w-8 h-8"
+                />
+                <span className="text-sm flex-1 truncate">
+                  {comp.competencia.descricao}
+                </span>
+              </Link>
+            ))}
+          </div>
+        </ScrollArea>
+      </CardContent>
+    </Card>
   );
 }
 

@@ -46,4 +46,12 @@ export class AuthEndpoint {
     async forgotPassword(data: {email: string}): Promise<any> {
         return await axios.post(`${PREFIX}/recuperando-senha`, data)
     }
+
+    async resendConfirmation(data: {email: string}): Promise<any> {
+        return await axios.post(`${PREFIX}/reenviar-confirmacao`, data)
+    }
+
+    async resetPassword(token: string, senha: string): Promise<any> {
+        return await axios.post(`${PREFIX}/recuperando`, { senha }, { params: { token } })
+    }
 }

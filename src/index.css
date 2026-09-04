@@ -1,0 +1,228 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    --background: 220 20% 97%;
+    --foreground: 220 20% 14%;
+
+    --card: 0 0% 100%;
+    --card-foreground: 220 20% 14%;
+
+    --popover: 0 0% 100%;
+    --popover-foreground: 220 20% 14%;
+
+    --primary: 239 50% 54%;
+    --primary-foreground: 0 0% 100%;
+
+    --secondary: 220 14% 96%;
+    --secondary-foreground: 220 20% 30%;
+
+    --muted: 220 14% 96%;
+    --muted-foreground: 220 10% 46%;
+
+    --accent: 239 50% 96%;
+    --accent-foreground: 239 50% 40%;
+
+    --destructive: 0 84% 60%;
+    --destructive-foreground: 0 0% 100%;
+
+    --border: 220 13% 91%;
+    --input: 220 13% 91%;
+    --ring: 239 50% 54%;
+
+    --radius: 0.625rem;
+
+    --success: 142 71% 45%;
+    --success-foreground: 0 0% 100%;
+    --warning: 38 92% 50%;
+    --warning-foreground: 0 0% 100%;
+    --info: 217 91% 60%;
+    --info-foreground: 0 0% 100%;
+  }
+
+  .dark {
+    --background: 220 20% 7%;
+    --foreground: 0 0% 95%;
+
+    --card: 220 20% 10%;
+    --card-foreground: 0 0% 95%;
+
+    --popover: 220 20% 10%;
+    --popover-foreground: 0 0% 95%;
+
+    --primary: 239 50% 62%;
+    --primary-foreground: 0 0% 100%;
+
+    --secondary: 220 14% 16%;
+    --secondary-foreground: 0 0% 85%;
+
+    --muted: 220 14% 16%;
+    --muted-foreground: 220 10% 55%;
+
+    --accent: 239 50% 16%;
+    --accent-foreground: 239 50% 75%;
+
+    --destructive: 0 72% 50%;
+    --destructive-foreground: 0 0% 100%;
+
+    --border: 220 14% 18%;
+    --input: 220 14% 18%;
+    --ring: 239 50% 62%;
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+
+  body {
+    @apply bg-background text-foreground antialiased;
+    font-feature-settings: "rlig" 1, "calt" 1;
+  }
+
+  h1, h2, h3, h4, h5, h6 {
+    @apply tracking-tight;
+  }
+
+  /* Focus visible for keyboard navigation */
+  :focus-visible {
+    @apply outline-2 outline-offset-2 outline-ring rounded-sm;
+  }
+}
+
+/* Scrollbar styling */
+.scrollbar-hide {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
+.scrollbar-hide::-webkit-scrollbar {
+  display: none;
+}
+
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  background: hsl(var(--muted-foreground) / 0.2);
+  border-radius: 999px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: hsl(var(--muted-foreground) / 0.35);
+}
+
+/* Animations */
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes slideUp {
+  from { opacity: 0; transform: translateY(8px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes slideDown {
+  from { opacity: 0; transform: translateY(-8px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes scaleIn {
+  from { opacity: 0; transform: scale(0.95); }
+  to { opacity: 1; transform: scale(1); }
+}
+
+.animate-fadeIn {
+  animation: fadeIn 0.2s ease-out;
+}
+
+.animate-slideUp {
+  animation: slideUp 0.25s ease-out;
+}
+
+.animate-slideDown {
+  animation: slideDown 0.25s ease-out;
+}
+
+.animate-scaleIn {
+  animation: scaleIn 0.2s ease-out;
+}
+
+.rich-text {
+  font-size: 0.95rem;
+  line-height: 1.6;
+}
+.rich-text:focus {
+  outline: none;
+}
+.rich-text p {
+  margin: 0.5em 0;
+}
+.rich-text h1 {
+  font-size: 1.5rem;
+  font-weight: 700;
+  margin: 0.6em 0 0.3em;
+}
+.rich-text h2 {
+  font-size: 1.25rem;
+  font-weight: 700;
+  margin: 0.6em 0 0.3em;
+}
+.rich-text h3 {
+  font-size: 1.1rem;
+  font-weight: 600;
+  margin: 0.6em 0 0.3em;
+}
+.rich-text ul {
+  list-style: disc;
+  padding-left: 1.5rem;
+  margin: 0.5em 0;
+}
+.rich-text ol {
+  list-style: decimal;
+  padding-left: 1.5rem;
+  margin: 0.5em 0;
+}
+.rich-text li {
+  margin: 0.2em 0;
+}
+.rich-text blockquote {
+  border-left: 3px solid hsl(var(--border));
+  padding-left: 1rem;
+  margin: 0.5em 0;
+  color: hsl(var(--muted-foreground));
+}
+.rich-text a {
+  color: hsl(var(--primary));
+  text-decoration: underline;
+}
+.rich-text strong {
+  font-weight: 700;
+}
+.rich-text code {
+  background: hsl(var(--muted));
+  padding: 0.1em 0.3em;
+  border-radius: 4px;
+  font-size: 0.85em;
+}
+.rich-text pre {
+  background: hsl(var(--muted));
+  padding: 0.75rem;
+  border-radius: 6px;
+  overflow-x: auto;
+  margin: 0.5em 0;
+}
+.rich-text pre code {
+  background: transparent;
+  padding: 0;
+}

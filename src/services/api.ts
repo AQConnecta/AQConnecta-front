@@ -7,6 +7,10 @@ import { FormacaoAcademicaEndpoint, UniversidadeEndpoint } from './endpoints/for
 import { PerfilEndpoint } from './endpoints/perfil.ts';
 import { UsuarioEndpoint } from './endpoints/usuario.ts';
 import { VagaEndpoint } from './endpoints/vaga.ts';
+import { AreaEndpoint } from './endpoints/area';
+import { ProjetoEndpoint } from './endpoints/projeto';
+import { PostagemEndpoint } from './endpoints/postagem';
+import { DenunciaEndpoint } from './endpoints/denuncia';
 
 const api = {
   auth: new AuthEndpoint(),
@@ -18,6 +22,10 @@ const api = {
   vaga: new VagaEndpoint(),
   usuario: new UsuarioEndpoint(),
   perfil: new PerfilEndpoint(),
+  area: new AreaEndpoint(),
+  projeto: new ProjetoEndpoint(),
+  postagem: new PostagemEndpoint(),
+  denuncia: new DenunciaEndpoint(),
   setBearerToken,
   removeBearerToken,
 }

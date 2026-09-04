@@ -1,177 +1,134 @@
-import { Box, Button, Typography } from '@mui/material'
-import { useEffect, useState } from 'react'
-import { enqueueSnackbar } from 'notistack'
-import { FaTrash, FaPencil } from 'react-icons/fa6';
-import api from '../../services/api'
-import { Endereco } from '../../services/endpoints/endereco'
-import EnderecoRegister from './EnderecoRegister'
+import { useEffect, useState } from 'react';
+import { toast } from 'sonner';
+import { Trash2, Pencil, Plus, MapPin } from 'lucide-react';
+import { Card, CardContent, CardHeader, CardTitle } from '../../components/ui/card';
+import { Button } from '../../components/ui/button';
+import api from '../../services/api';
+import { Endereco } from '../../services/endpoints/endereco';
+import EnderecoRegister from './EnderecoRegister';
 import { Usuario } from '../../services/endpoints/auth';
-import Card from '../../components/Card';
+import { handleApiError } from '../../lib/errors';
 
-type EnderecoProps ={
-  user: Usuario
+type EnderecoProps = {
+  user: Usuario;
   isMe: boolean;
 }
 
 function MeuEndereco(props: EnderecoProps) {
-  const { user, isMe } = props
-  const [enderecos, setEnderecos] = useState<Endereco[]>([])
-  const [enderecoEdit, setEnderecoEdit] = useState<Endereco | null>(null)
-  const [shouldReload, setShouldReload] = useState(0)
+  const { user, isMe } = props;
+  const [enderecos, setEnderecos] = useState<Endereco[]>([]);
+  const [enderecoEdit, setEnderecoEdit] = useState<Endereco | null>(null);
+  const [shouldReload, setShouldReload] = useState(0);
   const [open, setOpen] = useState<boolean>(false);
 
   useEffect(() => {
     async function getEndereco() {
       try {
-        const res = await api.endereco.getEndereco(user.id)
-        setEnderecos(res.data.data)
+        const res = await api.endereco.getEndereco(user.id);
+        setEnderecos(res.data.data);
       } catch (err) {
-        enqueueSnackbar('Erro ao buscar endereço', { variant: 'error' })
+        handleApiError(err, 'Erro ao buscar endereço');
       }
     }
 
-    getEndereco()
-  }, [shouldReload])
+    getEndereco();
+  }, [shouldReload, user.id]);
 
   function reload() {
-    setShouldReload((prev) => prev + 1)
+    setShouldReload((prev) => prev + 1);
   }
 
   function handleClose() {
-    setOpen(false)
-    reload()
+    setOpen(false);
+    setEnderecoEdit(null);
+    reload();
   }
 
   async function handleDelete(idEndereco: string) {
     try {
-      await api.endereco.deletarEndereco(idEndereco)
-      enqueueSnackbar('Endereço deletada com sucesso', { variant: 'success' })
-      reload()
+      await api.endereco.deletarEndereco(idEndereco);
+      toast.success('Endereço deletado com sucesso');
+      reload();
     } catch (err) {
-      enqueueSnackbar('Erro ao deletar endereço', { variant: 'error' })
+      handleApiError(err, 'Erro ao deletar endereço');
     }
   }
 
   return (
-    <Card sx={{ width: '100%' }}>
-      <Box
-        sx={{
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'center',
-          flexDirection: 'column',
-          gap: '8px',
-        }}
-      >
-        <Typography sx={{ fontSize: '20px', alignSelf: 'flex-start', padding: '8px', fontWeight: 600 }}>Endereços</Typography>
-        <Box
-          width="592px"
-          sx={{
-            display: 'flex',
-            flexDirection: 'column',
-            gap: '8px',
-            backgroundColor: 'white',
-            maxWidth: '350px',
-            padding: '20px',
-            borderRadius: '5px',
-          }}
-        >
+    <Card className="w-full">
+      <CardHeader>
+        <CardTitle>Endereços</CardTitle>
+      </CardHeader>
+      <CardContent className="space-y-4">
+        {enderecos && enderecos.length > 0 ? (
+          enderecos.map((endereco: Endereco, index: number) => (
+            <div 
+              key={endereco.id || index} 
+              className="p-4 border rounded-lg bg-card space-y-3"
+            >
+              <div className="flex items-center gap-2">
+                <MapPin className="w-4 h-4 text-primary" />
+                <h4 className="font-semibold">Endereço {index + 1}</h4>
+              </div>
+              
+              <div className="text-sm space-y-1 pl-6">
+                <p><span className="font-medium">Rua:</span> {endereco.rua}</p>
+                <p><span className="font-medium">Número:</span> {endereco.numeroCasa}</p>
+                <p><span className="font-medium">Bairro:</span> {endereco.bairro}</p>
+                <p><span className="font-medium">Cidade:</span> {endereco.cidade}</p>
+                <p><span className="font-medium">Estado:</span> {endereco.estado}</p>
+                <p><span className="font-medium">CEP:</span> {endereco.cep}</p>
+              </div>
 
-          {enderecos && enderecos.length > 0 ? (
-            enderecos.map((endereco: Endereco, index: number) => (
-              <Box key={index} sx={{ padding: '15px', border: '1px solid lightgrey', borderRadius: '5px', backgroundColor: '#fff', color: '#000' }}>
-                <Typography variant="h6" fontWeight="bold">
-                  Endereço &nbsp;
-                  {index + 1}
-                </Typography>
-                <Box sx={{ padding: '8px' }}>
-                  <Typography variant="body1" display="inline" fontWeight="bold">
-                    Rua:&nbsp;
-                  </Typography>
-                  {endereco.rua}
-                  <br />
-                  <Typography variant="body1" display="inline" fontWeight="bold">
-                    Número:
-                  </Typography>
-                  {endereco.numeroCasa}
-                  <br />
-                  <Typography variant="body1" display="inline" fontWeight="bold">
-                    Bairro:
-                  </Typography>
-                  {endereco.bairro}
-                  <br />
-                  <Typography variant="body1" display="inline" fontWeight="bold">
-                    Cidade:
-                  </Typography>
-                  {endereco.cidade}
-                  <br />
-                  <Typography variant="body1" display="inline" fontWeight="bold">
-                    Estado:
-                  </Typography>
-                  {endereco.estado}
-                  <br />
-                  <Typography variant="body1" display="inline" fontWeight="bold">
-                    CEP:
-                  </Typography>
-                  {endereco.cep}
-                  <br />
-                </Box>
-                {isMe
-                  && (
-                    <Box
-                      sx={{
-                        display: 'flex',
-                        direction: 'column',
-                        alignItems: 'center',
-                        justifyContent: 'center',
-                        gap: '16px',
-                      }}
-                    >
-                      <Button
-                        variant="contained"
-                        sx={{ width: '100%', height: '50px', display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}
-                        onClick={() => {
-                          setEnderecoEdit(endereco)
-                          setOpen(!open)
-                        }}
-                      >
-                        <FaPencil />
-                        <Typography>
-                          Editar
-                        </Typography>
-                      </Button>
-                      <Button
-                        variant="contained"
-                        sx={{ width: '100%', height: '50px', backgroundColor: 'tomato', display: 'flex', alignItems: 'center', justifyContent: 'space-between', '&:hover': { backgroundColor: 'red' } }}
-                        onClick={() => handleDelete(endereco.id!)}
-                      >
-                        <FaTrash />
-                        <Typography>
-                          Excluir
-                        </Typography>
-                      </Button>
-                    </Box>
-                  )}
-              </Box>
-            ))
-          ) : (
-            <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-              <Typography variant="body1">Nenhum endereço encontrado</Typography>
-            </Box>
-          )}
-        </Box>
-        {isMe
-          && (
-            <>
-              <Button variant="contained" sx={{ marginBottom: '20px' }} onClick={() => setOpen(!open)}>
-                Adicionar endereço
-              </Button>
-              <EnderecoRegister isOpen={open} setOpen={setOpen} enderecoEdit={enderecoEdit!} handleClose={handleClose} />
-            </>
-          )}
-      </Box>
+              {isMe && (
+                <div className="flex gap-2 pt-2">
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    className="flex-1"
+                    onClick={() => {
+                      setEnderecoEdit(endereco);
+                      setOpen(true);
+                    }}
+                  >
+                    <Pencil className="w-4 h-4 mr-2" />
+                    Editar
+                  </Button>
+                  <Button
+                    variant="destructive"
+                    size="sm"
+                    className="flex-1"
+                    onClick={() => handleDelete(endereco.id!)}
+                  >
+                    <Trash2 className="w-4 h-4 mr-2" />
+                    Excluir
+                  </Button>
+                </div>
+              )}
+            </div>
+          ))
+        ) : (
+          <p className="text-center text-muted-foreground py-4">
+            Nenhum endereço encontrado
+          </p>
+        )}
+
+        {isMe && (
+          <Button onClick={() => setOpen(true)} className="w-full">
+            <Plus className="w-4 h-4 mr-2" />
+            Adicionar endereço
+          </Button>
+        )}
+
+        <EnderecoRegister 
+          isOpen={open} 
+          setOpen={setOpen} 
+          enderecoEdit={enderecoEdit!} 
+          handleClose={handleClose} 
+        />
+      </CardContent>
     </Card>
-  )
+  );
 }
 
-export default MeuEndereco
+export default MeuEndereco;

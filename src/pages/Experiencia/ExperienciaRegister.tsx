@@ -1,13 +1,16 @@
-import {
-  Box, Button, Switch, TextField, Typography,
-} from '@mui/material';
 import { useEffect, useState } from 'react';
-import { useSnackbar } from 'notistack';
+import { toast } from 'sonner';
 import useHandleKeyPress from '../../hooks/useHandleKeyPress';
 import api from '../../services/api';
 import { Experiencia } from '../../services/endpoints/experiencia';
+import { Input } from '../../components/ui/input';
+import { Label } from '../../components/ui/label';
+import { Textarea } from '../../components/ui/textarea';
+import { Switch } from '../../components/ui/switch';
+import { Button } from '../../components/ui/button';
+import { handleApiError } from '../../lib/errors';
 
-interface IModal{
+interface IModal {
   experienciaEdit?: Experiencia;
   handleClose: () => void;
 }
@@ -21,32 +24,31 @@ function ExperienciaRegister({ experienciaEdit, handleClose }: IModal) {
     dataFim: '',
     atualExperiencia: false,
   });
-  const { enqueueSnackbar } = useSnackbar();
   const isEdit = !!experienciaEdit;
 
   async function submitExperiencia() {
-    const newExperiencia = { ...experiencia, dataInicio: `${experiencia.dataInicio}T00:00:00`, dataFim: experiencia.dataFim ? `${experiencia.dataFim}T00:00:00` : experiencia.dataFim };
+    const newExperiencia = {
+      ...experiencia,
+      dataInicio: `${experiencia.dataInicio}T00:00:00`,
+      dataFim: experiencia.dataFim ? `${experiencia.dataFim}T00:00:00` : experiencia.dataFim
+    };
     if (isEdit) {
       try {
-        if (!experiencia.id) return
+        if (!experiencia.id) return;
         await api.experiencia.alterarExperiencia(experiencia.id, newExperiencia);
-        enqueueSnackbar('Experiência editada com sucesso', {
-          variant: 'success',
-        });
+        toast.success('Experiência editada com sucesso');
         handleClose();
       } catch (error) {
-        enqueueSnackbar('Erro ao editar experiência', { variant: 'error' });
+        handleApiError(error, 'Erro ao editar experiência');
       }
       return;
     }
     try {
       await api.experiencia.cadastrarExperiencia(newExperiencia);
-      enqueueSnackbar('Experiência adicionada com sucesso', {
-        variant: 'success',
-      });
+      toast.success('Experiência adicionada com sucesso');
       handleClose();
     } catch (error) {
-      enqueueSnackbar('Erro ao adicionar experiência', { variant: 'error' });
+      handleApiError(error, 'Erro ao adicionar experiência');
     }
   }
 
@@ -66,7 +68,7 @@ function ExperienciaRegister({ experienciaEdit, handleClose }: IModal) {
     callback: () => submitExperiencia(),
   });
 
-  function setExperienciaValue(value: string, field: string) {
+  function setExperienciaValue(value: string | boolean, field: string) {
     setExperiencia({ ...experiencia, [field]: value });
   }
 
@@ -78,96 +80,81 @@ function ExperienciaRegister({ experienciaEdit, handleClose }: IModal) {
   }, [handleKeyPress]);
 
   return (
-    <Box
-      width="100%"
-      sx={{
-        display: 'flex',
-        flexDirection: 'column',
-        gap: '15px',
-        backgroundColor: 'white',
-        paddingTop: '8px',
-      }}
-    >
-      <TextField
-        variant="outlined"
-        placeholder="Título da experiência"
-        label="Titulo"
-        value={experiencia.titulo}
-        onChange={(e) => setExperienciaValue(e.target.value, 'titulo')}
-        sx={{ width: '100%' }}
-      />
-      <TextField
-        variant="outlined"
-        placeholder="Instituição"
-        label="Instituição"
-        value={experiencia.instituicao}
-        onChange={(e) => setExperienciaValue(e.target.value, 'instituicao')}
-        sx={{ width: '100%' }}
-      />
-      <Box>
-        <Box sx={{
-          display: 'flex', direction: 'column', alignItems: 'center', justifyContent: 'flex-end', width: '100%', paddingRight: '5px', paddingBottom: '8px',
-        }}
-        >
+    <div className="w-full flex flex-col gap-4 bg-background pt-2">
+      <div className="space-y-2">
+        <Label htmlFor="titulo">Título</Label>
+        <Input
+          id="titulo"
+          placeholder="Título da experiência"
+          value={experiencia.titulo}
+          onChange={(e) => setExperienciaValue(e.target.value, 'titulo')}
+        />
+      </div>
+
+      <div className="space-y-2">
+        <Label htmlFor="instituicao">Instituição</Label>
+        <Input
+          id="instituicao"
+          placeholder="Instituição"
+          value={experiencia.instituicao}
+          onChange={(e) => setExperienciaValue(e.target.value, 'instituicao')}
+        />
+      </div>
+
+      <div className="space-y-3">
+        <div className="flex items-center justify-end gap-2 pr-1 pb-2">
           <Switch
+            id="atualExperiencia"
             checked={experiencia.atualExperiencia}
-            onChange={(e) => setExperienciaValue(`${e.target.checked}`, 'atualExperiencia')}
+            onCheckedChange={(checked) => setExperienciaValue(checked, 'atualExperiencia')}
           />
-          <Typography>Experiência atual</Typography>
-        </Box>
-        <Box
-          sx={{
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'space-between',
-            direction: 'column',
-            gap: '12px',
-          }}
-        >
-          <TextField
-            variant="outlined"
-            type="date"
-            placeholder="Data de início"
-            label="Data de início"
-            InputLabelProps={{ shrink: true }}
-            value={experiencia.dataInicio || ''}
-            onChange={(e) => setExperienciaValue(e.target.value, 'dataInicio')}
-            sx={{ width: '100%' }}
-          />
-          <TextField
-            type="date"
-            variant="outlined"
-            placeholder="Data de fim"
-            label="Data de fim"
-            InputLabelProps={{ shrink: true }}
-            disabled={experiencia.atualExperiencia}
-            value={experiencia.dataFim || ''}
-            onChange={(e) => setExperienciaValue(e.target.value, 'dataFim')}
-            sx={{ width: '100%' }}
-          />
-        </Box>
-      </Box>
-      <TextField
-        variant="outlined"
-        placeholder="Descrição"
-        label="Descrição"
-        multiline
-        minRows={4}
-        value={experiencia.descricao}
-        onChange={(e) => setExperienciaValue(e.target.value, 'descricao')}
-        sx={{ width: '100%' }}
-      />
+          <Label htmlFor="atualExperiencia" className="cursor-pointer">
+            Experiência atual
+          </Label>
+        </div>
+
+        <div className="grid grid-cols-2 gap-3">
+          <div className="space-y-2">
+            <Label htmlFor="dataInicio">Data de início</Label>
+            <Input
+              id="dataInicio"
+              type="date"
+              value={experiencia.dataInicio || ''}
+              onChange={(e) => setExperienciaValue(e.target.value, 'dataInicio')}
+            />
+          </div>
+          <div className="space-y-2">
+            <Label htmlFor="dataFim">Data de fim</Label>
+            <Input
+              id="dataFim"
+              type="date"
+              disabled={experiencia.atualExperiencia}
+              value={experiencia.dataFim || ''}
+              onChange={(e) => setExperienciaValue(e.target.value, 'dataFim')}
+            />
+          </div>
+        </div>
+      </div>
+
+      <div className="space-y-2">
+        <Label htmlFor="descricao">Descrição</Label>
+        <Textarea
+          id="descricao"
+          placeholder="Descrição"
+          rows={4}
+          value={experiencia.descricao}
+          onChange={(e) => setExperienciaValue(e.target.value, 'descricao')}
+        />
+      </div>
+
       <Button
-        variant="contained"
-        sx={{ width: '100%', height: '50px' }}
-        disabled={
-          validateFields()
-        }
+        className="w-full h-12"
+        disabled={validateFields()}
         onClick={() => submitExperiencia()}
       >
         {isEdit ? 'Salvar' : 'Adicionar'}
       </Button>
-    </Box>
+    </div>
   );
 }
 

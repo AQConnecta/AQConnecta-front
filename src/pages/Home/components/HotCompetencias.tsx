@@ -1,29 +1,10 @@
-import { useEffect, useState } from 'react'
-import styled from 'styled-components'
-import { enqueueSnackbar } from 'notistack';
+import { useEffect, useState } from 'react';
 import CompetencyCard from '../../../layout/components/CompetencyCard';
 import { CompetenciaLevel } from '../../../services/endpoints/competencia';
 import api from '../../../services/api';
+import { handleApiError } from '../../../lib/errors';
 
-const Container = styled.div`
-  min-width: 200px;
-`
-
-const ArtCard = styled.div`
-  text-align: center;
-  overflow: hidden;
-  margin-bottom: 8px;
-  border-radius: 5px;
-  background-color: #fff;
-  transition: box-shadow 83ms;
-  position: relative;
-  border: none;
-  box-shadow:
-    0 0 0 1px rgb(0 0 0 / 15%),
-    0 0 0 rgb(0 0 0 / 20%);
-`
-
-function HotCompentencias() {
+function HotCompetencias() {
   const [competenciasLevel, setCompetenciasLevel] = useState<CompetenciaLevel[]>([]);
 
   useEffect(() => {
@@ -35,7 +16,7 @@ function HotCompentencias() {
         }
         setCompetenciasLevel(res.data.data);
       } catch (err) {
-        enqueueSnackbar('Erro ao buscar as competencias mais usadas', { variant: 'error' });
+        handleApiError(err, 'Erro ao buscar as competencias mais usadas');
       }
     }
 
@@ -43,12 +24,10 @@ function HotCompentencias() {
   }, []);
 
   return (
-    <Container>
-      <ArtCard>
-        <CompetencyCard competencies={competenciasLevel} />
-      </ArtCard>
-    </Container>
-  )
+    <div className="min-w-[200px]">
+      <CompetencyCard competencies={competenciasLevel} />
+    </div>
+  );
 }
 
-export default HotCompentencias
+export default HotCompetencias;

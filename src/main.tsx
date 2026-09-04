@@ -1,25 +1,23 @@
 import ReactDOM from 'react-dom/client'
-import { SnackbarProvider } from 'notistack'
-import { ThemeProvider } from '@mui/material'
+import { Toaster } from 'sonner'
 import App from './App.tsx'
-import './App.css'
+import './index.css'
 import { AuthProvider } from './contexts/AuthContext.tsx'
-import theme from './styles/muiTheme.tsx'
+import ErrorBoundary from './components/ErrorBoundary.tsx'
 
 ReactDOM.createRoot(document.getElementById('root')!).render(
-  <ThemeProvider theme={theme}>
-    <SnackbarProvider
-      maxSnack={3}
-      anchorOrigin={{
-        vertical: 'bottom',
-        horizontal: 'right',
-      }}
-      preventDuplicate
-    >
-      <AuthProvider>
-        <App />
-      </AuthProvider>
-    </SnackbarProvider>
-  </ThemeProvider>
-  ,
+  <ErrorBoundary>
+    <AuthProvider>
+      <App />
+      <Toaster
+        position="bottom-right"
+        richColors
+        closeButton
+        toastOptions={{
+          duration: 4000,
+          className: 'text-sm',
+        }}
+      />
+    </AuthProvider>
+  </ErrorBoundary>,
 )

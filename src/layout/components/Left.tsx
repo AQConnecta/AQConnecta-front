@@ -1,27 +1,33 @@
-import { Box, Checkbox, FormControlLabel } from '@mui/material';
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import HotCompentencias from '../../pages/Home/components/HotCompetencias';
+import { Checkbox } from '../../components/ui/checkbox';
+import { Label } from '../../components/ui/label';
+import HotCompetencias from '../../pages/Home/components/HotCompetencias';
 
 function Left() {
   const [iniciante, setIniciante] = useState(false);
   const navigate = useNavigate();
 
-  const handleCheckboxChange = (event: any) => {
-    const isChecked = event.target.checked;
-    setIniciante(isChecked);
-    navigate(`/buscar?tipo=vagas&iniciante=${isChecked}`);
+  const handleCheckboxChange = (checked: boolean) => {
+    setIniciante(checked);
+    navigate(`/buscar?tipo=vagas&iniciante=${checked}`);
   };
 
   return (
-    <Box>
-      <HotCompentencias />
+    <div className="space-y-4">
+      <HotCompetencias />
       
-      <FormControlLabel
-        control={<Checkbox checked={iniciante} onChange={handleCheckboxChange} />}
-        label="Mostrar apenas vagas para iniciantes"
-      />
-    </Box>
+      <div className="flex items-center space-x-2 p-4 bg-card rounded-lg border">
+        <Checkbox 
+          id="iniciante"
+          checked={iniciante} 
+          onCheckedChange={handleCheckboxChange}
+        />
+        <Label htmlFor="iniciante" className="text-sm cursor-pointer">
+          Mostrar apenas vagas para iniciantes
+        </Label>
+      </div>
+    </div>
   );
 }
 

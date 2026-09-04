@@ -45,4 +45,8 @@ export class UsuarioEndpoint {
     async deletarUsuario(id: number) {
       return await axios.delete(`/usuario/${id}`)
     }
+
+    async inativarUsuario(id: string) {
+      return await axios.delete(`/usuario/inativar-usuario/${id}`)
+    }
 }

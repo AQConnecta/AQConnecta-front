@@ -1,84 +1,38 @@
 import { useNavigate } from 'react-router-dom'
-import styled from 'styled-components'
-import { useAuth } from '../../contexts/AuthContext' // Importe o useAuth
-
-const Container = styled.div`
-  min-width: 200px;
-`
-
-const ArtCard = styled.div`
-  text-align: center;
-  overflow: hidden;
-  margin-bottom: 8px;
-  border-radius: 5px;
-  background-color: #fff;
-  transition: box-shadow 83ms;
-  position: relative;
-  border: none;
-  box-shadow:
-    0 0 0 1px rgb(0 0 0 / 15%),
-    0 0 0 rgb(0 0 0 / 20%);
-`
-
-const UserInfo = styled.div`
-  border-bottom: 1px solid rgba(0, 0, 0, 0.15);
-  padding: 12px 12px 16px;
-  word-wrap: break-word;
-  word-break: break-word;
-`
-
-const CardBackground = styled.div`
-  background: url('/images/card-bg.svg');
-  background-position: center;
-  background-size: 462px;
-  height: 54px;
-  margin: -12px -12px 0;
-`
-
-const Photo = styled.img`
-  box-shadow: none;
-  width: 72px;
-  height: 72px;
-  object-fit: cover;
-  border: 2px solid white;
-  margin: -38px auto 12px;
-  border-radius: 50%;
-  cursor: pointer;
-`
-
-const Text = styled.div`
-  font-size: 16px;
-  line-height: 1.5;
-  color: rgba(0, 0, 0, 0.9);
-  font-weight: 600;
-`
+import { Card, CardContent } from '../../components/ui/card'
+import { Avatar, AvatarImage, AvatarFallback } from '../../components/ui/avatar'
+import { useAuth } from '../../contexts/AuthContext'
 
 function Right() {
   const navigate = useNavigate()
   const { user } = useAuth()
 
-  const photoUrl = user?.fotoPerfil || 'https://via.placeholder.com/72x72.png?text=No+Image'
-
+  if (!user) return null;
+  const photoUrl = user.fotoPerfil || undefined
 
   return (
-    <Container>
-      { user && (
-        <ArtCard>
-          <UserInfo>
-            <CardBackground />
-            <Photo
-              src={photoUrl}
-              onClick={() => navigate('/usuario')}
-            />
-            <Text>
-              Olá,
-              {' '}
-              {user.nome || ''}
-            </Text>
-          </UserInfo>
-        </ArtCard>
-      )}
-    </Container>
+    <div className="min-w-[200px]">
+      <Card className="overflow-hidden">
+        <div 
+          className="h-14 bg-cover bg-center"
+          style={{ backgroundImage: "url('/images/card-bg.svg')" }}
+        />
+        <CardContent className="pt-0 -mt-9 text-center">
+          <Avatar 
+            className="w-[72px] h-[72px] mx-auto border-2 border-white cursor-pointer shadow-md"
+            onClick={() => navigate('/usuario')}
+          >
+            <AvatarImage src={photoUrl} alt={user.nome} />
+            <AvatarFallback className="bg-primary text-primary-foreground text-lg">
+              {user.nome?.charAt(0)?.toUpperCase() || 'U'}
+            </AvatarFallback>
+          </Avatar>
+          <p className="mt-3 text-base font-semibold text-foreground">
+            Olá, {user.nome || ''}
+          </p>
+        </CardContent>
+      </Card>
+    </div>
   )
 }
 

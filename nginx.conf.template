@@ -1,0 +1,90 @@
+# Template de nginx. No start do container, envsubst substitui ${BACKEND_URL}
+# e ${DNS_RESOLVER} e grava o arquivo final em /etc/nginx/conf.d/default.conf.
+
+server {
+    listen       8080;
+    server_name  _;
+
+    root   /usr/share/nginx/html;
+    index  index.html;
+
+    client_max_body_size 12m;
+    server_tokens off;
+
+    # Resolver configurável (default = resolver do kubelet/docker).
+    resolver ${DNS_RESOLVER} valid=30s ipv6=off;
+
+    # ---------- Cabeçalhos de segurança ----------
+    add_header X-Content-Type-Options    "nosniff" always;
+    add_header X-Frame-Options           "DENY" always;
+    add_header X-XSS-Protection          "1; mode=block" always;
+    add_header Referrer-Policy           "strict-origin-when-cross-origin" always;
+    add_header Permissions-Policy        "camera=(), microphone=(), geolocation=(), payment=()" always;
+    add_header Cross-Origin-Opener-Policy "same-origin" always;
+    add_header Cross-Origin-Resource-Policy "same-site" always;
+    add_header Strict-Transport-Security "max-age=31536000; includeSubDomains" always;
+    add_header Content-Security-Policy   "default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' data: https:; font-src 'self' data:; connect-src 'self'; frame-ancestors 'none'; base-uri 'self'; form-action 'self'; object-src 'none'" always;
+
+    # ---------- Bloqueios ----------
+    location ~ /\.(?!well-known) {
+        deny all;
+        return 404;
+    }
+    location ~* \.(env|git|gitignore|dockerfile|yml|yaml|toml|lock|json5)$ {
+        deny all;
+        return 404;
+    }
+
+    # ---------- Proxy API ----------
+    # Chama BACKEND_URL via variável (resolvida em runtime, permite DNS dinâmico).
+    location /api/ {
+        set $backend "${BACKEND_URL}";
+
+        proxy_http_version 1.1;
+        # Usa o host do backend no Host header (importante pra cert TLS do ingress externo).
+        proxy_set_header Host              $proxy_host;
+        proxy_set_header X-Real-IP         $remote_addr;
+        proxy_set_header X-Forwarded-For   $proxy_add_x_forwarded_for;
+        proxy_set_header X-Forwarded-Proto $scheme;
+        proxy_set_header X-Forwarded-Host  $host;
+        # Remove o header Origin: como o browser enxerga same-origin (/api/*),
+        # repassar o Origin real faria o Spring CORS rejeitar a requisição.
+        # Sem Origin, o CorsFilter passa a request direto.
+        proxy_set_header Origin            "";
+        proxy_ssl_server_name on;
+        proxy_ssl_name        $proxy_host;
+        proxy_pass_request_headers on;
+        proxy_buffering off;
+
+        proxy_connect_timeout 10s;
+        proxy_send_timeout    60s;
+        proxy_read_timeout    60s;
+
+        # Remove o prefixo /api antes de encaminhar ao backend.
+        rewrite ^/api/(.*)$ /$1 break;
+        proxy_pass $backend;
+    }
+
+    location = /healthz {
+        access_log off;
+        return 200 "ok\n";
+        add_header Content-Type text/plain;
+    }
+
+    location /assets/ {
+        expires 1y;
+        access_log off;
+        add_header Cache-Control "public, immutable, max-age=31536000";
+        try_files $uri =404;
+    }
+
+    location / {
+        try_files $uri $uri/ /index.html;
+        add_header Cache-Control "no-store, must-revalidate";
+    }
+
+    error_page 500 502 503 504 /50x.html;
+    location = /50x.html {
+        root /usr/share/nginx/html;
+    }
+}

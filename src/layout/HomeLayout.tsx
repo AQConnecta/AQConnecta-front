@@ -1,32 +1,35 @@
-import styled from 'styled-components'
 import { Outlet } from 'react-router-dom'
-import { Box } from '@mui/material'
 import Header from './components/Header'
 import Right from './components/Right'
 import Left from './components/Left'
 
-const Layout = styled.div`
-  display: flex;
-  flex-direction: row;
-  align-items: flex-start;
-  justify-content: center;
-  column-gap: 16px;
-  padding: 0px 32px;
-  width: 100%;
-  max-width: 95.68%;
-  margin: 25px 0px;
-`
-
 function HomeLayout() {
   return (
-    <Box sx={{ backgroundColor: '#f4f2ee', height: '100vh' }}>
+    <div className="min-h-screen bg-background">
       <Header />
-      <Layout>
-        <Left />
-        <Outlet />
-        <Right />
-      </Layout>
-    </Box>
+      <div className="max-w-7xl mx-auto px-4 lg:px-8 py-6">
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
+          {/* Sidebar esquerda - Desktop */}
+          <div className="hidden lg:block lg:col-span-3">
+            <div className="sticky top-24">
+              <Left />
+            </div>
+          </div>
+
+          {/* Conteúdo principal */}
+          <main className="lg:col-span-6">
+            <Outlet />
+          </main>
+
+          {/* Sidebar direita - Desktop */}
+          <div className="hidden lg:block lg:col-span-3">
+            <div className="sticky top-24">
+              <Right />
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
   )
 }
 

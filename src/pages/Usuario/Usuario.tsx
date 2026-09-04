@@ -1,7 +1,5 @@
 /* eslint-disable consistent-return */
-import { Box } from '@mui/material';
 import { useEffect, useState } from 'react';
-import { useSnackbar } from 'notistack';
 import MeuEndereco from '../Endereco/Endereco';
 import MinhaExperiencia from '../Experiencia/Experiencia';
 import MinhaFormacaoAcademica from '../FormacaoAcademica/FormacaoAcademica';
@@ -11,13 +9,13 @@ import UploadCurriculo from '../perfil/UploadCurriculo';
 import api from '../../services/api';
 import { Usuario } from '../../services/endpoints/auth';
 import { useAuth } from '../../contexts/AuthContext';
+import { handleApiError } from '../../lib/errors';
 
 function UsuarioProfile() {
   const { user: usuarioLogado, setUser: setUserAuth } = useAuth();
   let userUrl = window.location.pathname.split('/').pop();
-  if (userUrl === 'usuario') userUrl = usuarioLogado.userUrl;
+  if (userUrl === 'usuario') userUrl = usuarioLogado?.userUrl;
   const [user, setUser] = useState<Usuario>();
-  const { enqueueSnackbar } = useSnackbar();
   const isMe = userUrl === usuarioLogado?.userUrl;
 
   useEffect(() => {
@@ -30,7 +28,7 @@ function UsuarioProfile() {
           setUserAuth(usuario);
         }
       } catch (err) {
-        enqueueSnackbar('Erro ao buscar o usuário', { variant: 'error' });
+        handleApiError(err, 'Erro ao buscar o usuário');
       }
     }
     if (!userUrl) return setUser(usuarioLogado!);
@@ -38,10 +36,21 @@ function UsuarioProfile() {
   }, [userUrl]);
 
   return (
-    <Box sx={{ width: '592px', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', gap: '16px' }}>
+    <div className="w-full max-w-[592px] mx-auto flex flex-col items-center justify-center gap-4">
       {user && (
         <>
-          <UploadImagemPerfil user={user} isMe={isMe} />
+          <UploadImagemPerfil
+            user={user}
+            isMe={isMe}
+            onUploaded={(url) => {
+              setUser((prev) => (prev ? { ...prev, fotoPerfil: url } : prev));
+              if (isMe && usuarioLogado) {
+                const atualizado = { ...usuarioLogado, fotoPerfil: url };
+                setUserAuth(atualizado);
+                localStorage.setItem('user', JSON.stringify(atualizado));
+              }
+            }}
+          />
           {isMe && (
             <UploadCurriculo isMe={isMe} />
           )}
@@ -51,7 +60,7 @@ function UsuarioProfile() {
           <MinhasCompetencias user={user} isMe={isMe} />
         </>
       )}
-    </Box>
+    </div>
   );
 }
 

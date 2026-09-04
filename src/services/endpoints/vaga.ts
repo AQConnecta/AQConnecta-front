@@ -1,24 +1,33 @@
 import axios from './_axios'
 import { Usuario } from './auth'
-import { Competencia } from './competencia'
+import { Competencia, AreaAtuacao } from './competencia'
 
 const PREFIX = '/vaga'
 
 export type Vaga = {
     id?: string
-    publicador: Usuario
+    publicador: Usuario | string
     titulo: string
     descricao: string
     localDaVaga: string
     aceitaRemoto: boolean
-    dataLimiteCandidatura: Date | string
-    criadoEm: Date | string
+    dataLimiteCandidatura: string
+    criadoEm: string
     curriculoUrl: string
-    atualizadoEm: Date | string
-    deletadoEm: Date | string
+    atualizadoEm: string
+    deletadoEm: string
     usuario?: Usuario
     competencias?: Array<Competencia>
     iniciante: boolean
+    idProjeto?: string
+    projetoId?: string
+    projetoTitulo?: string
+    areaAtuacao?: AreaAtuacao
+}
+
+// Raw type for API response before transformation
+export type VagaRaw = Vaga & {
+    competencias: Array<{ descricao: string; id?: string }>
 }
 
 export type PartialVaga = Partial<Vaga>
@@ -64,5 +73,9 @@ export class VagaEndpoint {
 
     async listarCandidatos(idVaga:string) {
         return await axios.get(`${PREFIX}/candidaturas/${idVaga}`)
+    }
+
+    async listByProjeto(idProjeto: string) {
+        return await axios.get(`${PREFIX}/por-projeto/${idProjeto}`)
     }
 }

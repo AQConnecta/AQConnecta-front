@@ -1,0 +1,83 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: aqconnecta-frontend
+  namespace: aqconnecta
+  labels:
+    app: aqconnecta-frontend
+spec:
+  replicas: 1
+  revisionHistoryLimit: 5
+  selector:
+    matchLabels:
+      app: aqconnecta-frontend
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxSurge: 0
+      maxUnavailable: 1
+  template:
+    metadata:
+      labels:
+        app: aqconnecta-frontend
+    spec:
+      securityContext:
+        runAsNonRoot: true
+        runAsUser: 101
+        runAsGroup: 101
+        fsGroup: 101
+        fsGroupChangePolicy: OnRootMismatch
+      terminationGracePeriodSeconds: 15
+      containers:
+        - name: frontend          
+          image: docker.io/riume/aqconnecta-frontend:20
+          imagePullPolicy: IfNotPresent
+          envFrom:
+            - configMapRef:
+                name: aqconnecta-frontend-config
+                optional: false
+          ports:
+            - containerPort: 8080
+              name: http
+              protocol: TCP
+          livenessProbe:
+            httpGet:
+              path: /healthz
+              port: http
+            initialDelaySeconds: 30
+            periodSeconds: 20
+            timeoutSeconds: 2
+            failureThreshold: 6
+          readinessProbe:
+            httpGet:
+              path: /healthz
+              port: http
+            initialDelaySeconds: 10
+            periodSeconds: 10
+            timeoutSeconds: 2
+            failureThreshold: 6
+          resources:
+            requests:
+              cpu: 50m
+              memory: 64Mi
+            limits:
+              cpu: 200m
+              memory: 256Mi
+          securityContext:
+            allowPrivilegeEscalation: false
+            capabilities:
+              drop:
+                - ALL
+            readOnlyRootFilesystem: true
+          volumeMounts:
+            - mountPath: /tmp
+              name: tmp
+            - mountPath: /var/cache/nginx
+              name: nginx-cache
+      volumes:
+        - name: tmp
+          emptyDir:
+            medium: Memory
+        - name: nginx-cache
+          emptyDir:
+            medium: Memory

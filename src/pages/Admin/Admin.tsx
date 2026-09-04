@@ -1,115 +1,94 @@
-import { Box, Button, Typography } from '@mui/material'
-import { useState } from 'react'
-import AdminDatagrid from './AdminDatagrid'
-import UniversidadeModal from './components/UniversidadeModal'
-import CompetenciaModal from './components/CompetenciaModal'
+import { useState } from 'react';
+import { Link } from 'react-router-dom';
+import { Flag, Plus, Lightbulb, ShieldCheck } from 'lucide-react';
+import AdminDatagrid from './AdminDatagrid';
+import GerenciarUsuarios from './GerenciarUsuarios';
+import GerenciarProjetos from './GerenciarProjetos';
+import UniversidadeModal from './components/UniversidadeModal';
+import CompetenciaModal from './components/CompetenciaModal';
+import { Button } from '../../components/ui/button';
+import { Tabs, TabsList, TabsTrigger, TabsContent } from '../../components/ui/tabs';
 
-type ObjTypes = 'vaga' | 'universidade' | 'competencia'
+type ObjTypes = 'vaga' | 'universidade' | 'competencia' | 'usuario' | 'projeto';
 
 function Admin() {
-  const [type, setType] = useState<ObjTypes>('vaga')
-  const [isOpen, setIsOpen] = useState(false)
-  const [isOpenCompetencia, setIsOpenCompetencia] = useState(false)
-
-  function getBorderStyle(objType: ObjTypes) {
-    if (type === objType) {
-      return 'solid solid hidden solid'
-    }
-    return 'solid'
-  }
-
-  function getBorderColor(objType: ObjTypes) {
-    if (type === objType) {
-      return '1px solid #5E63B6'
-    }
-    return '1px solid rgba(224, 224, 224, 1)'
-  }
-
-  function getBackgroundColor(objType: ObjTypes) {
-    if (type === objType) {
-      return 'white'
-    }
-    return 'transparent'
-  }
+  const [type, setType] = useState<ObjTypes>('vaga');
+  const [isOpen, setIsOpen] = useState(false);
+  const [isOpenCompetencia, setIsOpenCompetencia] = useState(false);
 
   return (
-    <Box sx={{ height: '60vh' }}>
-      <Box sx={{ display: 'flex', flexDirection: 'row', alignItems: 'flex-end', justifyContent: 'space-between', gap: '-8px' }}>
-        <Box sx={{ display: 'flex', flexDirection: 'row', alignItems: 'flex-start', justifyContent: 'flex-start', gap: '-8px' }}>
-          <Box
-            onClick={() => setType('vaga')}
-            sx={{
-              width: '140px',
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center',
-              border: getBorderColor('vaga'),
-              borderStyle: getBorderStyle('vaga'),
-              backgroundColor: getBackgroundColor('vaga'),
-              borderRadius: '8px 8px 0px 0px',
-            }}
-          >
-            <Typography>Vagas</Typography>
-          </Box>
-          <Box
-            onClick={() => setType('universidade')}
-            sx={{
-              width: '140px',
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center',
-              border: getBorderColor('universidade'),
-              borderStyle: getBorderStyle('universidade'),
-              backgroundColor: getBackgroundColor('universidade'),
-              borderRadius: '8px 8px 0px 0px',
-            }}
-          >
-            <Typography>Universidades</Typography>
-          </Box>
-          <Box
-            onClick={() => setType('competencia')}
-            sx={{
-              width: '140px',
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center',
-              border: getBorderColor('competencia'),
-              borderStyle: getBorderStyle('competencia'),
-              backgroundColor: getBackgroundColor('competencia'),
-              borderRadius: '8px 8px 0px 0px',
-            }}
-          >
-            <Typography>Competências</Typography>
-          </Box>
-        </Box>
-        {type === 'universidade' && (
-          <Box>
-            <Button
-              variant="contained"
-              color="primary"
-              onClick={() => setIsOpen(true)}
-            >
-              Criar universidade
-            </Button>
-          </Box>
-        )}
-        {type === 'competencia' && (
-          <Box>
-            <Button
-              variant="contained"
-              color="primary"
-              onClick={() => setIsOpenCompetencia(true)}
-            >
-              Criar competência
-            </Button>
-          </Box>
-        )}
-      </Box>
-      <AdminDatagrid type={type} />
+    <div className="space-y-6">
+      <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+        <div>
+          <h1 className="text-2xl font-bold flex items-center gap-2">
+            <ShieldCheck className="h-6 w-6 text-primary" />
+            Painel de Administração
+          </h1>
+          <p className="text-sm text-muted-foreground">Gerencie o conteúdo e os usuários da plataforma.</p>
+        </div>
+        <div className="flex gap-2">
+          <Button variant="outline" asChild>
+            <Link to="/admin/denuncias">
+              <Flag className="h-4 w-4 mr-2" />
+              Denúncias
+            </Link>
+          </Button>
+          <Button variant="outline" asChild>
+            <Link to="/admin/competencias">
+              <Lightbulb className="h-4 w-4 mr-2" />
+              Sugestões
+            </Link>
+          </Button>
+        </div>
+      </div>
+
+      <Tabs value={type} onValueChange={(value) => setType(value as ObjTypes)} className="w-full">
+        <div className="flex flex-col gap-2 mb-4 sm:flex-row sm:items-center sm:justify-between">
+          <TabsList className="w-full justify-start overflow-x-auto sm:w-auto">
+            <TabsTrigger value="vaga">Vagas</TabsTrigger>
+            <TabsTrigger value="universidade">Universidades</TabsTrigger>
+            <TabsTrigger value="competencia">Competências</TabsTrigger>
+            <TabsTrigger value="usuario">Usuários</TabsTrigger>
+            <TabsTrigger value="projeto">Projetos</TabsTrigger>
+          </TabsList>
+
+          <div className="flex gap-2">
+            {type === 'universidade' && (
+              <Button onClick={() => setIsOpen(true)}>
+                <Plus className="h-4 w-4 mr-2" />
+                Criar universidade
+              </Button>
+            )}
+            {type === 'competencia' && (
+              <Button onClick={() => setIsOpenCompetencia(true)}>
+                <Plus className="h-4 w-4 mr-2" />
+                Criar competência
+              </Button>
+            )}
+          </div>
+        </div>
+
+        <TabsContent value="vaga">
+          <AdminDatagrid type="vaga" />
+        </TabsContent>
+        <TabsContent value="universidade">
+          <AdminDatagrid type="universidade" />
+        </TabsContent>
+        <TabsContent value="competencia">
+          <AdminDatagrid type="competencia" />
+        </TabsContent>
+        <TabsContent value="usuario">
+          <GerenciarUsuarios />
+        </TabsContent>
+        <TabsContent value="projeto">
+          <GerenciarProjetos />
+        </TabsContent>
+      </Tabs>
+
       <UniversidadeModal isOpen={isOpen} handleClose={() => setIsOpen(false)} />
       <CompetenciaModal isOpen={isOpenCompetencia} handleClose={() => setIsOpenCompetencia(false)} />
-    </Box>
-  )
+    </div>
+  );
 }
 
-export default Admin
+export default Admin;

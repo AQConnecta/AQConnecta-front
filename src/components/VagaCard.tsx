@@ -1,22 +1,41 @@
-import { Avatar, Box, Button, Card, Chip, IconButton, Menu, MenuItem, Typography } from '@mui/material';
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { Link } from 'react-router-dom';
-import FmdGoodOutlined from '@mui/icons-material/FmdGoodOutlined';
-import MoreVertOutlinedIcon from '@mui/icons-material/MoreVertOutlined';
-import EditOutlinedIcon from '@mui/icons-material/EditOutlined';
-import DeleteOutlineOutlinedIcon from '@mui/icons-material/DeleteOutlineOutlined';
-import { useSnackbar } from 'notistack';
+import { MapPin, Briefcase, MoreVertical, Pencil, Trash2, Users, CheckCircle2 } from 'lucide-react';
+import { toast } from 'sonner';
+import { Card, CardContent, CardFooter, CardHeader } from './ui/card';
+import { Badge } from './ui/badge';
+import { Button } from './ui/button';
+import { Avatar, AvatarImage, AvatarFallback } from './ui/avatar';
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from './ui/dropdown-menu';
+import { Separator } from './ui/separator';
 import { useAuth } from '../contexts/AuthContext';
 import { Vaga } from '../services/endpoints/vaga';
+import { Usuario } from '../services/endpoints/auth';
 import api from '../services/api';
+import { handleApiError } from '../lib/errors';
+import { useJaCandidatado, marcarCandidatado } from '../hooks/useCandidaturas';
+import { useRequireAuth } from '../hooks/useRequireAuth';
 import VagaModal from '../pages/Home/components/VagaModal';
 import CandidatosModal from './CandidatosModal';
 import SelecionarCurriculo from '../pages/Home/components/SelecionarCurriculo';
 
 type VagaProps = {
-    vaga: Vaga;
-    reloadVagas: () => void;
-    hideButton?: boolean;
+  vaga: Vaga;
+  reloadVagas: () => void;
+  hideButton?: boolean;
+}
+
+// Helper to get publicador as Usuario object
+function getPublicador(publicador: string | Usuario): Usuario | null {
+  if (typeof publicador === 'string') {
+    return null;
+  }
+  return publicador;
 }
 
 function VagaCard(props: VagaProps) {
@@ -26,13 +45,14 @@ function VagaCard(props: VagaProps) {
   const [editObj, seteditObj] = useState<Vaga | null>(null);
   const [isCurriculoModalOpen, setIsCurriculoModalOpen] = useState(false);
   const [vagaToApply, setVagaToApply] = useState<Vaga | null>(null);
-  const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
   const [selectedVaga, setSelectedVaga] = useState<Vaga | null>(null);
-  const { enqueueSnackbar } = useSnackbar()
   const { user } = useAuth();
-  const createdByMe = vaga.publicador.id === user?.id;
-  const open = Boolean(anchorEl);
+  
+  const publicador = getPublicador(vaga.publicador);
+  const createdByMe = publicador?.id === user?.id;
   const isExpired = new Date(vaga.dataLimiteCandidatura) < new Date();
+  const jaCandidatado = useJaCandidatado(vaga.id, user?.id);
+  const requireAuth = useRequireAuth();
 
   function handleOpenCurriculoModal(vagaSelected: Vaga) {
     setVagaToApply(vagaSelected);
@@ -44,38 +64,31 @@ function VagaCard(props: VagaProps) {
     setIsOpenCandidatos(true);
   }
 
-  const handleClick = (event: React.MouseEvent<HTMLButtonElement>) => {
-    setAnchorEl(event.currentTarget);
-  };
-
-  const handleClose = () => {
-    setAnchorEl(null);
-  };
-
   async function handleEdit(vagaSelected: Vaga) {
     setIsOpenEditVaga(true);
     seteditObj(vagaSelected);
-    handleClose();
   }
 
   async function handleSelectCurriculo(curriculoId: string) {
     if (vagaToApply) {
       try {
         await api.vaga.candidatarVaga(vagaToApply.id!, curriculoId);
-        enqueueSnackbar('Candidatura realizada com sucesso', { variant: 'success' });
+        toast.success('Candidatura realizada com sucesso');
+        marcarCandidatado(vagaToApply.id!);
         setIsCurriculoModalOpen(false);
       } catch (err) {
-        enqueueSnackbar('Erro ao se candidatar', { variant: 'error' });
+        handleApiError(err, 'Erro ao se candidatar');
       }
     }
   }
+
   async function handleDelete(vagaSelected: Vaga) {
     try {
       await api.vaga.deletarVaga(vagaSelected.id!);
-      reloadVagas()
-      enqueueSnackbar('Vaga excluída com sucesso', { variant: 'success' });
+      reloadVagas();
+      toast.success('Vaga excluída com sucesso');
     } catch (err) {
-      enqueueSnackbar('Erro ao excluir a vaga', { variant: 'error' });
+      handleApiError(err, 'Erro ao excluir a vaga');
     }
   }
 
@@ -86,106 +99,145 @@ function VagaCard(props: VagaProps) {
 
   return (
     <>
-      { isOpenEditVaga && (
+      {isOpenEditVaga && (
         <VagaModal isOpen={isOpenEditVaga} handleClose={() => handleCloseEditModal()} editObj={editObj} />
       )}
-      { isOpenCandidatos && (
+      {isOpenCandidatos && (
         <CandidatosModal onClose={() => setIsOpenCandidatos(false)} selectedVaga={selectedVaga} />
       )}
-      { isCurriculoModalOpen && (
+      {isCurriculoModalOpen && (
         <SelecionarCurriculo
           isOpen={isCurriculoModalOpen}
           handleClose={() => setIsCurriculoModalOpen(false)}
           onSelect={handleSelectCurriculo}
         />
       )}
-      <Card sx={{ borderBottom: '1px solid #00000014', padding: '0px 24px', width: '560px', backgroundColor: 'white' }} key={vaga.id}>
-        <Box sx={{ display: 'flex', flexDirection: 'column', gap: '8px', padding: '8px 0px 16px 0px' }}>
-          <Box sx={{ display: 'flex', flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between' }}>
-            <Typography sx={{ fontSize: '24px', fontWeight: 600 }}>{vaga.titulo}</Typography>
-            {
-              createdByMe
-                  && (
-                    <>
-                      <IconButton onClick={handleClick}>
-                        <MoreVertOutlinedIcon sx={{ height: '24px', width: '24px' }} />
-                      </IconButton>
-                      <Menu
-                        anchorEl={anchorEl}
-                        open={open}
-                        onClose={handleClose}
-                      >
-                        <MenuItem onClick={() => handleEdit(vaga)} sx={{ display: 'flex', gap: '8px' }}>
-                          <EditOutlinedIcon />
-                          {' '}
-                          Editar
-                        </MenuItem>
-                        <MenuItem onClick={() => handleDelete(vaga)} sx={{ display: 'flex', gap: '8px' }}>
-                          <DeleteOutlineOutlinedIcon />
-                          {' '}
-                          Excluir
-                        </MenuItem>
-                      </Menu>
-                    </>
-                  )
-            }
-          </Box>
-          <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
-            <Box sx={{ display: 'flex', flexDirection: 'row', alignItems: 'center', justifyContent: 'center', gap: '8px' }}>
-              <Link to={`/usuario/${vaga.publicador.userUrl}`} target="_blank" rel="noopener noreferrer">
-                <Avatar src={vaga.publicador.fotoPerfil} alt="Imagem de perfil" sx={{ height: '24px', width: '24px', borderRadius: '50%' }} />
+      
+      <Card className="w-full max-w-[600px] hover:shadow-md transition-shadow">
+        <CardHeader className="pb-3">
+          <div className="flex items-start justify-between gap-4">
+            <h3 className="text-xl font-bold text-foreground break-words flex-1">
+              {vaga.titulo}
+            </h3>
+            {createdByMe && (
+              <DropdownMenu>
+                <DropdownMenuTrigger asChild>
+                  <Button variant="ghost" size="icon" className="shrink-0">
+                    <MoreVertical className="w-5 h-5" />
+                  </Button>
+                </DropdownMenuTrigger>
+                <DropdownMenuContent align="end">
+                  <DropdownMenuItem onClick={() => handleEdit(vaga)}>
+                    <Pencil className="w-4 h-4 mr-2" />
+                    Editar
+                  </DropdownMenuItem>
+                  <DropdownMenuItem 
+                    onClick={() => handleDelete(vaga)}
+                    className="text-destructive focus:text-destructive"
+                  >
+                    <Trash2 className="w-4 h-4 mr-2" />
+                    Excluir
+                  </DropdownMenuItem>
+                </DropdownMenuContent>
+              </DropdownMenu>
+            )}
+          </div>
+        </CardHeader>
+
+        <CardContent className="space-y-4">
+          {/* Publisher Info */}
+          <div className="flex items-center justify-between flex-wrap gap-2">
+            <div className="flex items-center gap-2">
+              <Link to={`/usuario/${publicador?.userUrl || ''}`} target="_blank">
+                <Avatar className="w-8 h-8">
+                  <AvatarImage src={publicador?.fotoPerfil} alt="Foto de perfil" />
+                  <AvatarFallback>
+                    {publicador?.nome?.charAt(0)?.toUpperCase() || 'U'}
+                  </AvatarFallback>
+                </Avatar>
               </Link>
-              <Typography sx={{ fontSize: '14px', fontWeight: 400, fontStyle: 'italic' }}>
-                Criado por
-                {' '}
-                {createdByMe ? 'você' : vaga.publicador.nome}
-              </Typography>
-            </Box>
-            { isExpired && (
-              <Chip label="Vaga expirada" sx={{ backgroundColor: 'tomato', height: '24px', width: '118px' }} />
+              <span className="text-sm text-muted-foreground">
+                Criado por {createdByMe ? 'você' : (publicador?.nome || 'Desconhecido')}
+              </span>
+            </div>
+            {isExpired && (
+              <Badge variant="destructive">Vaga expirada</Badge>
             )}
-          </Box>
-          <Box sx={{ display: 'flex', flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between' }}>
-            <Box sx={{ display: 'flex', flexDirection: 'row', alignItems: 'center', justifyContent: 'flex-start' }}>
-              <FmdGoodOutlined sx={{ height: '14px', width: '14px' }} />
-              <Typography sx={{ fontSize: '14px', fontWeight: 400 }}>
-                {vaga.localDaVaga}
-              </Typography>
-            </Box>
-            <Chip label={vaga.aceitaRemoto ? 'Vaga remota' : 'Vaga presencial'} sx={{ backgroundColor: '#dad5fc', height: '24px', width: '118px' }} />
-          </Box>
-          <Box>
-            <Box sx={{ display: 'flex', justifyContent: 'space-between' }}>
-              <Typography sx={{ fontSize: '16px', fontWeight: 600 }}>Sobre a vaga:</Typography>
-              { vaga.iniciante
-                && <Chip label="Iniciante" sx={{ backgroundColor: '#bbf7d0', height: '24px', width: '118px' }} />}
-            </Box>
-            <Typography sx={{ fontSize: '14px', fontWeight: 500 }}>{vaga.descricao}</Typography>
-          </Box>
-          <Box>
-            <Typography sx={{ fontSize: '16px', fontWeight: 600 }}>Competências:</Typography>
-            <Box sx={{ display: 'flex', flexDirection: 'row', gap: '8px', flexWrap: 'wrap' }}>
-              {vaga.competencias?.map((competencia) => (
-                <Chip label={competencia.descricao} sx={{ backgroundColor: '#dad5fc', height: '24px' }} key={competencia.id} />
-              ))}
-            </Box>
-          </Box>
-          <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-            {createdByMe ? (
-              <Button sx={{ fontStyle: 'italic', textDecoration: 'underline', fontSize: '12px', color: 'black', textTransform: 'initial' }} onClick={() => handleOpenCandidatos(vaga)}>
-                Ver candidatos
-              </Button>
-            ) : (<Box />)}
-            {!(hideButton || createdByMe) && (
-              <Button variant="contained" color="primary" sx={{ height: '30px' }} onClick={() => handleOpenCurriculoModal(vaga)}>
-                Quero me candidatar
-              </Button>
-            )}
-          </Box>
-        </Box>
+          </div>
+
+          {/* Location and Remote Info */}
+          <div className="flex items-center justify-between flex-wrap gap-2">
+            <div className="flex items-center gap-1 text-muted-foreground">
+              <MapPin className="w-4 h-4" />
+              <span className="text-sm">{vaga.localDaVaga}</span>
+            </div>
+            <Badge variant={vaga.aceitaRemoto ? "info" : "warning"}>
+              <Briefcase className="w-3 h-3 mr-1" />
+              {vaga.aceitaRemoto ? 'Vaga remota' : 'Vaga presencial'}
+            </Badge>
+          </div>
+
+          {/* Description */}
+          <div>
+            <div className="flex items-center justify-between gap-2 mb-2">
+              <h4 className="font-semibold text-foreground">Sobre a vaga</h4>
+              {vaga.iniciante && (
+                <Badge variant="success">Iniciante</Badge>
+              )}
+            </div>
+            <p className="text-sm text-muted-foreground leading-relaxed">
+              {vaga.descricao}
+            </p>
+          </div>
+
+          {/* Competencies */}
+          {vaga.competencias && vaga.competencias.length > 0 && (
+            <div>
+              <h4 className="font-semibold text-foreground mb-2">Competências</h4>
+              <div className="flex flex-wrap gap-2">
+                {vaga.competencias.map((competencia) => (
+                  <Badge 
+                    key={competencia.id}
+                    variant="outline"
+                    className="bg-purple-50 text-purple-700 border-purple-200"
+                  >
+                    {competencia.descricao}
+                  </Badge>
+                ))}
+              </div>
+            </div>
+          )}
+        </CardContent>
+
+        <Separator />
+
+        <CardFooter className="pt-4 flex justify-between items-center flex-wrap gap-2">
+          {createdByMe ? (
+            <Button
+              variant="link"
+              onClick={() => handleOpenCandidatos(vaga)}
+              className="p-0 h-auto text-primary"
+            >
+              <Users className="w-4 h-4 mr-1" />
+              Ver candidatos
+            </Button>
+          ) : jaCandidatado ? (
+            <span className="flex items-center gap-1 text-sm font-medium text-green-600">
+              <CheckCircle2 className="w-4 h-4" />
+              Candidatura enviada
+            </span>
+          ) : (
+            <div />
+          )}
+          {!(hideButton || createdByMe || jaCandidatado) && (
+            <Button onClick={() => requireAuth(() => handleOpenCurriculoModal(vaga))}>
+              Quero me candidatar
+            </Button>
+          )}
+        </CardFooter>
       </Card>
     </>
-  )
+  );
 }
 
 export default VagaCard;

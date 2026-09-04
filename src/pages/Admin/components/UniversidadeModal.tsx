@@ -1,28 +1,33 @@
-import {
-  Box,
-  Button,
-  Dialog,
-  DialogActions,
-  DialogContent,
-  DialogTitle,
-  FormControl,
-  IconButton,
-  MenuItem,
-  Select,
-  TextField,
-  Typography,
-} from '@mui/material';
-import CloseIcon from '@mui/icons-material/Close';
-import React, { useState } from 'react';
-import { useSnackbar } from 'notistack';
+import { useState } from 'react';
+import { X } from 'lucide-react';
+import { toast } from 'sonner';
 import api from '../../../services/api';
 import { PartialUniversidade, Universidade } from '../../../services/endpoints/formacaoAcademica';
+import { handleApiError } from '../../../lib/errors';
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogFooter,
+} from '../../../components/ui/dialog';
+import { Input } from '../../../components/ui/input';
+import { Label } from '../../../components/ui/label';
+import { Button } from '../../../components/ui/button';
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '../../../components/ui/select';
+import { ScrollArea } from '../../../components/ui/scroll-area';
 
-  type UniversidadeModalProps = {
-    isOpen: boolean;
-    handleClose: () => void;
-    editObj?: Universidade | null;
-  };
+type UniversidadeModalProps = {
+  isOpen: boolean;
+  handleClose: () => void;
+  editObj?: Universidade | null;
+};
 
 const universidadeDefaultValues: PartialUniversidade = {
   codigoIes: 0,
@@ -54,9 +59,8 @@ const situacaoIesOptions = ['Ativa', 'Extinta'];
 function UniversidadeModal(props: UniversidadeModalProps) {
   const { isOpen, handleClose, editObj } = props;
   const [universidade, setUniversidade] = useState<Universidade>(
-    editObj || (universidadeDefaultValues as Universidade),
+    editObj || (universidadeDefaultValues as Universidade)
   );
-  const { enqueueSnackbar } = useSnackbar();
   const isEdit = !!editObj;
 
   function setUniversidadeValue(value: string | number, field: string) {
@@ -76,120 +80,133 @@ function UniversidadeModal(props: UniversidadeModalProps) {
     try {
       if (isEdit) {
         await api.universidade.alterarUniversidade(editObj?.id!, { ...universidade });
-        enqueueSnackbar('Universidade editada com sucesso', { variant: 'success' });
+        toast.success('Universidade editada com sucesso');
         onClose();
         return;
       }
       await api.universidade.cadastrarUniversidade({ ...universidade });
-      enqueueSnackbar('Universidade criada com sucesso', { variant: 'success' });
+      toast.success('Universidade criada com sucesso');
       onClose();
     } catch (error) {
-      enqueueSnackbar('Erro ao criar universidade', { variant: 'error' });
+      handleApiError(error, 'Erro ao criar universidade');
     }
   }
 
   return (
-    <Dialog open={isOpen} onClose={() => onClose()}>
-      <DialogTitle>
-        <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', width: '400px', gap: '8px', padding: '8px' }}>
-          {isEdit ? 'Editar universidade' : 'Nova universidade'}
-          <IconButton onClick={() => onClose()}>
-            <CloseIcon />
-          </IconButton>
-        </Box>
-      </DialogTitle>
-      <DialogContent>
-        <Box
-          sx={{
-            display: 'flex',
-            flexDirection: 'column',
-            gap: '32px',
-            maxWidth: '500px',
-            padding: '8px',
-          }}
-        >
-          <TextField
-            variant="outlined"
-            label="Nome da Instituição"
-            value={universidade.nomeInstituicao}
-            onChange={(e) => setUniversidadeValue(e.target.value, 'nomeInstituicao')}
-            fullWidth
-          />
-          <TextField
-            variant="outlined"
-            label="Sigla"
-            value={universidade.sigla}
-            onChange={(e) => setUniversidadeValue(e.target.value, 'sigla')}
-            fullWidth
-          />
-          <TextField
-            variant="outlined"
-            label="Código IES"
-            value={universidade.codigoIes}
-            onChange={(e) => setUniversidadeValue(e.target.value, 'codigoIes')}
-            fullWidth
-          />
-
-          {/* Select for Organização Acadêmica */}
-          <FormControl fullWidth>
-            <Typography variant="body1">Organização Acadêmica</Typography>
-            <Select
-              value={universidade.organizacaoAcademica}
-              onChange={(e) => setUniversidadeValue(e.target.value, 'organizacaoAcademica')}
-              displayEmpty
-              fullWidth
+    <Dialog open={isOpen} onOpenChange={(open) => !open && onClose()}>
+      <DialogContent className="max-w-md max-h-[90vh]">
+        <DialogHeader>
+          <DialogTitle className="flex items-center justify-between">
+            {isEdit ? 'Editar universidade' : 'Nova universidade'}
+            <Button
+              variant="ghost"
+              size="icon"
+              className="h-6 w-6"
+              onClick={onClose}
             >
-              {organizacaoAcademicaOptions.map((option) => (
-                <MenuItem key={option} value={option}>
-                  {option}
-                </MenuItem>
-              ))}
-            </Select>
-          </FormControl>
+              <X className="h-4 w-4" />
+            </Button>
+          </DialogTitle>
+        </DialogHeader>
 
-          <TextField
-            variant="outlined"
-            label="Município"
-            value={universidade.municipio}
-            onChange={(e) => setUniversidadeValue(e.target.value, 'municipio')}
-            fullWidth
-          />
-          <TextField
-            variant="outlined"
-            label="UF"
-            value={universidade.uf}
-            onChange={(e) => setUniversidadeValue(e.target.value, 'uf')}
-            fullWidth
-          />
+        <ScrollArea className="max-h-[60vh] pr-4">
+          <div className="flex flex-col gap-4 py-2">
+            <div className="space-y-2">
+              <Label htmlFor="nomeInstituicao">Nome da Instituição</Label>
+              <Input
+                id="nomeInstituicao"
+                value={universidade.nomeInstituicao}
+                onChange={(e) => setUniversidadeValue(e.target.value, 'nomeInstituicao')}
+              />
+            </div>
 
-          {/* Select for Situação IES */}
-          <FormControl fullWidth>
-            <Typography variant="body1">Situação IES</Typography>
-            <Select
-              value={universidade.situacaoIes}
-              onChange={(e) => setUniversidadeValue(e.target.value, 'situacaoIes')}
-              displayEmpty
-              fullWidth
-            >
-              {situacaoIesOptions.map((option) => (
-                <MenuItem key={option} value={option}>
-                  {option}
-                </MenuItem>
-              ))}
-            </Select>
-          </FormControl>
-        </Box>
-      </DialogContent>
-      <DialogActions>
-        <Box sx={{ display: 'flex', gap: '16px', padding: '0 24px 16px 24px' }}>
-          <Button onClick={() => onClose()} color="primary" variant="outlined">
+            <div className="space-y-2">
+              <Label htmlFor="sigla">Sigla</Label>
+              <Input
+                id="sigla"
+                value={universidade.sigla}
+                onChange={(e) => setUniversidadeValue(e.target.value, 'sigla')}
+              />
+            </div>
+
+            <div className="space-y-2">
+              <Label htmlFor="codigoIes">Código IES</Label>
+              <Input
+                id="codigoIes"
+                type="number"
+                value={universidade.codigoIes}
+                onChange={(e) => setUniversidadeValue(Number(e.target.value), 'codigoIes')}
+              />
+            </div>
+
+            <div className="space-y-2">
+              <Label>Organização Acadêmica</Label>
+              <Select
+                value={universidade.organizacaoAcademica}
+                onValueChange={(value) => setUniversidadeValue(value, 'organizacaoAcademica')}
+              >
+                <SelectTrigger>
+                  <SelectValue placeholder="Selecione..." />
+                </SelectTrigger>
+                <SelectContent>
+                  {organizacaoAcademicaOptions.map((option) => (
+                    <SelectItem key={option} value={option}>
+                      {option}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            </div>
+
+            <div className="space-y-2">
+              <Label htmlFor="municipio">Município</Label>
+              <Input
+                id="municipio"
+                value={universidade.municipio}
+                onChange={(e) => setUniversidadeValue(e.target.value, 'municipio')}
+              />
+            </div>
+
+            <div className="space-y-2">
+              <Label htmlFor="uf">UF</Label>
+              <Input
+                id="uf"
+                value={universidade.uf}
+                onChange={(e) => setUniversidadeValue(e.target.value, 'uf')}
+                maxLength={2}
+              />
+            </div>
+
+            <div className="space-y-2">
+              <Label>Situação IES</Label>
+              <Select
+                value={universidade.situacaoIes}
+                onValueChange={(value) => setUniversidadeValue(value, 'situacaoIes')}
+              >
+                <SelectTrigger>
+                  <SelectValue placeholder="Selecione..." />
+                </SelectTrigger>
+                <SelectContent>
+                  {situacaoIesOptions.map((option) => (
+                    <SelectItem key={option} value={option}>
+                      {option}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            </div>
+          </div>
+        </ScrollArea>
+
+        <DialogFooter className="gap-2 sm:gap-0">
+          <Button variant="outline" onClick={onClose}>
             Cancelar
           </Button>
-          <Button onClick={() => handleSubmit()} color="primary" variant="contained">
+          <Button onClick={handleSubmit}>
             {isEdit ? 'Editar' : 'Criar'}
           </Button>
-        </Box>
-      </DialogActions>
+        </DialogFooter>
+      </DialogContent>
     </Dialog>
   );
 }

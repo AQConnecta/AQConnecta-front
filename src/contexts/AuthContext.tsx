@@ -1,15 +1,17 @@
 /* eslint-disable no-unused-vars */
 import React, { createContext, useContext, useState, useMemo, useCallback, useEffect } from 'react'
-import { enqueueSnackbar } from 'notistack'
+import { AxiosError } from 'axios'
+import { toast } from 'sonner'
 import { jwtDecode } from 'jwt-decode'
 import { Usuario } from '../services/endpoints/auth'
 import { setBearerToken, removeBearerToken } from '../services/endpoints/_axios'
+import { parseApiError } from '../lib/errors'
 import api from '../services/api'
 
 type AuthData = {
   user: Usuario | null
   setUser: (user: Usuario | null) => void
-  handleLogin: (email: string, password: string) => Promise<{ logged: boolean, isAdmin: boolean}>
+  handleLogin: (email: string, password: string) => Promise<{ logged: boolean, isAdmin: boolean, naoAtivado?: boolean }>
   isLogged: boolean
   checkLogged: () => boolean
   logout: () => void
@@ -37,7 +39,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         setUser(parsedUser)
         setIsLogged(true)
         setBearerToken(localStorage.getItem('token') || '')
-        setIsAdmin(!!user?.permissao.find((p) => p.descricao === 'ADMIN'));
+        setIsAdmin(!!parsedUser.permissao.find((p: { descricao: string }) => p.descricao === 'ADMIN'));
         setLoading(false)
         return true
       }
@@ -56,22 +58,43 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   const handleLogin = async (email: string, password: string) => {
     try {
       const res = await api.auth.login({ email, senha: password })
-      const userRaw = res.data
-      if (userRaw) {
+      // Backend wraps response in ResponseHandler: { data: { usuario, token }, message, status }
+      const raw = res as any
+      const userRaw = raw.data?.data || raw.data
+      if (userRaw && userRaw.token) {
         localStorage.setItem('token', userRaw.token)
         localStorage.setItem('user', JSON.stringify(userRaw.usuario))
         setUser(userRaw.usuario)
         setIsLogged(true)
         setBearerToken(userRaw.token)
-        const decoded: any = jwtDecode(userRaw.token)
+        const decoded: { exp: number } = jwtDecode(userRaw.token)
         const exp = decoded.exp
         localStorage.setItem('tokenExp', exp.toString())
-        setIsAdmin(!!userRaw.usuario.permissao.find((p) => p.descricao === 'ADMIN'));
-        return { logged: true, isAdmin: !!user?.permissao.find((p) => p.descricao === 'ADMIN') }
+        const admin = !!userRaw.usuario.permissao.find((p: { descricao: string }) => p.descricao === 'ADMIN')
+        setIsAdmin(admin)
+        return { logged: true, isAdmin: admin }
       }
     } catch (err) {
-      enqueueSnackbar('Usuário ou senha inválidos', { variant: 'error' })
-      return false
+      // Extrai mensagem específica do backend (e.g. "Usuário não foi ativado, verifique seu email").
+      // Casos especiais com mensagem mais amigável; o resto vai pelo parser padrão.
+      const apiMessage = parseApiError(err)
+      const status = err instanceof AxiosError ? err.response?.status : undefined
+      let naoAtivado = false
+
+      if (apiMessage.toLowerCase().includes('não foi ativado')
+        || apiMessage.toLowerCase().includes('nao foi ativado')) {
+        naoAtivado = true
+        toast.error('Necessário confirmar seu email', {
+          description: 'Verifique sua caixa de correios ou spam para encontrar o link de confirmação.',
+          duration: 8000,
+        })
+      } else if (status === 401 || apiMessage.toLowerCase().includes('senha incorret')
+        || apiMessage.toLowerCase().includes('credenciais')) {
+        toast.error('E-mail ou senha incorretos')
+      } else {
+        toast.error(apiMessage)
+      }
+      return { logged: false, isAdmin: false, naoAtivado }
     } finally {
       setLoading(false)
     }
@@ -98,7 +121,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       loading,
       isAdmin,
     }),
-    [user, isLogged, loading],
+    [user, isLogged, loading, isAdmin],
   )
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>

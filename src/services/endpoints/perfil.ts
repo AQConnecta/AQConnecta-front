@@ -3,9 +3,27 @@ import axios from './_axios';
 const PREFIX = '/usuario';
 
 export type Curriculo = {
-  id: number,
-  curriculo: string
-  nomeCurriculo: string
+  id: string,
+  nome: string
+  url: string
+}
+
+// Backend serializes the JPA entity with its raw column names; remap to the
+// shape the UI expects so consumers don't need to know about backend field names.
+type RawCurriculo = {
+  id: number | string
+  nomeCurriculo?: string
+  curriculo?: string
+  nome?: string
+  url?: string
+}
+
+function normalizeCurriculo(raw: RawCurriculo): Curriculo {
+  return {
+    id: String(raw.id),
+    nome: raw.nomeCurriculo ?? raw.nome ?? '',
+    url: raw.curriculo ?? raw.url ?? '',
+  }
 }
 
 export class PerfilEndpoint {
@@ -33,7 +51,12 @@ export class PerfilEndpoint {
   }
 
   async getCurriculos(): Promise<{ data: { data: Curriculo[] } }> {
-    return await axios.get(`${PREFIX}/curriculos`)
+    const response = await axios.get(`${PREFIX}/curriculos`)
+    const raw: RawCurriculo[] = response.data?.data ?? []
+    return {
+      ...response,
+      data: { ...response.data, data: raw.map(normalizeCurriculo) },
+    }
   }
 
   async listarMinhasCandidaturas() {

@@ -1,48 +1,54 @@
-# Ignorar node_modules (será instalado dentro da imagem)
+# Dependências instaladas dentro do container
 node_modules
-npm-debug.log
-yarn-error.log
-pnpm-lock.yaml
-
-# Pastas e arquivos de teste
-coverage
-cypress/
-tests/
-__tests__/
-*.spec.js
-*.test.js
-*.spec.ts
-*.test.ts
-
-# Configurações e arquivos locais
-.env
-.env.*.local
-.DS_Store
-.idea/
-.vscode/
-*.swp
-*.swo
-
-# Logs
-*.log
-logs/
-tmp/
-temp/
-
-# Build local (será recriado no container)
-build
-dist
-
-# Cache do npm/yarn/pnpm
 .npm
 .yarn
 .pnpm-store
 
-# Git e outros VCS
+# Build local
+build
+dist
+
+# Logs e temp
+npm-debug.log*
+yarn-error.log*
+*.log
+logs
+tmp
+temp
+
+# Tests
+coverage
+cypress
+**/__tests__
+*.spec.js
+*.spec.ts
+*.test.js
+*.test.ts
+
+# Secrets / variáveis de ambiente
+.env
+.env.*
+!.env.example
+*.pem
+*.key
+*.crt
+*.p12
+
+# IDEs / OS
+.idea
+.vscode
+.DS_Store
+Thumbs.db
+ehthumbs.db
+*.swp
+*.swo
+
+# VCS
 .git
 .gitignore
 .gitattributes
 
-# Arquivos de sistema e editor
-Thumbs.db
-ehthumbs.db
+# Docker
+Dockerfile
+.dockerignore
+docker-compose*.yml
