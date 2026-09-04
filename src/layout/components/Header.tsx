@@ -74,7 +74,6 @@ function Header() {
       <header className="bg-white border-b border-gray-200 sticky top-0 z-50">
         <div className="max-w-7xl mx-auto px-4">
           <div className="flex items-center justify-between h-16 gap-4">
-            {/* Logo */}
             <div className="flex items-center gap-3 md:gap-8 flex-1 md:flex-initial">
               <Link to="/home" className="flex items-center gap-2">
                 <img src={LogoSvg} alt="AQConnecta" className="w-8 h-8" />
@@ -83,7 +82,6 @@ function Header() {
                 </span>
               </Link>
 
-              {/* Barra de pesquisa - Desktop */}
               <div className="hidden md:flex items-center relative w-80">
                 <Search className="absolute left-3 w-4 h-4 text-muted-foreground" />
                 <Input
@@ -96,7 +94,6 @@ function Header() {
               </div>
             </div>
 
-            {/* Navigation - Desktop */}
             <nav className="hidden md:flex items-center gap-6">
               {menuItems.map((item) => (
                 <Link
@@ -110,7 +107,6 @@ function Header() {
               ))}
             </nav>
 
-            {/* Actions */}
             <div className="flex items-center gap-2">
               <Button
                 variant="ghost"
@@ -138,7 +134,6 @@ function Header() {
             </div>
           </div>
 
-          {/* Barra de pesquisa - Mobile */}
           <div className="md:hidden pb-3">
             <div className="relative">
               <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
@@ -154,7 +149,6 @@ function Header() {
         </div>
       </header>
 
-      {/* Mobile Drawer */}
       <Sheet open={drawerOpen} onOpenChange={setDrawerOpen}>
         <SheetContent side="right">
           <SheetHeader>

@@ -157,7 +157,6 @@ function EnderecoRegister({ isOpen, setOpen, enderecoEdit, handleClose }: IModal
         </DialogHeader>
 
         <div className="space-y-4 py-2">
-          {/* CEP com busca automática */}
           <div className="space-y-1.5">
             <Label htmlFor="cep">CEP</Label>
             <div className="relative">
@@ -185,7 +184,6 @@ function EnderecoRegister({ isOpen, setOpen, enderecoEdit, handleClose }: IModal
             )}
           </div>
 
-          {/* Estado e Cidade lado a lado */}
           <div className="grid grid-cols-2 gap-3">
             <div className="space-y-1.5">
               <Label htmlFor="estado">Estado</Label>
@@ -229,7 +227,6 @@ function EnderecoRegister({ isOpen, setOpen, enderecoEdit, handleClose }: IModal
             />
           </div>
 
-          {/* Número e Complemento lado a lado */}
           <div className="grid grid-cols-2 gap-3">
             <div className="space-y-1.5">
               <Label htmlFor="numero">Número</Label>

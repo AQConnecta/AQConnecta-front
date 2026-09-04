@@ -92,7 +92,6 @@ function VagaModal(props: VagaModalProps) {
     return () => { cancelled = true }
   }, [vaga.areaAtuacao])
 
-  // --- Autocomplete de cidades ---
   const [cidadeQuery, setCidadeQuery] = useState(editObj?.localDaVaga || '')
   const [cidadeSugestoes, setCidadeSugestoes] = useState<IbgeCidade[]>([])
   const [buscandoCidade, setBuscandoCidade] = useState(false)
@@ -143,7 +142,6 @@ function VagaModal(props: VagaModalProps) {
     setCidadeSugestoes([])
   }
 
-  // Fechar dropdown ao clicar fora
   useEffect(() => {
     function handleClickOutside(e: MouseEvent) {
       if (containerRef.current && !containerRef.current.contains(e.target as Node)) {
@@ -154,7 +152,6 @@ function VagaModal(props: VagaModalProps) {
     return () => document.removeEventListener('mousedown', handleClickOutside)
   }, [])
 
-  // --- Restante do form ---
   function setVagaValue(value: string | boolean, field: string) {
     setVaga((prev) => ({ ...prev, [field]: value }))
   }
@@ -262,7 +259,6 @@ function VagaModal(props: VagaModalProps) {
               />
             </div>
 
-            {/* Campo cidade com autocomplete IBGE */}
             <div className="space-y-2" ref={containerRef}>
               <Label htmlFor="local">Cidade</Label>
               <div className="relative">

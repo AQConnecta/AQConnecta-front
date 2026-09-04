@@ -23,7 +23,6 @@ export default function MobileLayout() {
     localStorage.setItem('mobileActiveTab', activeTab);
   }, [activeTab]);
 
-  // Check if mobile using CSS media query logic
   const [isMobile, setIsMobile] = React.useState(false);
 
   React.useEffect(() => {
@@ -35,12 +34,10 @@ export default function MobileLayout() {
     return () => window.removeEventListener('resize', checkMobile);
   }, []);
 
-  // Only render on mobile
   if (!isMobile) return null;
 
   return (
     <div className="bg-muted/30 min-h-screen pb-16">
-      {/* Header */}
       <header className="sticky top-0 z-50 bg-background border-b">
         <div className="flex items-center justify-between h-14 px-4">
           <Link to="/home" className="flex items-center gap-2">
@@ -65,7 +62,6 @@ export default function MobileLayout() {
         </div>
       </header>
 
-      {/* Content */}
       <Tabs value={activeTab} onValueChange={(v) => setActiveTab(v as TabId)} className="h-full">
         <div className="min-h-[calc(100vh-56px-64px)]">
           <TabsContent value="vagas" className="p-4 mt-0">
@@ -81,7 +77,6 @@ export default function MobileLayout() {
           </TabsContent>
         </div>
 
-        {/* Bottom Navigation */}
         <div className="fixed bottom-0 left-0 right-0 bg-background border-t shadow-lg z-50">
           <TabsList className="w-full h-16 rounded-none grid grid-cols-3 bg-background">
             <TabsTrigger

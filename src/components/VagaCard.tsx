@@ -30,7 +30,6 @@ type VagaProps = {
   hideButton?: boolean;
 }
 
-// Helper to get publicador as Usuario object
 function getPublicador(publicador: string | Usuario): Usuario | null {
   if (typeof publicador === 'string') {
     return null;
@@ -145,7 +144,6 @@ function VagaCard(props: VagaProps) {
         </CardHeader>
 
         <CardContent className="space-y-4">
-          {/* Publisher Info */}
           <div className="flex items-center justify-between flex-wrap gap-2">
             <div className="flex items-center gap-2">
               <Link to={`/usuario/${publicador?.userUrl || ''}`} target="_blank">
@@ -165,7 +163,6 @@ function VagaCard(props: VagaProps) {
             )}
           </div>
 
-          {/* Location and Remote Info */}
           <div className="flex items-center justify-between flex-wrap gap-2">
             <div className="flex items-center gap-1 text-muted-foreground">
               <MapPin className="w-4 h-4" />
@@ -177,7 +174,6 @@ function VagaCard(props: VagaProps) {
             </Badge>
           </div>
 
-          {/* Description */}
           <div>
             <div className="flex items-center justify-between gap-2 mb-2">
               <h4 className="font-semibold text-foreground">Sobre a vaga</h4>
@@ -190,7 +186,6 @@ function VagaCard(props: VagaProps) {
             </p>
           </div>
 
-          {/* Competencies */}
           {vaga.competencias && vaga.competencias.length > 0 && (
             <div>
               <h4 className="font-semibold text-foreground mb-2">Competências</h4>

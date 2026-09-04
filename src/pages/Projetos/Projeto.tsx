@@ -30,6 +30,15 @@ import { Tabs, TabsList, TabsTrigger, TabsContent } from '../../components/ui/ta
 
 const POSTS_SIZE = 5
 
+function safeHref(url: string): string {
+  try {
+    const u = new URL(url, window.location.origin)
+    return ['http:', 'https:', 'mailto:'].includes(u.protocol) ? url : '#'
+  } catch {
+    return '#'
+  }
+}
+
 function ProjetoPage() {
   const { id } = useParams()
   const navigate = useNavigate()
@@ -285,7 +294,7 @@ function ProjetoPage() {
                   {projeto.links.map((l) => (
                     <a
                       key={l.id || l.url}
-                      href={l.url}
+                      href={safeHref(l.url)}
                       target="_blank"
                       rel="noopener noreferrer"
                       className="text-sm text-primary hover:underline inline-flex items-center gap-1 border rounded-md px-3 py-1.5 break-all"

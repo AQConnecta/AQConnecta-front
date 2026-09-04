@@ -58,7 +58,6 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   const handleLogin = async (email: string, password: string) => {
     try {
       const res = await api.auth.login({ email, senha: password })
-      // Backend wraps response in ResponseHandler: { data: { usuario, token }, message, status }
       const raw = res as any
       const userRaw = raw.data?.data || raw.data
       if (userRaw && userRaw.token) {
@@ -75,8 +74,6 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         return { logged: true, isAdmin: admin }
       }
     } catch (err) {
-      // Extrai mensagem específica do backend (e.g. "Usuário não foi ativado, verifique seu email").
-      // Casos especiais com mensagem mais amigável; o resto vai pelo parser padrão.
       const apiMessage = parseApiError(err)
       const status = err instanceof AxiosError ? err.response?.status : undefined
       let naoAtivado = false

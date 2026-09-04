@@ -4,15 +4,9 @@ import { LoadingSpinner } from '../components/LoadingState'
 import ErrorBoundary from '../components/ErrorBoundary'
 import ProtectedRoute from './ProtectedRoute'
 
-// Layouts
 import HomeLayout from '../layout/HomeLayout'
 import OnlyHeaderLayout from '../layout/OnlyHeaderLayout'
 
-/**
- * Wrapper de React.lazy que recupera de "Failed to fetch dynamically imported module".
- * Esse erro acontece quando o usuário está com o HTML antigo em cache e o build novo
- * mudou os hashes dos chunks. Em vez de quebrar a tela, recarregamos uma única vez.
- */
 function lazyWithRetry<T extends ComponentType<unknown>>(
   factory: () => Promise<{ default: T }>,
 ) {
@@ -30,12 +24,10 @@ function lazyWithRetry<T extends ComponentType<unknown>>(
       if (isChunkError && !sessionStorage.getItem(RELOAD_KEY)) {
         sessionStorage.setItem(RELOAD_KEY, '1')
         window.location.reload()
-        // devolve um componente vazio enquanto o reload acontece
         return { default: (() => null) as unknown as T }
       }
       throw err
     } finally {
-      // limpa a flag em casos de sucesso após reload
       if (sessionStorage.getItem(RELOAD_KEY)) {
         setTimeout(() => sessionStorage.removeItem(RELOAD_KEY), 5000)
       }
@@ -43,7 +35,6 @@ function lazyWithRetry<T extends ComponentType<unknown>>(
   })
 }
 
-// Lazy-loaded pages
 const Login = lazyWithRetry(() => import('../pages/Login/Login'))
 const Register = lazyWithRetry(() => import('../pages/Register/Register'))
 const ForgotPassword = lazyWithRetry(() => import('../pages/ForgotPassword/ForgotPassword'))
@@ -84,13 +75,11 @@ const AppRoutes = () => {
     <BrowserRouter>
       <Suspense fallback={<LoadingSpinner fullScreen />}>
         <Routes>
-          {/* Public routes */}
           <Route path="register" element={<SuspenseWrapper><Register /></SuspenseWrapper>} />
           <Route path="login" element={<SuspenseWrapper><Login /></SuspenseWrapper>} />
           <Route path="forgot-password" element={<SuspenseWrapper><ForgotPassword /></SuspenseWrapper>} />
           <Route path="redefinir-senha" element={<SuspenseWrapper><RedefinirSenha /></SuspenseWrapper>} />
 
-          {/* Protected routes with OnlyHeaderLayout */}
           <Route
             path="competencias"
             element={(
@@ -250,7 +239,6 @@ const AppRoutes = () => {
             />
           </Route>
 
-          {/* Home with full layout - navegação pública */}
           <Route element={<HomeLayout />}>
             <Route
               path="home"
@@ -262,7 +250,6 @@ const AppRoutes = () => {
             />
           </Route>
 
-          {/* 404 */}
           <Route path="*" element={<SuspenseWrapper><ErrorPage /></SuspenseWrapper>} />
         </Routes>
       </Suspense>
