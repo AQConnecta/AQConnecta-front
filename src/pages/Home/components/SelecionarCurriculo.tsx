@@ -52,15 +52,15 @@ function SelecionarCurriculo({ isOpen, handleClose, onSelect }: SelecionarCurric
         <DialogHeader>
           <DialogTitle>Selecionar Currículo</DialogTitle>
         </DialogHeader>
-        
+
         <div className="space-y-3 py-4">
           {curriculos.length > 0 ? (
             curriculos.map((curriculo) => (
               <label
                 key={curriculo.id}
                 className={`flex items-center gap-3 p-3 border rounded-lg cursor-pointer transition-colors ${
-                  selectedCurriculo === curriculo.id 
-                    ? 'border-primary bg-primary/5' 
+                  selectedCurriculo === curriculo.id
+                    ? 'border-primary bg-primary/5'
                     : 'hover:bg-accent'
                 }`}
               >
@@ -73,10 +73,11 @@ function SelecionarCurriculo({ isOpen, handleClose, onSelect }: SelecionarCurric
                   className="sr-only"
                 />
                 <div className={`w-4 h-4 rounded-full border-2 flex items-center justify-center ${
-                  selectedCurriculo === curriculo.id 
-                    ? 'border-primary' 
+                  selectedCurriculo === curriculo.id
+                    ? 'border-primary'
                     : 'border-muted-foreground'
-                }`}>
+                }`}
+                >
                   {selectedCurriculo === curriculo.id && (
                     <div className="w-2 h-2 rounded-full bg-primary" />
                   )}

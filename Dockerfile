@@ -3,9 +3,10 @@
 # ---- Build stage ----
 FROM node:22.12.0-alpine AS build
 WORKDIR /app
+ENV HUSKY=0
 
-COPY package.json package-lock.json* ./
-RUN if [ -f package-lock.json ]; then npm ci; else npm install; fi
+COPY package.json yarn.lock ./
+RUN yarn install --frozen-lockfile
 
 COPY . .
 ARG VITE_BASE_URL=""
@@ -13,7 +14,7 @@ ARG VITE_ENV=production
 ENV VITE_BASE_URL=$VITE_BASE_URL \
     VITE_ENV=$VITE_ENV \
     NODE_ENV=production
-RUN npm run build
+RUN yarn build
 
 # ---- Runtime stage ----
 FROM nginx:1.27.3-alpine

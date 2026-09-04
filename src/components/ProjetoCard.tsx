@@ -36,7 +36,10 @@ function ProjetoCard({ projeto }: { projeto: ProjetoResumo }) {
           </div>
           <h3 className="font-bold text-foreground line-clamp-1">{projeto.titulo}</h3>
           <p className="text-sm text-muted-foreground line-clamp-2 min-h-[2.5rem]">{projeto.descricao}</p>
-          <p className="text-xs text-muted-foreground">por {projeto.donoNome}</p>
+          <p className="text-xs text-muted-foreground">
+            por
+            {projeto.donoNome}
+          </p>
         </CardContent>
       </Card>
     </Link>

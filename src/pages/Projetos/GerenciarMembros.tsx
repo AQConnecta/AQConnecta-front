@@ -277,7 +277,11 @@ function GerenciarMembros() {
                       <p className="text-xs text-muted-foreground">{c.usuario?.email}</p>
                     </div>
                   </div>
-                  <Badge variant="warning">{PAPEL_LABELS[c.papel]} · pendente</Badge>
+                  <Badge variant="warning">
+                    {PAPEL_LABELS[c.papel]}
+                    {' '}
+                    · pendente
+                  </Badge>
                 </div>
               ))}
             </div>
@@ -373,7 +377,11 @@ function GerenciarMembros() {
                     </Avatar>
                     <div>
                       <p className="text-sm font-medium">{m.usuario?.nome}</p>
-                      <p className="text-xs text-muted-foreground">{PAPEL_LABELS[m.papel]} · saiu</p>
+                      <p className="text-xs text-muted-foreground">
+                        {PAPEL_LABELS[m.papel]}
+                        {' '}
+                        · saiu
+                      </p>
                     </div>
                   </div>
                   {gerencia && (

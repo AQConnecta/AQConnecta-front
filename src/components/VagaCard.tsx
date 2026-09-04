@@ -46,7 +46,7 @@ function VagaCard(props: VagaProps) {
   const [vagaToApply, setVagaToApply] = useState<Vaga | null>(null);
   const [selectedVaga, setSelectedVaga] = useState<Vaga | null>(null);
   const { user } = useAuth();
-  
+
   const publicador = getPublicador(vaga.publicador);
   const createdByMe = publicador?.id === user?.id;
   const isExpired = new Date(vaga.dataLimiteCandidatura) < new Date();
@@ -111,7 +111,7 @@ function VagaCard(props: VagaProps) {
           onSelect={handleSelectCurriculo}
         />
       )}
-      
+
       <Card className="w-full max-w-[600px] hover:shadow-md transition-shadow">
         <CardHeader className="pb-3">
           <div className="flex items-start justify-between gap-4">
@@ -130,7 +130,7 @@ function VagaCard(props: VagaProps) {
                     <Pencil className="w-4 h-4 mr-2" />
                     Editar
                   </DropdownMenuItem>
-                  <DropdownMenuItem 
+                  <DropdownMenuItem
                     onClick={() => handleDelete(vaga)}
                     className="text-destructive focus:text-destructive"
                   >
@@ -155,7 +155,9 @@ function VagaCard(props: VagaProps) {
                 </Avatar>
               </Link>
               <span className="text-sm text-muted-foreground">
-                Criado por {createdByMe ? 'você' : (publicador?.nome || 'Desconhecido')}
+                Criado por
+                {' '}
+                {createdByMe ? 'você' : (publicador?.nome || 'Desconhecido')}
               </span>
             </div>
             {isExpired && (
@@ -168,7 +170,7 @@ function VagaCard(props: VagaProps) {
               <MapPin className="w-4 h-4" />
               <span className="text-sm">{vaga.localDaVaga}</span>
             </div>
-            <Badge variant={vaga.aceitaRemoto ? "info" : "warning"}>
+            <Badge variant={vaga.aceitaRemoto ? 'info' : 'warning'}>
               <Briefcase className="w-3 h-3 mr-1" />
               {vaga.aceitaRemoto ? 'Vaga remota' : 'Vaga presencial'}
             </Badge>
@@ -191,7 +193,7 @@ function VagaCard(props: VagaProps) {
               <h4 className="font-semibold text-foreground mb-2">Competências</h4>
               <div className="flex flex-wrap gap-2">
                 {vaga.competencias.map((competencia) => (
-                  <Badge 
+                  <Badge
                     key={competencia.id}
                     variant="outline"
                     className="bg-purple-50 text-purple-700 border-purple-200"

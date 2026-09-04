@@ -157,7 +157,9 @@ function Perfil({ user, isMe, onUploaded }: PerfilProps) {
 
         <div className="text-center">
           <p className="text-muted-foreground">
-            <span className="font-semibold">E-mail:</span> {user.email}
+            <span className="font-semibold">E-mail:</span>
+            {' '}
+            {user.email}
           </p>
         </div>
       </CardContent>

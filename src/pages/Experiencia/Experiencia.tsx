@@ -80,15 +80,21 @@ function MinhaExperiencia(props: ExperienciaProps) {
               <div className="flex items-center gap-2">
                 <Briefcase className="w-4 h-4 text-primary" />
                 <h4 className="font-semibold uppercase">
-                  {experiencia.titulo} - {experiencia.instituicao}
+                  {experiencia.titulo}
+                  {' '}
+                  -
+                  {experiencia.instituicao}
                 </h4>
               </div>
-              
+
               <p className="text-sm text-muted-foreground">
-                {formatDate(experiencia.dataInicio)} - {' '}
+                {formatDate(experiencia.dataInicio)}
+                {' '}
+                -
+                {' '}
                 {experiencia.atualExperiencia ? 'até o momento' : formatDate(experiencia.dataFim)}
               </p>
-              
+
               <p className="text-sm">{experiencia.descricao}</p>
 
               {isMe && (
@@ -128,9 +134,9 @@ function MinhaExperiencia(props: ExperienciaProps) {
           </Button>
         )}
 
-        <CustomDialog 
-          isOpen={open} 
-          onClose={() => setOpen(false)} 
+        <CustomDialog
+          isOpen={open}
+          onClose={() => setOpen(false)}
           title={`${experienciaToEdit ? 'Editar' : 'Adicionar'} experiência`}
         >
           <ExperienciaRegister experienciaEdit={experienciaToEdit!} handleClose={handleClose} />

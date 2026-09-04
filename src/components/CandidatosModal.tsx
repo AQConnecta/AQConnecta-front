@@ -44,15 +44,17 @@ function CandidatosModal(props: CandidatoModalProps) {
       <DialogContent className="sm:max-w-md">
         <DialogHeader>
           <DialogTitle>
-            Candidatos para {selectedVaga?.titulo}
+            Candidatos para
+            {' '}
+            {selectedVaga?.titulo}
           </DialogTitle>
         </DialogHeader>
-        
+
         <div className="space-y-4 py-4">
           {candidatos.length ? (
             candidatos.map((candidato, index) => (
-              <div 
-                key={index} 
+              <div
+                key={index}
                 className="flex items-center justify-between gap-4"
               >
                 <div className="flex items-center gap-4">
@@ -65,9 +67,9 @@ function CandidatosModal(props: CandidatoModalProps) {
                   <div className="flex flex-col">
                     <span className="font-medium">{candidato.usuario?.nome}</span>
                     {candidato.curriculoUrl && candidato.usuario && (
-                      <Link 
-                        to={`/usuario/${candidato.usuario.userUrl}`} 
-                        target="_blank" 
+                      <Link
+                        to={`/usuario/${candidato.usuario.userUrl}`}
+                        target="_blank"
                         rel="noopener noreferrer"
                         className="text-sm text-primary hover:underline"
                       >

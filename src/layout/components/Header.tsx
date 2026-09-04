@@ -8,13 +8,13 @@ import {
   Briefcase,
   FileText,
   FolderKanban,
-  ShieldCheck
+  ShieldCheck,
 } from 'lucide-react'
 import { Button } from '../../components/ui/button'
 import { Input } from '../../components/ui/input'
 import { Sheet, SheetContent, SheetHeader, SheetTitle } from '../../components/ui/sheet'
 import { useAuth } from '../../contexts/AuthContext'
-import LogoSvg from '/AqConnectaIcon.svg?url'
+import LogoSvg from '../../../public/AqConnectaIcon.svg'
 
 function Header() {
   const { logout, isAdmin, user } = useAuth()
@@ -42,12 +42,12 @@ function Header() {
 
   const menuItems = user
     ? [
-        { text: 'Projetos', icon: FolderKanban, path: '/projetos' },
-        { text: 'Meu Perfil', icon: User, path: '/usuario' },
-        { text: 'Minhas Vagas', icon: Briefcase, path: '/minhas-vagas' },
-        { text: 'Minhas Candidaturas', icon: FileText, path: '/minhas-candidaturas' },
-        ...(isAdmin ? [{ text: 'Administração', icon: ShieldCheck, path: '/admin' }] : []),
-      ]
+      { text: 'Projetos', icon: FolderKanban, path: '/projetos' },
+      { text: 'Meu Perfil', icon: User, path: '/usuario' },
+      { text: 'Minhas Vagas', icon: Briefcase, path: '/minhas-vagas' },
+      { text: 'Minhas Candidaturas', icon: FileText, path: '/minhas-candidaturas' },
+      ...(isAdmin ? [{ text: 'Administração', icon: ShieldCheck, path: '/admin' }] : []),
+    ]
     : [{ text: 'Projetos', icon: FolderKanban, path: '/projetos' }]
 
   const SearchResults = () => (

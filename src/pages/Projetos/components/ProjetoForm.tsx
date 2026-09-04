@@ -163,9 +163,8 @@ function ProjetoForm({ projetoId }: { projetoId?: string }) {
 
   const universidadeSelecionada = universidades.find((u) => u.id === idUniversidade)
   const universidadesFiltradas = universidades.filter(
-    (u) =>
-      u.nomeInstituicao?.toLowerCase().includes(buscaUniversidade.toLowerCase()) ||
-      u.sigla?.toLowerCase().includes(buscaUniversidade.toLowerCase()),
+    (u) => u.nomeInstituicao?.toLowerCase().includes(buscaUniversidade.toLowerCase())
+      || u.sigla?.toLowerCase().includes(buscaUniversidade.toLowerCase()),
   )
 
   return (

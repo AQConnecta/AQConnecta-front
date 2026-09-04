@@ -85,7 +85,13 @@ function MeusConvites() {
                   <div>
                     <p className="font-medium text-foreground">{c.projetoTitulo}</p>
                     <p className="text-xs text-muted-foreground">
-                      Convidado por {c.convidadoPorNome} como {PAPEL_LABELS[c.papel]}
+                      Convidado por
+                      {' '}
+                      {c.convidadoPorNome}
+                      {' '}
+                      como
+                      {' '}
+                      {PAPEL_LABELS[c.papel]}
                     </p>
                   </div>
                 </div>

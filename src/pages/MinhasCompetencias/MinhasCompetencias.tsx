@@ -42,11 +42,9 @@ function MinhaCompetencia(props: CompetenciaProps) {
   }
 
   const handleSelect = (id: string) => {
-    setSelectedCompetencias((prevSelected) =>
-      prevSelected.includes(id)
-        ? prevSelected.filter((competenciaId) => competenciaId !== id)
-        : [...prevSelected, id]
-    );
+    setSelectedCompetencias((prevSelected) => (prevSelected.includes(id)
+      ? prevSelected.filter((competenciaId) => competenciaId !== id)
+      : [...prevSelected, id]));
   };
 
   async function handleUnlink() {

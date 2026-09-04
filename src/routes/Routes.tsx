@@ -16,10 +16,9 @@ function lazyWithRetry<T extends ComponentType<unknown>>(
       return await factory()
     } catch (err) {
       const message = err instanceof Error ? err.message : ''
-      const isChunkError =
-        message.includes('Failed to fetch dynamically imported module') ||
-        message.includes('Importing a module script failed') ||
-        message.includes('error loading dynamically imported module')
+      const isChunkError = message.includes('Failed to fetch dynamically imported module')
+        || message.includes('Importing a module script failed')
+        || message.includes('error loading dynamically imported module')
 
       if (isChunkError && !sessionStorage.getItem(RELOAD_KEY)) {
         sessionStorage.setItem(RELOAD_KEY, '1')

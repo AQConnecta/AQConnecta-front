@@ -74,15 +74,24 @@ function MinhaFormacaoAcademica(props: FormacaoAcademicaProps) {
             >
               <div className="flex items-center gap-2">
                 <GraduationCap className="w-4 h-4 text-primary" />
-                <span className="text-sm text-muted-foreground">Formação {index + 1}</span>
+                <span className="text-sm text-muted-foreground">
+                  Formação
+                  {index + 1}
+                </span>
               </div>
-              
+
               <h4 className="font-semibold uppercase">
-                {formacaoAcademica.descricao} - {formacaoAcademica.universidade.nomeInstituicao}
+                {formacaoAcademica.descricao}
+                {' '}
+                -
+                {formacaoAcademica.universidade.nomeInstituicao}
               </h4>
-              
+
               <p className="text-sm text-muted-foreground">
-                {formatDate(formacaoAcademica.dataInicio)} - {formatDate(formacaoAcademica.dataFim)}
+                {formatDate(formacaoAcademica.dataInicio)}
+                {' '}
+                -
+                {formatDate(formacaoAcademica.dataFim)}
                 {formacaoAcademica.atualFormacao && ' - Cursando'}
               </p>
 

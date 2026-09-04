@@ -59,9 +59,8 @@ function GerenciarUsuarios() {
   }
 
   const filtrados = usuarios.filter(
-    (u) =>
-      u.nome?.toLowerCase().includes(busca.toLowerCase()) ||
-      u.email?.toLowerCase().includes(busca.toLowerCase()),
+    (u) => u.nome?.toLowerCase().includes(busca.toLowerCase())
+      || u.email?.toLowerCase().includes(busca.toLowerCase()),
   )
 
   return (

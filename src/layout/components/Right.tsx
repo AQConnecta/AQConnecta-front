@@ -13,12 +13,12 @@ function Right() {
   return (
     <div className="min-w-[200px]">
       <Card className="overflow-hidden">
-        <div 
+        <div
           className="h-14 bg-cover bg-center"
           style={{ backgroundImage: "url('/images/card-bg.svg')" }}
         />
         <CardContent className="pt-0 -mt-9 text-center">
-          <Avatar 
+          <Avatar
             className="w-[72px] h-[72px] mx-auto border-2 border-white cursor-pointer shadow-md"
             onClick={() => navigate('/usuario')}
           >
@@ -28,7 +28,9 @@ function Right() {
             </AvatarFallback>
           </Avatar>
           <p className="mt-3 text-base font-semibold text-foreground">
-            Olá, {user.nome || ''}
+            Olá,
+            {' '}
+            {user.nome || ''}
           </p>
         </CardContent>
       </Card>

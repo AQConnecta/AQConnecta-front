@@ -16,11 +16,11 @@ function Left() {
   return (
     <div className="space-y-4">
       <HotCompetencias />
-      
+
       <div className="flex items-center space-x-2 p-4 bg-card rounded-lg border">
-        <Checkbox 
+        <Checkbox
           id="iniciante"
-          checked={iniciante} 
+          checked={iniciante}
           onCheckedChange={handleCheckboxChange}
         />
         <Label htmlFor="iniciante" className="text-sm cursor-pointer">

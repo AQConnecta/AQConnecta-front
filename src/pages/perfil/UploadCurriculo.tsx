@@ -120,9 +120,9 @@ function Curriculo({ isMe }: { isMe: boolean }) {
               key={curriculo.id}
               className="flex items-center justify-between p-3 border rounded-lg bg-card"
             >
-              <a 
-                href={curriculo.url} 
-                target="_blank" 
+              <a
+                href={curriculo.url}
+                target="_blank"
                 rel="noopener noreferrer"
                 className="flex items-center gap-2 text-primary font-medium hover:underline"
               >
@@ -142,7 +142,7 @@ function Curriculo({ isMe }: { isMe: boolean }) {
             </div>
           ))}
         </div>
-        
+
         {isMe && (
           <Button onClick={() => setIsModalOpen(true)} className="w-full">
             <Plus className="w-4 h-4 mr-2" />

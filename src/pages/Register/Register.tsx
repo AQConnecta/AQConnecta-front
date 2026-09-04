@@ -124,7 +124,8 @@ function Register() {
               </Button>
 
               <div className="text-center text-sm text-muted-foreground">
-                Já tem conta?{' '}
+                Já tem conta?
+                {' '}
                 <Link
                   to="/login"
                   className="text-primary hover:underline font-semibold"

@@ -138,8 +138,7 @@ function EnderecoRegister({ isOpen, setOpen, enderecoEdit, handleClose }: IModal
     }
   }
 
-  const camposObrigatoriosPreenchidos =
-    endereco.cep.length >= 8
+  const camposObrigatoriosPreenchidos = endereco.cep.length >= 8
     && endereco.rua.length > 0
     && endereco.bairro.length > 0
     && endereco.cidade.length > 0
@@ -152,7 +151,9 @@ function EnderecoRegister({ isOpen, setOpen, enderecoEdit, handleClose }: IModal
         <DialogHeader>
           <DialogTitle className="flex items-center gap-2">
             <MapPin className="w-5 h-5 text-primary" />
-            {isEdit ? 'Editar' : 'Adicionar'} endereço
+            {isEdit ? 'Editar' : 'Adicionar'}
+            {' '}
+            endereço
           </DialogTitle>
         </DialogHeader>
 
@@ -243,7 +244,9 @@ function EnderecoRegister({ isOpen, setOpen, enderecoEdit, handleClose }: IModal
 
             <div className="space-y-1.5">
               <Label htmlFor="complemento">
-                Complemento <span className="text-muted-foreground font-normal">(opcional)</span>
+                Complemento
+                {' '}
+                <span className="text-muted-foreground font-normal">(opcional)</span>
               </Label>
               <Input
                 id="complemento"

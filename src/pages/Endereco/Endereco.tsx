@@ -62,22 +62,49 @@ function MeuEndereco(props: EnderecoProps) {
       <CardContent className="space-y-4">
         {enderecos && enderecos.length > 0 ? (
           enderecos.map((endereco: Endereco, index: number) => (
-            <div 
-              key={endereco.id || index} 
+            <div
+              key={endereco.id || index}
               className="p-4 border rounded-lg bg-card space-y-3"
             >
               <div className="flex items-center gap-2">
                 <MapPin className="w-4 h-4 text-primary" />
-                <h4 className="font-semibold">Endereço {index + 1}</h4>
+                <h4 className="font-semibold">
+                  Endereço
+                  {index + 1}
+                </h4>
               </div>
-              
+
               <div className="text-sm space-y-1 pl-6">
-                <p><span className="font-medium">Rua:</span> {endereco.rua}</p>
-                <p><span className="font-medium">Número:</span> {endereco.numeroCasa}</p>
-                <p><span className="font-medium">Bairro:</span> {endereco.bairro}</p>
-                <p><span className="font-medium">Cidade:</span> {endereco.cidade}</p>
-                <p><span className="font-medium">Estado:</span> {endereco.estado}</p>
-                <p><span className="font-medium">CEP:</span> {endereco.cep}</p>
+                <p>
+                  <span className="font-medium">Rua:</span>
+                  {' '}
+                  {endereco.rua}
+                </p>
+                <p>
+                  <span className="font-medium">Número:</span>
+                  {' '}
+                  {endereco.numeroCasa}
+                </p>
+                <p>
+                  <span className="font-medium">Bairro:</span>
+                  {' '}
+                  {endereco.bairro}
+                </p>
+                <p>
+                  <span className="font-medium">Cidade:</span>
+                  {' '}
+                  {endereco.cidade}
+                </p>
+                <p>
+                  <span className="font-medium">Estado:</span>
+                  {' '}
+                  {endereco.estado}
+                </p>
+                <p>
+                  <span className="font-medium">CEP:</span>
+                  {' '}
+                  {endereco.cep}
+                </p>
               </div>
 
               {isMe && (
@@ -120,11 +147,11 @@ function MeuEndereco(props: EnderecoProps) {
           </Button>
         )}
 
-        <EnderecoRegister 
-          isOpen={open} 
-          setOpen={setOpen} 
-          enderecoEdit={enderecoEdit!} 
-          handleClose={handleClose} 
+        <EnderecoRegister
+          isOpen={open}
+          setOpen={setOpen}
+          enderecoEdit={enderecoEdit!}
+          handleClose={handleClose}
         />
       </CardContent>
     </Card>

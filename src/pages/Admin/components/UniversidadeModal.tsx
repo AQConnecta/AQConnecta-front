@@ -59,7 +59,7 @@ const situacaoIesOptions = ['Ativa', 'Extinta'];
 function UniversidadeModal(props: UniversidadeModalProps) {
   const { isOpen, handleClose, editObj } = props;
   const [universidade, setUniversidade] = useState<Universidade>(
-    editObj || (universidadeDefaultValues as Universidade)
+    editObj || (universidadeDefaultValues as Universidade),
   );
   const isEdit = !!editObj;
 

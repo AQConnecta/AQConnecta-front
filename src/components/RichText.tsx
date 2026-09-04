@@ -46,7 +46,7 @@ function RichText({ value, onChange, editable = true, className }: RichTextProps
 
   useEffect(() => {
     if (editor && !editor.isFocused && value !== editor.getHTML()) {
-      editor.commands.setContent(value, false)
+      editor.commands.setContent(value, { emitUpdate: false })
     }
   }, [value, editor])
 

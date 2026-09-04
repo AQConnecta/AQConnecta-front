@@ -107,7 +107,7 @@ function VagaModal(props: VagaModalProps) {
     setBuscandoCidade(true)
     try {
       const res = await fetch(
-        `https://servicodados.ibge.gov.br/api/v1/localidades/municipios?orderBy=nome`,
+        'https://servicodados.ibge.gov.br/api/v1/localidades/municipios?orderBy=nome',
       )
       const todas: IbgeCidade[] = await res.json()
       const filtradas = todas
@@ -292,7 +292,12 @@ function VagaModal(props: VagaModalProps) {
                           <MapPin className="w-3.5 h-3.5 text-muted-foreground shrink-0" />
                           <span>
                             {cidade.nome}
-                            {uf && <span className="text-muted-foreground ml-1">- {uf}</span>}
+                            {uf && (
+                              <span className="text-muted-foreground ml-1">
+                                -
+                                {uf}
+                              </span>
+                            )}
                           </span>
                         </button>
                       )
@@ -397,18 +402,23 @@ function VagaModal(props: VagaModalProps) {
               onChange={(e) => setSearch(e.target.value)}
             />
 
-            {search.trim().length >= 2 &&
-              !competenciasList.some((c) => c.descricao.toLowerCase() === search.trim().toLowerCase()) && (
-                <Button type="button" variant="outline" size="sm" className="mt-1" onClick={handleSugerir}>
-                  <Lightbulb className="w-4 h-4 mr-1" />
-                  Sugerir "{search.trim()}" como nova competência
-                </Button>
-              )}
+            {search.trim().length >= 2
+              && !competenciasList.some((c) => c.descricao.toLowerCase() === search.trim().toLowerCase()) && (
+              <Button type="button" variant="outline" size="sm" className="mt-1" onClick={handleSugerir}>
+                <Lightbulb className="w-4 h-4 mr-1" />
+                Sugerir "
+                {search.trim()}
+                " como nova competência
+              </Button>
+            )}
 
             {vaga.areaAtuacao && sugestoesArea.filter((s) => !competencias.find((c) => c.id === s.id)).length > 0 && (
               <div className="mt-2">
                 <p className="text-xs text-muted-foreground mb-1">
-                  Mais usadas em {AREA_ATUACAO_LABELS[vaga.areaAtuacao]}:
+                  Mais usadas em
+                  {' '}
+                  {AREA_ATUACAO_LABELS[vaga.areaAtuacao]}
+                  :
                 </p>
                 <div className="flex flex-wrap gap-2">
                   {sugestoesArea

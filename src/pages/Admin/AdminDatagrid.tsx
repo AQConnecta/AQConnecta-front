@@ -48,10 +48,8 @@ type AdminDatagridProps = {
 
 function AdminDatagrid({ type }: AdminDatagridProps) {
   const { vagas, reloadVagas, isLoading: vagaLoading } = useVaga();
-  const { universidades, reloadUniversidades, isLoading: universidadeLoading } =
-    useUniversidade();
-  const { competencias, reloadCompetencias, isLoading: competenciaLoading } =
-    useCompetencia();
+  const { universidades, reloadUniversidades, isLoading: universidadeLoading } = useUniversidade();
+  const { competencias, reloadCompetencias, isLoading: competenciaLoading } = useCompetencia();
 
   const [editItem, setEditItem] = useState<any>(null);
   const [isEditVagaOpen, setIsEditVagaOpen] = useState(false);
@@ -59,14 +57,11 @@ function AdminDatagrid({ type }: AdminDatagridProps) {
 
   const isLoading = vagaLoading || universidadeLoading || competenciaLoading;
 
-  const handleVagaDeleteRow = (id: string | number) =>
-    DeleteHandler({ reload: reloadVagas, type: 'vaga', id });
+  const handleVagaDeleteRow = (id: string | number) => DeleteHandler({ reload: reloadVagas, type: 'vaga', id });
 
-  const handleUniversidadeDeleteRow = (id: string | number) =>
-    DeleteHandler({ reload: reloadUniversidades, type: 'universidade', id });
+  const handleUniversidadeDeleteRow = (id: string | number) => DeleteHandler({ reload: reloadUniversidades, type: 'universidade', id });
 
-  const handleCompetenciaDeleteRow = (id: string | number) =>
-    DeleteHandler({ reload: reloadCompetencias, type: 'competencia', id });
+  const handleCompetenciaDeleteRow = (id: string | number) => DeleteHandler({ reload: reloadCompetencias, type: 'competencia', id });
 
   const rowsMap = useMemo(() => ({
     vaga: vagas ?? [],

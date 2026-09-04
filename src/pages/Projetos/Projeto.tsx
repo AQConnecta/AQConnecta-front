@@ -188,13 +188,20 @@ function ProjetoPage() {
           <p className="text-sm text-muted-foreground flex items-center gap-2 flex-wrap">
             <span className="flex items-center gap-1">
               <Users className="w-4 h-4" />
-              {projeto.totalMembros} membro(s)
+              {projeto.totalMembros}
+              {' '}
+              membro(s)
             </span>
             <span className="flex items-center gap-1">
               <Heart className="w-4 h-4" />
-              {projeto.totalSeguidores} seguidor(es)
+              {projeto.totalSeguidores}
+              {' '}
+              seguidor(es)
             </span>
-            <span>· por {projeto.dono?.nome || 'Desconhecido'}</span>
+            <span>
+              · por
+              {projeto.dono?.nome || 'Desconhecido'}
+            </span>
             {projeto.universidade && (
               <span className="flex items-center gap-1">
                 <Building2 className="w-4 h-4" />
@@ -319,7 +326,12 @@ function ProjetoPage() {
           ) : (
             <>
               <p className="text-sm text-muted-foreground">
-                {vagasAtivas} vaga(s) ativa(s) de {vagas.length} no total
+                {vagasAtivas}
+                {' '}
+                vaga(s) ativa(s) de
+                {vagas.length}
+                {' '}
+                no total
               </p>
               <div className="space-y-3">
                 {vagas.map((v) => (

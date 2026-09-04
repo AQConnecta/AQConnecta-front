@@ -115,7 +115,7 @@ function ListCompetencia() {
                   <Table>
                     <TableHeader>
                       <TableRow className="bg-muted/50">
-                        <TableHead className="w-10"></TableHead>
+                        <TableHead className="w-10" />
                         <TableHead>Descrição</TableHead>
                       </TableRow>
                     </TableHeader>
@@ -147,7 +147,9 @@ function ListCompetencia() {
                   disabled={selectedRows.length === 0}
                   onClick={handleLinkWithMe}
                 >
-                  Vincular a mim ({selectedRows.length})
+                  Vincular a mim (
+                  {selectedRows.length}
+                  )
                 </Button>
               </>
             )}
@@ -164,7 +166,7 @@ function ListCompetencia() {
               <Table>
                 <TableHeader>
                   <TableRow className="bg-muted/50">
-                    <TableHead className="w-10"></TableHead>
+                    <TableHead className="w-10" />
                     <TableHead>Descrição</TableHead>
                   </TableRow>
                 </TableHeader>
@@ -197,7 +199,9 @@ function ListCompetencia() {
               disabled={selectedMyComp.length === 0}
               onClick={handleUnlink}
             >
-              Desvincular ({selectedMyComp.length})
+              Desvincular (
+              {selectedMyComp.length}
+              )
             </Button>
           </CardContent>
         </Card>

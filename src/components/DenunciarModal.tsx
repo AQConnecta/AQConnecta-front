@@ -61,7 +61,10 @@ function DenunciarModal({ idProjeto, isOpen, onClose }: { idProjeto: string; isO
             </Select>
           </div>
           <div className="space-y-1.5">
-            <Label htmlFor="descricao">Descrição {motivo === 'OUTRO' ? '(obrigatória)' : '(opcional)'}</Label>
+            <Label htmlFor="descricao">
+              Descrição
+              {motivo === 'OUTRO' ? '(obrigatória)' : '(opcional)'}
+            </Label>
             <Textarea
               id="descricao"
               value={descricao}

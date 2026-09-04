@@ -54,11 +54,11 @@ export default function UsuarioProfileMobile() {
   const avatarSrc = user?.fotoPerfil || '';
   const initials = user?.nome
     ? user.nome
-        .split(' ')
-        .map((n) => n[0])
-        .slice(0, 2)
-        .join('')
-        .toUpperCase()
+      .split(' ')
+      .map((n) => n[0])
+      .slice(0, 2)
+      .join('')
+      .toUpperCase()
     : 'U';
 
   return (

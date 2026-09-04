@@ -162,7 +162,8 @@ function Login() {
               )}
 
               <div className="text-center text-sm text-muted-foreground">
-                Não tem conta?{' '}
+                Não tem conta?
+                {' '}
                 <Link
                   to="/register"
                   className="text-primary hover:underline font-semibold"

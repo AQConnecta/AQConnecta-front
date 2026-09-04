@@ -47,7 +47,10 @@ function ForgotPassword() {
             </div>
             <h2 className="text-xl font-bold">E-mail enviado!</h2>
             <p className="text-sm text-muted-foreground max-w-sm mx-auto">
-              Enviamos as instruções de recuperação para <strong>{getValues('email')}</strong>. Verifique sua caixa de entrada e spam.
+              Enviamos as instruções de recuperação para
+              {' '}
+              <strong>{getValues('email')}</strong>
+              . Verifique sua caixa de entrada e spam.
             </p>
             <Button
               variant="outline"

@@ -30,7 +30,7 @@ function ExperienciaRegister({ experienciaEdit, handleClose }: IModal) {
     const newExperiencia = {
       ...experiencia,
       dataInicio: `${experiencia.dataInicio}T00:00:00`,
-      dataFim: experiencia.dataFim ? `${experiencia.dataFim}T00:00:00` : experiencia.dataFim
+      dataFim: experiencia.dataFim ? `${experiencia.dataFim}T00:00:00` : experiencia.dataFim,
     };
     if (isEdit) {
       try {

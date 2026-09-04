@@ -132,7 +132,7 @@ function PostDetalhe() {
         <div
           className={cn(
             'grid gap-1 overflow-hidden rounded-xl border',
-            post.imagens.length === 2 ? 'grid-cols-2' : 'grid-cols-2 sm:grid-cols-3'
+            post.imagens.length === 2 ? 'grid-cols-2' : 'grid-cols-2 sm:grid-cols-3',
           )}
         >
           {post.imagens.map((img) => (

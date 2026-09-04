@@ -70,7 +70,7 @@ function Denuncias() {
         icon={Flag}
         title="Denúncias de projetos"
         description="Revise os reports enviados pelos usuários."
-        actions={
+        actions={(
           <Select value={filtro} onValueChange={setFiltro}>
             <SelectTrigger className="w-44">
               <SelectValue />
@@ -82,7 +82,7 @@ function Denuncias() {
               <SelectItem value="IGNORADO">Ignorados</SelectItem>
             </SelectContent>
           </Select>
-        }
+        )}
       />
 
       {loading ? (
@@ -108,7 +108,9 @@ function Denuncias() {
                 </div>
                 {d.descricao && <p className="text-sm text-muted-foreground">{d.descricao}</p>}
                 <p className="text-xs text-muted-foreground">
-                  por {d.denunciante?.nome || 'Anônimo'}
+                  por
+                  {' '}
+                  {d.denunciante?.nome || 'Anônimo'}
                   {d.resolvidoPorNome ? ` · tratado por ${d.resolvidoPorNome}` : ''}
                 </p>
                 <div className="flex gap-2 pt-1 flex-wrap">

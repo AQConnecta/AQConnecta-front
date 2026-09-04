@@ -197,7 +197,9 @@ function FormacaoAcademicaRegister({ isOpen, setOpen, handleClose: closeModal, e
         <DialogHeader>
           <DialogTitle className="flex items-center gap-2">
             <GraduationCap className="h-5 w-5 text-primary" />
-            {isEdit ? 'Editar' : 'Adicionar'} formação acadêmica
+            {isEdit ? 'Editar' : 'Adicionar'}
+            {' '}
+            formação acadêmica
           </DialogTitle>
         </DialogHeader>
 
@@ -205,7 +207,9 @@ function FormacaoAcademicaRegister({ isOpen, setOpen, handleClose: closeModal, e
           <div className="flex flex-col gap-5 py-1">
             <div className="space-y-2">
               <Label>
-                Instituição de ensino <span className="text-destructive">*</span>
+                Instituição de ensino
+                {' '}
+                <span className="text-destructive">*</span>
               </Label>
               <Select
                 value={uniSelecionada?.id || ''}
@@ -254,10 +258,19 @@ function FormacaoAcademicaRegister({ isOpen, setOpen, handleClose: closeModal, e
                         <SelectItem key={universidade.id} value={universidade.id || ''}>
                           <span className="font-medium">{universidade.nomeInstituicao}</span>
                           {universidade.sigla && (
-                            <span className="text-muted-foreground"> ({universidade.sigla})</span>
+                            <span className="text-muted-foreground">
+                              {' '}
+                              (
+                              {universidade.sigla}
+                              )
+                            </span>
                           )}
                           {universidade.uf && (
-                            <span className="text-muted-foreground"> · {universidade.uf}</span>
+                            <span className="text-muted-foreground">
+                              {' '}
+                              ·
+                              {universidade.uf}
+                            </span>
                           )}
                         </SelectItem>
                       ))
@@ -269,7 +282,9 @@ function FormacaoAcademicaRegister({ isOpen, setOpen, handleClose: closeModal, e
 
             <div className="space-y-2">
               <Label htmlFor="descricao">
-                Curso / formação <span className="text-destructive">*</span>
+                Curso / formação
+                {' '}
+                <span className="text-destructive">*</span>
               </Label>
               <Textarea
                 id="descricao"
@@ -297,7 +312,9 @@ function FormacaoAcademicaRegister({ isOpen, setOpen, handleClose: closeModal, e
             <div className="grid grid-cols-2 gap-3">
               <div className="space-y-2">
                 <Label htmlFor="dataInicio">
-                  Início <span className="text-destructive">*</span>
+                  Início
+                  {' '}
+                  <span className="text-destructive">*</span>
                 </Label>
                 <Input
                   id="dataInicio"
@@ -308,7 +325,9 @@ function FormacaoAcademicaRegister({ isOpen, setOpen, handleClose: closeModal, e
               </div>
               <div className="space-y-2">
                 <Label htmlFor="dataFim">
-                  Conclusão {!formacaoAcademica.atualFormacao && <span className="text-destructive">*</span>}
+                  Conclusão
+                  {' '}
+                  {!formacaoAcademica.atualFormacao && <span className="text-destructive">*</span>}
                 </Label>
                 <Input
                   id="dataFim"

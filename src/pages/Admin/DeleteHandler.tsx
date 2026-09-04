@@ -12,7 +12,7 @@ async function deleteGeneric(
   callbackDelete: (id: string) => Promise<any>,
   callbackReload: () => void,
   id: string | number,
-  type: string
+  type: string,
 ) {
   try {
     await callbackDelete(String(id));

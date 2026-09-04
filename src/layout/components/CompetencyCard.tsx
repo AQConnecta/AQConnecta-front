@@ -17,13 +17,13 @@ function CompetencyCard({ competencies }: CompetencyCardProps) {
         <ScrollArea className="h-[230px] px-4">
           <div className="space-y-1 pb-4">
             {competencies?.map((comp, index) => (
-              <Link 
+              <Link
                 key={index}
                 to={`/buscar?tipo=vagas&idCompetencia=${comp.competencia.id}`}
                 className="flex items-center gap-2 p-2 rounded-md hover:bg-accent transition-colors"
               >
-                <img 
-                  src={`/images/level-${comp.level}.svg`} 
+                <img
+                  src={`/images/level-${comp.level}.svg`}
                   alt={`Nível ${comp.level}`}
                   className="w-8 h-8"
                 />
