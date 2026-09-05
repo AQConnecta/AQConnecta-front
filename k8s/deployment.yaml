@@ -30,7 +30,7 @@ spec:
       terminationGracePeriodSeconds: 15
       containers:
         - name: frontend          
-          image: docker.io/riume/aqconnecta-frontend:20
+          image: harbor.200.134.21.86.nip.io/aqconnecta/aqconnecta-frontend:latest
           imagePullPolicy: IfNotPresent
           envFrom:
             - configMapRef:
