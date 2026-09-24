@@ -23,7 +23,7 @@ server {
     add_header Cross-Origin-Opener-Policy "same-origin" always;
     add_header Cross-Origin-Resource-Policy "same-site" always;
     add_header Strict-Transport-Security "max-age=31536000; includeSubDomains" always;
-    add_header Content-Security-Policy   "default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' data: https:; font-src 'self' data:; connect-src 'self'; frame-ancestors 'none'; base-uri 'self'; form-action 'self'; object-src 'none'" always;
+    add_header Content-Security-Policy   "default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob: https:; font-src 'self' data:; connect-src 'self'; frame-ancestors 'none'; base-uri 'self'; form-action 'self'; object-src 'none'" always;
 
     # ---------- Bloqueios ----------
     location ~ /\.(?!well-known) {
@@ -62,6 +62,31 @@ server {
 
         # Remove o prefixo /api antes de encaminhar ao backend.
         rewrite ^/api/(.*)$ /$1 break;
+        proxy_pass $backend;
+    }
+
+    # ---------- Arquivos públicos (uploads/avatares) ----------
+    # Servidos pelo backend em /files/** (endpoint público). Sem esse proxy,
+    # <img src="/files/..."> cairia no try_files → index.html e a imagem quebra.
+    location /files/ {
+        set $backend "${BACKEND_URL}";
+
+        proxy_http_version 1.1;
+        proxy_set_header Host              $proxy_host;
+        proxy_set_header X-Real-IP         $remote_addr;
+        proxy_set_header X-Forwarded-For   $proxy_add_x_forwarded_for;
+        proxy_set_header X-Forwarded-Proto $scheme;
+        proxy_set_header X-Forwarded-Host  $host;
+        proxy_set_header Origin            "";
+        proxy_ssl_server_name on;
+        proxy_ssl_name        $proxy_host;
+        proxy_pass_request_headers on;
+        proxy_buffering off;
+
+        proxy_connect_timeout 10s;
+        proxy_send_timeout    60s;
+        proxy_read_timeout    60s;
+
         proxy_pass $backend;
     }
 

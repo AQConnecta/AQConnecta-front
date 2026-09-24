@@ -34,9 +34,11 @@ _axios.interceptors.response.use(
   (response) => response,
   (error) => {
     if (error.response?.status === 401) {
+      const hadToken = !!localStorage.getItem('token')
       const currentPath = window.location.pathname
-      // Avoid redirect loop on auth pages
-      if (!['/login', '/register', '/forgot-password'].includes(currentPath)) {
+      // Só redireciona quando a sessão expirou (havia token). Visitante anônimo
+      // navegando em páginas públicas não deve ser jogado para o /login.
+      if (hadToken && !['/login', '/register', '/forgot-password'].includes(currentPath)) {
         removeBearerToken()
         localStorage.removeItem('token')
         localStorage.removeItem('user')
