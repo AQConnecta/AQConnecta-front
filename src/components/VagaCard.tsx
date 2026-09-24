@@ -48,7 +48,7 @@ function VagaCard(props: VagaProps) {
   const { user } = useAuth();
 
   const publicador = getPublicador(vaga.publicador);
-  const createdByMe = publicador?.id === user?.id;
+  const createdByMe = !!user?.id && publicador?.id === user.id;
   const isExpired = new Date(vaga.dataLimiteCandidatura) < new Date();
   const jaCandidatado = useJaCandidatado(vaga.id, user?.id);
   const requireAuth = useRequireAuth();
