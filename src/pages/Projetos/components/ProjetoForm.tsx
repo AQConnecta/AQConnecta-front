@@ -345,9 +345,9 @@ function ProjetoForm({ projetoId }: { projetoId?: string }) {
                     </button>
                   </div>
                 ))}
-                <label className="w-24 h-24 rounded-md border border-dashed flex items-center justify-center cursor-pointer hover:bg-accent transition-colors">
+                <label htmlFor="projeto-imagem-upload" className="w-24 h-24 rounded-md border border-dashed flex items-center justify-center cursor-pointer hover:bg-accent transition-colors">
                   <Plus className="w-6 h-6 text-muted-foreground" />
-                  <input type="file" accept="image/*" className="hidden" onChange={handleAddImagem} />
+                  <input id="projeto-imagem-upload" type="file" accept="image/*" className="hidden" onChange={handleAddImagem} />
                 </label>
               </div>
             </div>

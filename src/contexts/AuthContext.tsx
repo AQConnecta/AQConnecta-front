@@ -1,4 +1,3 @@
-/* eslint-disable no-unused-vars */
 import React, { createContext, useContext, useState, useMemo, useCallback, useEffect } from 'react'
 import { AxiosError } from 'axios'
 import { toast } from 'sonner'

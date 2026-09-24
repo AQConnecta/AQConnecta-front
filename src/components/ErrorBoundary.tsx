@@ -9,7 +9,6 @@ type ErrorBoundaryProps = {
 
 type ErrorBoundaryState = {
   hasError: boolean
-  error?: Error
 }
 
 class ErrorBoundary extends React.Component<ErrorBoundaryProps, ErrorBoundaryState> {
@@ -18,8 +17,8 @@ class ErrorBoundary extends React.Component<ErrorBoundaryProps, ErrorBoundarySta
     this.state = { hasError: false }
   }
 
-  static getDerivedStateFromError(error: Error): ErrorBoundaryState {
-    return { hasError: true, error }
+  static getDerivedStateFromError(): ErrorBoundaryState {
+    return { hasError: true }
   }
 
   componentDidCatch(error: Error, errorInfo: React.ErrorInfo) {
@@ -27,7 +26,7 @@ class ErrorBoundary extends React.Component<ErrorBoundaryProps, ErrorBoundarySta
   }
 
   handleReset = () => {
-    this.setState({ hasError: false, error: undefined })
+    this.setState({ hasError: false })
   }
 
   render() {
@@ -56,7 +55,7 @@ class ErrorBoundary extends React.Component<ErrorBoundaryProps, ErrorBoundarySta
               Tentar novamente
             </Button>
             <Button
-              onClick={() => window.location.href = '/home'}
+              onClick={() => { window.location.href = '/home' }}
             >
               Ir para o início
             </Button>

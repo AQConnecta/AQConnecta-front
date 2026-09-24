@@ -127,9 +127,9 @@ function PostForm({ idProjeto, postId }: { idProjeto: string; postId?: string })
                     </button>
                   </div>
                 ))}
-                <label className="w-24 h-24 rounded-md border border-dashed flex items-center justify-center cursor-pointer hover:bg-accent transition-colors">
+                <label htmlFor="post-imagem-upload" className="w-24 h-24 rounded-md border border-dashed flex items-center justify-center cursor-pointer hover:bg-accent transition-colors">
                   <Plus className="w-6 h-6 text-muted-foreground" />
-                  <input type="file" accept="image/*" className="hidden" onChange={handleAddImagem} />
+                  <input id="post-imagem-upload" type="file" accept="image/*" className="hidden" onChange={handleAddImagem} />
                 </label>
               </div>
             </div>

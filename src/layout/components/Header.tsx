@@ -16,6 +16,32 @@ import { Sheet, SheetContent, SheetHeader, SheetTitle } from '../../components/u
 import { useAuth } from '../../contexts/AuthContext'
 import LogoSvg from '../../../public/AqConnectaIcon.svg'
 
+function SearchResults({ show, query, onPick }: {
+  show: boolean
+  query: string
+  onPick: (path: string) => void
+}) {
+  if (!show) return null
+  return (
+    <div className="absolute top-full left-0 right-0 mt-1 bg-white border rounded-md shadow-lg z-50">
+      <button
+        type="button"
+        onClick={() => onPick(`/buscar?tipo=vagas&filtro=${query}`)}
+        className="w-full px-4 py-2 text-left text-sm hover:bg-accent transition-colors"
+      >
+        Filtrar por Título de Vaga
+      </button>
+      <button
+        type="button"
+        onClick={() => onPick(`/buscar?tipo=usuarios&filtro=${query}`)}
+        className="w-full px-4 py-2 text-left text-sm hover:bg-accent transition-colors"
+      >
+        Filtrar por Usuário
+      </button>
+    </div>
+  )
+}
+
 function Header() {
   const { logout, isAdmin, user } = useAuth()
   const navigate = useNavigate()
@@ -50,25 +76,6 @@ function Header() {
     ]
     : [{ text: 'Projetos', icon: FolderKanban, path: '/projetos' }]
 
-  const SearchResults = () => (
-    showResults ? (
-      <div className="absolute top-full left-0 right-0 mt-1 bg-white border rounded-md shadow-lg z-50">
-        <button
-          onClick={() => handleOptionClick(`/buscar?tipo=vagas&filtro=${searchQuery}`)}
-          className="w-full px-4 py-2 text-left text-sm hover:bg-accent transition-colors"
-        >
-          Filtrar por Título de Vaga
-        </button>
-        <button
-          onClick={() => handleOptionClick(`/buscar?tipo=usuarios&filtro=${searchQuery}`)}
-          className="w-full px-4 py-2 text-left text-sm hover:bg-accent transition-colors"
-        >
-          Filtrar por Usuário
-        </button>
-      </div>
-    ) : null
-  )
-
   return (
     <>
       <header className="bg-white border-b border-gray-200 sticky top-0 z-50">
@@ -90,7 +97,7 @@ function Header() {
                   onChange={handleSearchChange}
                   className="pl-10"
                 />
-                <SearchResults />
+                <SearchResults show={showResults} query={searchQuery} onPick={handleOptionClick} />
               </div>
             </div>
 
@@ -143,7 +150,7 @@ function Header() {
                 onChange={handleSearchChange}
                 className="pl-10"
               />
-              <SearchResults />
+              <SearchResults show={showResults} query={searchQuery} onPick={handleOptionClick} />
             </div>
           </div>
         </div>
@@ -158,6 +165,7 @@ function Header() {
             {menuItems.map((item) => (
               <button
                 key={item.path}
+                type="button"
                 onClick={() => handleOptionClick(item.path)}
                 className="flex items-center gap-3 px-4 py-3 rounded-lg text-muted-foreground hover:bg-accent hover:text-accent-foreground transition-colors"
               >

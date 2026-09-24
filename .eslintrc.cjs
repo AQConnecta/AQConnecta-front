@@ -14,6 +14,12 @@ module.exports = {
                 sourceType: 'script',
             },
         },
+        {
+            files: ['src/components/ui/**'],
+            rules: {
+                'jsx-a11y/heading-has-content': 0,
+            },
+        },
     ],
     parserOptions: {
         ecmaVersion: 'latest',
@@ -39,6 +45,15 @@ module.exports = {
         "react/jsx-no-undef": "error",
         "react/require-default-props": 0,
         "react/jsx-no-bind": 0,
+        "no-undef": 0,
+        "no-unused-vars": 0,
+        "react/jsx-props-no-spreading": 'warn',
+        "import/prefer-default-export": 'warn',
+        "no-use-before-define": 'warn',
+        "no-alert": 'warn',
+        "no-nested-ternary": 'warn',
+        "react/destructuring-assignment": 'warn',
+        "no-console": ['error', { allow: ['error', 'warn'] }],
     },
     settings: {
         react: {

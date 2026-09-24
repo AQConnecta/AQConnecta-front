@@ -126,7 +126,7 @@ function FormacaoAcademicaRegister({ isOpen, setOpen, handleClose: closeModal, e
   }, [formacaoId]);
 
   useEffect(() => {
-    if (!isOpen) return;
+    if (!isOpen) return undefined;
     let active = true;
     setBuscandoUniversidades(true);
     const timer = setTimeout(() => {

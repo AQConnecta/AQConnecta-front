@@ -36,7 +36,7 @@ function RichText({ value, onChange, editable = true, className }: RichTextProps
     extensions: [StarterKit],
     content: value,
     editable,
-    onUpdate: ({ editor }) => onChange?.(editor.getHTML()),
+    onUpdate: ({ editor: instance }) => onChange?.(instance.getHTML()),
     editorProps: {
       attributes: {
         class: cn('rich-text', editable ? 'min-h-[160px] px-3 py-2' : ''),

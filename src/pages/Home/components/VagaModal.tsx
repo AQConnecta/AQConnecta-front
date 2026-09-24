@@ -82,7 +82,7 @@ function VagaModal(props: VagaModalProps) {
   useEffect(() => {
     if (!vaga.areaAtuacao) {
       setSugestoesArea([])
-      return
+      return undefined
     }
     let cancelled = false
     api.competencia
@@ -406,9 +406,9 @@ function VagaModal(props: VagaModalProps) {
               && !competenciasList.some((c) => c.descricao.toLowerCase() === search.trim().toLowerCase()) && (
               <Button type="button" variant="outline" size="sm" className="mt-1" onClick={handleSugerir}>
                 <Lightbulb className="w-4 h-4 mr-1" />
-                Sugerir "
+                Sugerir &quot;
                 {search.trim()}
-                " como nova competência
+                &quot; como nova competência
               </Button>
             )}
 

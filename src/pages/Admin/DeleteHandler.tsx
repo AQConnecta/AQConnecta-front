@@ -9,7 +9,7 @@ type DeleteHandlerProps = {
 };
 
 async function deleteGeneric(
-  callbackDelete: (id: string) => Promise<any>,
+  callbackDelete: (idAlvo: string) => Promise<any>,
   callbackReload: () => void,
   id: string | number,
   type: string,

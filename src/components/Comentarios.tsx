@@ -141,7 +141,6 @@ function Comentarios({ idProjeto, idPost }: { idProjeto: string; idPost: string 
 
   useEffect(() => {
     carregar(0)
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [idProjeto, idPost])
 
   const sentinelRef = useInfiniteScroll(() => carregar(page + 1), temMais, loading)

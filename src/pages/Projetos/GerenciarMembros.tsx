@@ -79,7 +79,6 @@ function GerenciarMembros() {
   useEffect(() => {
     carregarProjeto()
     carregarMembros(0)
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [id])
 
   useEffect(() => {
@@ -88,10 +87,10 @@ function GerenciarMembros() {
   }, [id, gerencia])
 
   useEffect(() => {
-    if (!id || !gerencia) return
+    if (!id || !gerencia) return undefined
     if (busca.trim().length < 2) {
       setResultados([])
-      return
+      return undefined
     }
     let active = true
     setBuscando(true)

@@ -136,10 +136,7 @@ function Perfil({ user, isMe, onUploaded }: PerfilProps) {
       </Dialog>
 
       <CardContent className="flex flex-col items-center justify-center gap-4 py-6">
-        <div
-          className={`relative ${isMe ? 'cursor-pointer group' : ''}`}
-          onClick={() => isMe && fileInputRef.current?.click()}
-        >
+        <div className={`relative ${isMe ? 'group' : ''}`}>
           <Avatar className="w-32 h-32 border-2 border-white shadow-md">
             <AvatarImage src={user.fotoPerfil || undefined} alt={user.nome} />
             <AvatarFallback className="text-2xl bg-primary text-primary-foreground">
@@ -147,9 +144,14 @@ function Perfil({ user, isMe, onUploaded }: PerfilProps) {
             </AvatarFallback>
           </Avatar>
           {isMe && (
-            <div className="absolute inset-0 rounded-full bg-black/50 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
+            <button
+              type="button"
+              aria-label="Alterar foto de perfil"
+              onClick={() => fileInputRef.current?.click()}
+              className="absolute inset-0 rounded-full bg-black/50 opacity-0 group-hover:opacity-100 focus-visible:opacity-100 transition-opacity flex items-center justify-center cursor-pointer"
+            >
               <Camera className="w-8 h-8 text-white" />
-            </div>
+            </button>
           )}
         </div>
 

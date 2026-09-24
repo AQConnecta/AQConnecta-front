@@ -140,6 +140,14 @@ function RelacionarUsuarioCompetencias(props: CompetenciaProps) {
                       isSelected(competencia) ? 'bg-primary/10' : ''
                     }`}
                     onClick={() => toggleCompetencia(competencia)}
+                    onKeyDown={(e) => {
+                      if (e.key === 'Enter' || e.key === ' ') {
+                        e.preventDefault()
+                        toggleCompetencia(competencia)
+                      }
+                    }}
+                    role="button"
+                    tabIndex={0}
                   >
                     <Checkbox
                       checked={isSelected(competencia)}

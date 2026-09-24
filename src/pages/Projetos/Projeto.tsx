@@ -91,7 +91,6 @@ function ProjetoPage() {
   useEffect(() => {
     setPosts([])
     carregarPosts(0)
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [id])
 
   const postsSentinelRef = useInfiniteScroll(() => carregarPosts(postsPage + 1), postsTemMais, postsLoading)
@@ -106,7 +105,6 @@ function ProjetoPage() {
 
   useEffect(() => {
     carregarVagas()
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [id])
 
   async function handleToggleSeguir() {

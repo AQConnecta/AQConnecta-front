@@ -19,7 +19,7 @@ function AuthImage({ path, alt, className }: AuthImageProps) {
     setError(false)
     setSrc(null)
 
-    if (!path) return
+    if (!path) return undefined
 
     axios
       .get(path, { responseType: 'blob' })

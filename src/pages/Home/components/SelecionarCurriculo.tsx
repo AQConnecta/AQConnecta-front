@@ -1,4 +1,3 @@
-/* eslint-disable no-unused-vars */
 import { useState, useEffect } from 'react';
 import { FileText } from 'lucide-react';
 import {
@@ -58,6 +57,7 @@ function SelecionarCurriculo({ isOpen, handleClose, onSelect }: SelecionarCurric
             curriculos.map((curriculo) => (
               <label
                 key={curriculo.id}
+                htmlFor={`curriculo-${curriculo.id}`}
                 className={`flex items-center gap-3 p-3 border rounded-lg cursor-pointer transition-colors ${
                   selectedCurriculo === curriculo.id
                     ? 'border-primary bg-primary/5'
@@ -65,6 +65,7 @@ function SelecionarCurriculo({ isOpen, handleClose, onSelect }: SelecionarCurric
                 }`}
               >
                 <input
+                  id={`curriculo-${curriculo.id}`}
                   type="radio"
                   name="curriculo"
                   value={curriculo.id}

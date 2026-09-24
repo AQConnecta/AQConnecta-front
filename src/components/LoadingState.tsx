@@ -53,7 +53,7 @@ export function CardSkeleton({ count = 3 }: { count?: number }) {
 
 export function ButtonLoading({ children, isLoading, ...props }: { children: React.ReactNode, isLoading: boolean } & React.ButtonHTMLAttributes<HTMLButtonElement>) {
   return (
-    <button disabled={isLoading} {...props}>
+    <button type="button" disabled={isLoading} {...props}>
       {isLoading ? (
         <span className="flex items-center gap-2">
           <Loader2 className="w-4 h-4 animate-spin" />
