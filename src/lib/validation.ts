@@ -58,10 +58,12 @@ export const vagaSchema = z.object({
     .max(255, 'Título deve ter no máximo 255 caracteres'),
   descricao: z
     .string()
-    .min(1, 'Descrição é obrigatória'),
+    .min(1, 'Descrição é obrigatória')
+    .max(10000, 'Descrição deve ter no máximo 10000 caracteres'),
   localDaVaga: z
     .string()
-    .min(1, 'Local da vaga é obrigatório'),
+    .min(1, 'Local da vaga é obrigatório')
+    .max(200, 'Local deve ter no máximo 200 caracteres'),
   aceitaRemoto: z.boolean(),
   dataLimiteCandidatura: z
     .string()

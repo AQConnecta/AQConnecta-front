@@ -69,11 +69,11 @@ function ListaProjetos() {
         actions={
           user ? (
             <div className="flex flex-wrap gap-2">
-              <Button variant="outline" size="sm" onClick={() => navigate('/projetos/seguidos')}>
+              <Button variant="outline" size="sm" onClick={() => navigate('/projetos/seguidos')} aria-label="Projetos que sigo">
                 <Heart className="w-4 h-4 sm:mr-2" />
                 <span className="hidden sm:inline">Que sigo</span>
               </Button>
-              <Button variant="outline" size="sm" onClick={() => navigate('/projetos/convites')}>
+              <Button variant="outline" size="sm" onClick={() => navigate('/projetos/convites')} aria-label="Meus convites">
                 <Mail className="w-4 h-4 sm:mr-2" />
                 <span className="hidden sm:inline">Meus convites</span>
               </Button>

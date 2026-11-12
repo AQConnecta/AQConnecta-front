@@ -86,6 +86,7 @@ function ExperienciaRegister({ experienciaEdit, handleClose }: IModal) {
         <Input
           id="titulo"
           placeholder="Título da experiência"
+          maxLength={150}
           value={experiencia.titulo}
           onChange={(e) => setExperienciaValue(e.target.value, 'titulo')}
         />
@@ -96,6 +97,7 @@ function ExperienciaRegister({ experienciaEdit, handleClose }: IModal) {
         <Input
           id="instituicao"
           placeholder="Instituição"
+          maxLength={150}
           value={experiencia.instituicao}
           onChange={(e) => setExperienciaValue(e.target.value, 'instituicao')}
         />
@@ -142,9 +144,11 @@ function ExperienciaRegister({ experienciaEdit, handleClose }: IModal) {
           id="descricao"
           placeholder="Descrição"
           rows={4}
+          maxLength={2000}
           value={experiencia.descricao}
           onChange={(e) => setExperienciaValue(e.target.value, 'descricao')}
         />
+        <p className="text-xs text-muted-foreground text-right">{`${experiencia.descricao?.length ?? 0}/2000`}</p>
       </div>
 
       <Button

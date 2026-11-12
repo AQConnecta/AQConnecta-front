@@ -254,6 +254,7 @@ function VagaModal(props: VagaModalProps) {
               <Input
                 id="titulo"
                 placeholder="Título da vaga"
+                maxLength={255}
                 value={vaga.titulo}
                 onChange={(e) => setVagaValue(e.target.value, 'titulo')}
               />
@@ -294,8 +295,7 @@ function VagaModal(props: VagaModalProps) {
                             {cidade.nome}
                             {uf && (
                               <span className="text-muted-foreground ml-1">
-                                -
-                                {uf}
+                                {`- ${uf}`}
                               </span>
                             )}
                           </span>
@@ -315,8 +315,10 @@ function VagaModal(props: VagaModalProps) {
               placeholder="Descrição da vaga"
               value={vaga.descricao}
               onChange={(e) => setVagaValue(e.target.value, 'descricao')}
-              rows={3}
+              rows={6}
+              maxLength={10000}
             />
+            <p className="text-xs text-muted-foreground text-right">{`${vaga.descricao?.length ?? 0}/10000`}</p>
           </div>
 
           <div className="space-y-2">

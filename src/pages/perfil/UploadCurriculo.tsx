@@ -86,8 +86,10 @@ function Curriculo({ isMe }: { isMe: boolean }) {
     setShouldUpdate((prev) => prev + 1);
   };
 
-  const handleDelete = async (id: string) => {
+  const handleDelete = async (id: string, nome: string) => {
+    if (!window.confirm(`Excluir o currículo "${nome}"?`)) return;
     try {
+      await api.perfil.removerCurriculo(id);
       toast.success('Currículo excluído com sucesso!');
       setCurriculos((prev) => prev.filter((curriculo) => curriculo.id !== id));
     } catch (error) {
@@ -133,8 +135,9 @@ function Curriculo({ isMe }: { isMe: boolean }) {
                 <Button
                   variant="ghost"
                   size="icon"
-                  onClick={() => handleDelete(curriculo.id)}
+                  onClick={() => handleDelete(curriculo.id, curriculo.nome)}
                   className="text-destructive hover:text-destructive hover:bg-destructive/10"
+                  aria-label={`Excluir currículo ${curriculo.nome}`}
                 >
                   <Trash2 className="w-4 h-4" />
                 </Button>

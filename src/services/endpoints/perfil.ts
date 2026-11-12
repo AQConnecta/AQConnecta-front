@@ -59,6 +59,10 @@ export class PerfilEndpoint {
     }
   }
 
+  async removerCurriculo(idCurriculo: string) {
+    return await axios.delete(`${PREFIX}/remover-curriculo/${idCurriculo}`)
+  }
+
   async listarMinhasCandidaturas() {
     return await axios.get(`${PREFIX}/candidaturas`)
   }

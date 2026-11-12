@@ -51,6 +51,7 @@ function MinhaExperiencia(props: ExperienciaProps) {
   };
 
   async function handleDelete(idExperiencia: string) {
+    if (!window.confirm('Excluir esta experiência?')) return;
     try {
       await api.experiencia.deletarExperiencia(idExperiencia);
       toast.success('Experiência deletada com sucesso');
@@ -80,19 +81,12 @@ function MinhaExperiencia(props: ExperienciaProps) {
               <div className="flex items-center gap-2">
                 <Briefcase className="w-4 h-4 text-primary" />
                 <h4 className="font-semibold uppercase">
-                  {experiencia.titulo}
-                  {' '}
-                  -
-                  {experiencia.instituicao}
+                  {`${experiencia.titulo} - ${experiencia.instituicao}`}
                 </h4>
               </div>
 
               <p className="text-sm text-muted-foreground">
-                {formatDate(experiencia.dataInicio)}
-                {' '}
-                -
-                {' '}
-                {experiencia.atualExperiencia ? 'até o momento' : formatDate(experiencia.dataFim)}
+                {`${formatDate(experiencia.dataInicio)} - ${experiencia.atualExperiencia || !experiencia.dataFim ? 'até o momento' : formatDate(experiencia.dataFim)}`}
               </p>
 
               <p className="text-sm">{experiencia.descricao}</p>

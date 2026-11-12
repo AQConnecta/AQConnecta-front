@@ -45,6 +45,7 @@ function MeuEndereco(props: EnderecoProps) {
   }
 
   async function handleDelete(idEndereco: string) {
+    if (!window.confirm('Excluir este endereço?')) return;
     try {
       await api.endereco.deletarEndereco(idEndereco);
       toast.success('Endereço deletado com sucesso');
@@ -69,8 +70,7 @@ function MeuEndereco(props: EnderecoProps) {
               <div className="flex items-center gap-2">
                 <MapPin className="w-4 h-4 text-primary" />
                 <h4 className="font-semibold">
-                  Endereço
-                  {index + 1}
+                  {`Endereço ${index + 1}`}
                 </h4>
               </div>
 

@@ -186,19 +186,14 @@ function ProjetoPage() {
           <p className="text-sm text-muted-foreground flex items-center gap-2 flex-wrap">
             <span className="flex items-center gap-1">
               <Users className="w-4 h-4" />
-              {projeto.totalMembros}
-              {' '}
-              membro(s)
+              {`${projeto.totalMembros} ${projeto.totalMembros === 1 ? 'membro' : 'membros'}`}
             </span>
             <span className="flex items-center gap-1">
               <Heart className="w-4 h-4" />
-              {projeto.totalSeguidores}
-              {' '}
-              seguidor(es)
+              {`${projeto.totalSeguidores} ${projeto.totalSeguidores === 1 ? 'seguidor' : 'seguidores'}`}
             </span>
             <span>
-              · por
-              {projeto.dono?.nome || 'Desconhecido'}
+              {`· por ${projeto.dono?.nome || 'Desconhecido'}`}
             </span>
             {projeto.universidade && (
               <span className="flex items-center gap-1">
@@ -324,12 +319,7 @@ function ProjetoPage() {
           ) : (
             <>
               <p className="text-sm text-muted-foreground">
-                {vagasAtivas}
-                {' '}
-                vaga(s) ativa(s) de
-                {vagas.length}
-                {' '}
-                no total
+                {`${vagasAtivas} ${vagasAtivas === 1 ? 'vaga ativa' : 'vagas ativas'} de ${vagas.length} no total`}
               </p>
               <div className="space-y-3">
                 {vagas.map((v) => (

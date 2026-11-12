@@ -70,7 +70,7 @@ function MinhaCompetencia(props: CompetenciaProps) {
         </CardTitle>
       </CardHeader>
       <CardContent className="space-y-4">
-        <ScrollArea className="h-[300px]">
+        <ScrollArea className={competencias && competencias.length > 5 ? 'h-[300px]' : ''}>
           <div className="space-y-2 pr-4">
             {competencias && competencias.length > 0 ? (
               competencias.map((competencia, index) => (
@@ -83,6 +83,7 @@ function MinhaCompetencia(props: CompetenciaProps) {
                     <Checkbox
                       checked={selectedCompetencias.includes(competencia.id)}
                       onCheckedChange={() => handleSelect(competencia.id)}
+                      aria-label={`Selecionar ${competencia.descricao}`}
                     />
                   )}
                 </div>

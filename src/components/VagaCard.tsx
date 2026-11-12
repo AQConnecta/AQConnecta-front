@@ -45,7 +45,9 @@ function VagaCard(props: VagaProps) {
   const [isCurriculoModalOpen, setIsCurriculoModalOpen] = useState(false);
   const [vagaToApply, setVagaToApply] = useState<Vaga | null>(null);
   const [selectedVaga, setSelectedVaga] = useState<Vaga | null>(null);
+  const [descricaoExpandida, setDescricaoExpandida] = useState(false);
   const { user } = useAuth();
+  const descricaoLonga = (vaga.descricao?.length ?? 0) > 400 || (vaga.descricao?.split('\n').length ?? 0) > 6;
 
   const publicador = getPublicador(vaga.publicador);
   const createdByMe = !!user?.id && publicador?.id === user.id;
@@ -82,6 +84,7 @@ function VagaCard(props: VagaProps) {
   }
 
   async function handleDelete(vagaSelected: Vaga) {
+    if (!window.confirm(`Excluir a vaga "${vagaSelected.titulo}"? Esta ação não pode ser desfeita.`)) return;
     try {
       await api.vaga.deletarVaga(vagaSelected.id!);
       reloadVagas();
@@ -121,7 +124,7 @@ function VagaCard(props: VagaProps) {
             {createdByMe && (
               <DropdownMenu>
                 <DropdownMenuTrigger asChild>
-                  <Button variant="ghost" size="icon" className="shrink-0">
+                  <Button variant="ghost" size="icon" className="shrink-0" aria-label="Opções da vaga">
                     <MoreVertical className="w-5 h-5" />
                   </Button>
                 </DropdownMenuTrigger>
@@ -183,9 +186,21 @@ function VagaCard(props: VagaProps) {
                 <Badge variant="success">Iniciante</Badge>
               )}
             </div>
-            <p className="text-sm text-muted-foreground leading-relaxed">
+            <p
+              className={`text-sm text-muted-foreground leading-relaxed whitespace-pre-line break-words ${descricaoLonga && !descricaoExpandida ? 'line-clamp-6' : ''}`}
+            >
               {vaga.descricao}
             </p>
+            {descricaoLonga && (
+              <button
+                type="button"
+                onClick={() => setDescricaoExpandida((v) => !v)}
+                className="mt-1 text-sm font-medium text-primary hover:underline"
+                aria-expanded={descricaoExpandida}
+              >
+                {descricaoExpandida ? 'Ver menos' : 'Ver mais'}
+              </button>
+            )}
           </div>
 
           {vaga.competencias && vaga.competencias.length > 0 && (

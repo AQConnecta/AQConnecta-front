@@ -267,9 +267,7 @@ function FormacaoAcademicaRegister({ isOpen, setOpen, handleClose: closeModal, e
                           )}
                           {universidade.uf && (
                             <span className="text-muted-foreground">
-                              {' '}
-                              ·
-                              {universidade.uf}
+                              {` · ${universidade.uf}`}
                             </span>
                           )}
                         </SelectItem>
@@ -290,6 +288,7 @@ function FormacaoAcademicaRegister({ isOpen, setOpen, handleClose: closeModal, e
                 id="descricao"
                 placeholder="Ex.: Bacharelado em Ciência da Computação"
                 rows={3}
+                maxLength={255}
                 value={formacaoAcademica.descricao}
                 onChange={(e) => setFormacaoValue(e.target.value, 'descricao')}
               />

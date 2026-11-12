@@ -76,6 +76,7 @@ function AdminDatagrid({ type }: AdminDatagridProps) {
   }), []);
 
   const handleDeleteRow = (id: string | number) => {
+    if (!window.confirm('Excluir este registro? Esta ação não pode ser desfeita.')) return;
     if (type === 'vaga') handleVagaDeleteRow(id);
     else if (type === 'universidade') handleUniversidadeDeleteRow(id);
     else if (type === 'competencia') handleCompetenciaDeleteRow(id);

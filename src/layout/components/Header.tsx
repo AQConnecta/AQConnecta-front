@@ -93,6 +93,7 @@ function Header() {
                 <Search className="absolute left-3 w-4 h-4 text-muted-foreground" />
                 <Input
                   placeholder="Pesquisar..."
+                  aria-label="Pesquisar"
                   value={searchQuery}
                   onChange={handleSearchChange}
                   className="pl-10"
@@ -120,6 +121,7 @@ function Header() {
                 size="icon"
                 className="md:hidden"
                 onClick={() => setDrawerOpen(true)}
+                aria-label="Abrir menu"
               >
                 <Menu className="w-5 h-5" />
               </Button>
@@ -129,6 +131,8 @@ function Header() {
                   size="icon"
                   onClick={() => logoutUser()}
                   className="text-muted-foreground hover:text-destructive"
+                  aria-label="Sair"
+                  title="Sair"
                 >
                   <LogOut className="w-5 h-5" />
                 </Button>
@@ -146,6 +150,7 @@ function Header() {
               <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
               <Input
                 placeholder="Pesquisar..."
+                aria-label="Pesquisar"
                 value={searchQuery}
                 onChange={handleSearchChange}
                 className="pl-10"

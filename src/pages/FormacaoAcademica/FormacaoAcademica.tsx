@@ -51,6 +51,7 @@ function MinhaFormacaoAcademica(props: FormacaoAcademicaProps) {
   };
 
   async function handleDelete(idFormacaoAcademica: string) {
+    if (!window.confirm('Excluir esta formação acadêmica?')) return;
     try {
       await api.formacaoAcademica.deletarFormacaoAcademica(idFormacaoAcademica);
       toast.success('Formação Acadêmica deletada com sucesso');
@@ -75,24 +76,16 @@ function MinhaFormacaoAcademica(props: FormacaoAcademicaProps) {
               <div className="flex items-center gap-2">
                 <GraduationCap className="w-4 h-4 text-primary" />
                 <span className="text-sm text-muted-foreground">
-                  Formação
-                  {index + 1}
+                  {`Formação ${index + 1}`}
                 </span>
               </div>
 
               <h4 className="font-semibold uppercase">
-                {formacaoAcademica.descricao}
-                {' '}
-                -
-                {formacaoAcademica.universidade.nomeInstituicao}
+                {`${formacaoAcademica.descricao} - ${formacaoAcademica.universidade.nomeInstituicao}`}
               </h4>
 
               <p className="text-sm text-muted-foreground">
-                {formatDate(formacaoAcademica.dataInicio)}
-                {' '}
-                -
-                {formatDate(formacaoAcademica.dataFim)}
-                {formacaoAcademica.atualFormacao && ' - Cursando'}
+                {`${formatDate(formacaoAcademica.dataInicio)} - ${formacaoAcademica.atualFormacao || !formacaoAcademica.dataFim ? 'Cursando' : formatDate(formacaoAcademica.dataFim)}`}
               </p>
 
               {formacaoAcademica.diploma && (
